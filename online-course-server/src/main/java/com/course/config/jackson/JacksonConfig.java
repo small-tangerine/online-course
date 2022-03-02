@@ -1,4 +1,4 @@
-package com.course.config.security.jackson;
+package com.course.config.jackson;
 
 import com.course.commons.constant.TimeConstants;
 import com.fasterxml.jackson.annotation.JsonInclude;
