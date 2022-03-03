@@ -10,7 +10,6 @@ import com.course.service.entity.UserToken;
 import com.course.service.service.UserTokenService;
 import io.jsonwebtoken.SignatureException;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -35,12 +34,15 @@ import java.util.Objects;
 @Slf4j
 public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
 
-    @Autowired
-    private UserDetailsService userDetailsService;
-    @Autowired
-    private JwtUtil jwtUtil;
-    @Autowired
-    private UserTokenService userTokenService;
+    private final UserDetailsService userDetailsService;
+    private final JwtUtil jwtUtil;
+    private final UserTokenService userTokenService;
+
+    public JwtAuthenticationTokenFilter(UserDetailsService userDetailsService, JwtUtil jwtUtil, UserTokenService userTokenService) {
+        this.userDetailsService = userDetailsService;
+        this.jwtUtil = jwtUtil;
+        this.userTokenService = userTokenService;
+    }
 
     private static final String AUTH_HEADER = "Authorization";
 
@@ -69,6 +71,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         } catch (Exception e) {
+            e.printStackTrace();
             log.error("authenticated :{}", e.getMessage());
             throw new AccessException("用户权限异常");
         }
@@ -82,6 +85,12 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
                 .gt(UserToken::getExpiredAt, LocalDateTime.now())
                 .last("limit 1");
         UserToken userToken = userTokenService.getOne(query);
+        if (Objects.nonNull(userToken)) {
+            LocalDateTime expiredAt = LocalDateTime.now().plusMinutes(30L);
+            UserToken updateToken = new UserToken().setId(userToken.getId())
+                    .setExpiredAt(expiredAt);
+            userTokenService.updateById(updateToken);
+        }
         return Objects.nonNull(userToken);
     }
 

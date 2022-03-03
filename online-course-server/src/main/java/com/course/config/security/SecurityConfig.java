@@ -4,6 +4,7 @@ import com.course.config.security.handler.JwtAuthenticationTokenFilter;
 import com.course.config.security.handler.RestAuthenticationEntryPoint;
 import com.course.config.security.handler.RestfulAccessDeniedHandler;
 import com.course.config.security.service.SecurityService;
+import com.course.service.service.UserTokenService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -30,10 +31,13 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-    private final SecurityService securityService;
 
-    public SecurityConfig(SecurityService securityService) {
+    private final SecurityService securityService;
+    private final UserTokenService userTokenService;
+
+    public SecurityConfig(SecurityService securityService, UserTokenService userTokenService) {
         this.securityService = securityService;
+        this.userTokenService = userTokenService;
     }
 
     @Override
@@ -69,18 +73,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity webSecurity) {
         //不需要保护的资源路径允许访问: 配置白名单的不拦截
-        webSecurity.ignoring().antMatchers("/account/login","/account/register",
+        webSecurity.ignoring().antMatchers("/account/login", "/account/register",
                 "/account/reset-password");
         //允许跨域请求的OPTIONS请求
         webSecurity.ignoring().antMatchers(HttpMethod.OPTIONS);
 
     }
+
     @Override
     @Bean
     public UserDetailsService userDetailsService() {
         //获取登录用户信息
         return securityService::loadUserByUsername;
     }
+
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService())
@@ -93,7 +99,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     public JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter() {
-        return new JwtAuthenticationTokenFilter();
+        return new JwtAuthenticationTokenFilter(userDetailsService(), jwtUtil(), userTokenService);
     }
 
     @Bean
