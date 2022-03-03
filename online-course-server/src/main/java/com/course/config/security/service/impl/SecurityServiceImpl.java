@@ -1,8 +1,6 @@
 package com.course.config.security.service.impl;
 
 import cn.hutool.core.text.CharSequenceUtil;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.course.api.entity.User;
 import com.course.config.security.model.LoginUser;
 import com.course.config.security.service.SecurityService;
@@ -32,11 +30,7 @@ public class SecurityServiceImpl implements SecurityService {
     @Override
     public UserDetails loadUserByUsername(String username) {
         //从数据库找
-        LambdaQueryWrapper<User> query = Wrappers.lambdaQuery();
-        query.eq(User::getEmail, username)
-                .or().eq(User::getMobile, username)
-                .last("limit 1");
-        User user = userService.getOne(query);
+        User user = userService.findByUsername(username);
         if (Objects.isNull(user)) {
             log.error("帐号【{}】不存在", username);
             throw new UsernameNotFoundException(CharSequenceUtil.format("用户帐号【{}】不存在", username));

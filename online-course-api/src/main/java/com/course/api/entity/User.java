@@ -1,15 +1,15 @@
 package com.course.api.entity;
 
-import java.math.BigDecimal;
-import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import java.time.LocalDateTime;
 import com.baomidou.mybatisplus.annotation.TableField;
-import java.io.Serializable;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+
+import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
  * <p>
@@ -36,8 +36,8 @@ public class User implements Serializable {
     /**
      * ID
      */
-    @TableField("user_id")
-    private String userId;
+    @TableField("uid")
+    private String uid;
 
     /**
      * 账号 
@@ -85,7 +85,7 @@ public class User implements Serializable {
      * 学习时长/h
      */
     @TableField("learn_hour")
-    private BigDecimal learnHour;
+    private Long learnHour;
 
     /**
      * 性别 unknown male female

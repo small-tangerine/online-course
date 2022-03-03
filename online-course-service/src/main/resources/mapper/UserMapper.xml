@@ -5,7 +5,7 @@
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.course.api.entity.User">
         <id column="id" property="id" />
-        <result column="user_id" property="userId" />
+        <result column="uid" property="uid" />
         <result column="username" property="username" />
         <result column="password" property="password" />
         <result column="mobile" property="mobile" />
@@ -25,7 +25,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, user_id, username, password, mobile, email, nickname, avatar, job, learn_hour, sex, city, signature, created_at, created_by, updated_at, updated_by
+        id, uid, username, password, mobile, email, nickname, avatar, job, learn_hour, sex, city, signature, created_at, created_by, updated_at, updated_by
     </sql>
 
 </mapper>

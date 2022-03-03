@@ -23,6 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.rmi.AccessException;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 /**
@@ -78,6 +79,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
         LambdaQueryWrapper<UserToken> query = Wrappers.lambdaQuery();
         query.eq(UserToken::getToken, token)
                 .eq(UserToken::getUsername, username)
+                .gt(UserToken::getExpiredAt, LocalDateTime.now())
                 .last("limit 1");
         UserToken userToken = userTokenService.getOne(query);
         return Objects.nonNull(userToken);

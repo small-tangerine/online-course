@@ -17,7 +17,7 @@ public enum SexEnum {
      */
     MALE("male","男"),
     FEMALE("female", "女"),
-    UN_KNOW("unknow", "未知");
+    UN_KNOW("unknown", "保密");
 
     public static String getDescFromSex(String sex) {
         for (SexEnum sexEnum : SexEnum.values()) {

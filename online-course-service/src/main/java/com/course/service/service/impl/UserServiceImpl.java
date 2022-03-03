@@ -17,4 +17,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
 
+    @Override
+    public User findByUsername(String username) {
+        return lambdaQuery().eq(User::getUsername, username)
+                .or().eq(User::getMobile, username)
+                .eq(User::getEmail, username)
+                .last("limit 1")
+                .one();
+    }
 }

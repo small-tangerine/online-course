@@ -49,7 +49,7 @@ public class UserToken implements Serializable {
      * 类型 1用户端 2管理端
      */
     @TableField("type")
-    private Boolean type;
+    private Integer type;
 
     /**
      * token

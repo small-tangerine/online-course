@@ -13,4 +13,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface UserTokenService extends IService<UserToken> {
 
+    UserToken findByUserIdAndType(Integer id, Integer typeId);
 }

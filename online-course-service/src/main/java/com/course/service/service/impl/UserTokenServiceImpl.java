@@ -17,4 +17,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserTokenServiceImpl extends ServiceImpl<UserTokenMapper, UserToken> implements UserTokenService {
 
+    @Override
+    public UserToken findByUserIdAndType(Integer id, Integer typeId) {
+        return lambdaQuery().eq(UserToken::getUserId, id)
+                .eq(UserToken::getType, typeId)
+                .last("limit 1")
+                .one();
+    }
 }
