@@ -43,7 +43,7 @@ public enum ResultCodeEnum {
     EMAIL_SEND_FAILURE(9000,"邮件发送失败"),
     EMAIL_SEND_SUCCESS(0,"邮件发送成功"),
     REGISTER_SUCCESS(0,"注册成功"),
-    REGISTER_FAILURE(8010,"注册失败请稍后重试!"),
+    REGISTER_FAILURE(8010,"注册失败请稍后重试"),
     ARTICLE_NOT_EXIST(8005,"文章不存在"),
     RESOURCE_NOT_EXIST(8006,"资源不存在"),
     RESET_PASSWORD_SUCCESS(0,"密码重置成功"),
@@ -63,7 +63,7 @@ public enum ResultCodeEnum {
     VERIFY_CODE_FAILURE(1004,"验证码校验失败"),
     VERIFY_CODE_SUCCESS(0,"验证码校验成功"),
     /*2 用户管理*/
-    USER_UNLOCKED_SUCCESS (0,"解锁成功,请登录!"),
+    USER_UNLOCKED_SUCCESS (0,"解锁成功,请登录"),
     USER_ACCOUNT_PASSWORD_ERROR(1111, "用户账号或密码不正确"),
 
     USER_ACCOUNT_UNAVAILABLE(1110, "账号已禁用，请联系管理员"),

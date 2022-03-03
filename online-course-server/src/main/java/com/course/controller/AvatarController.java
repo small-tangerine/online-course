@@ -73,7 +73,7 @@ public class AvatarController {
                     .setUpdatedAt(LocalDateTime.now())
                     .setUpdatedBy(SecurityUtils.getUserId());
             userService.updateById(updateAvatar);
-            user.setAvatar(avatar);
+            user.setAvatar(avatar).setPassword(null);
             return Response.ok("上传头像成功", mapperFacade.map(user, UserVo.class));
         } catch (IOException e) {
             log.error("上传头像失败", e);

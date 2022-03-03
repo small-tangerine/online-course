@@ -70,6 +70,7 @@ public class AccountController {
         Assert.isTrue(passwordEncoder.matches(loginVo.getPassword(), user.getPassword()),
                 "用户帐号或密码错误");
         UserVo map = mapperFacade.map(user, UserVo.class);
+        map.setPassword(null);
         // 生成token
         UserToken userToken = generateToken(user);
         UserToken loginToken = userTokenService.findByUserIdAndType(user.getId(), LoginTypeEnum.FRONT.getTypeId());
@@ -95,8 +96,8 @@ public class AccountController {
                 || Validator.isMobile(loginVo.getUsername()), "请输入正确的手机号/邮箱");
 
         User user = userService.findByUsername(loginVo.getUsername());
-        Assert.isNull(user, "该账号已存在,请登录!");
-        Assert.equals(loginVo.getCheckPassword(), loginVo.getPassword(), "两次密码输入不一致!");
+        Assert.isNull(user, "该账号已存在,请登录");
+        Assert.equals(loginVo.getCheckPassword(), loginVo.getPassword(), "两次密码输入不一致");
         // 封装用户默认信息
         User defaultUser = userComponent.wrapDefaultUserInfo(loginVo);
         // 生成token
@@ -104,6 +105,7 @@ public class AccountController {
         // 生成登录信息
         userComponent.saveUser(defaultUser, userToken);
         UserVo map = mapperFacade.map(defaultUser, UserVo.class);
+        map.setPassword(null);
         map.setToken(userToken.getToken());
         return Response.ok(map);
     }
@@ -136,8 +138,8 @@ public class AccountController {
                 || Validator.isMobile(loginVo.getUsername()), "请输入正确的手机号/邮箱");
 
         User user = userService.findByUsername(loginVo.getUsername());
-        Assert.notNull(user, "该账号不存在,请注册!");
-        Assert.equals(loginVo.getCheckPassword(), loginVo.getPassword(), "两次密码输入不一致!");
+        Assert.notNull(user, "该账号不存在,请注册");
+        Assert.equals(loginVo.getCheckPassword(), loginVo.getPassword(), "两次密码输入不一致");
 
         UserVo map = mapperFacade.map(user, UserVo.class);
         // 生成token
@@ -149,6 +151,7 @@ public class AccountController {
         // 更新登录状态
         User updatePassword = new User().setId(user.getId()).setPassword(passwordEncoder.encode(loginVo.getPassword()));
         userComponent.updatePassword(updatePassword, userToken);
+        map.setPassword(null);
         map.setToken(userToken.getToken());
         return Response.ok(map);
     }
