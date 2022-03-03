@@ -15,7 +15,9 @@ public class ResponseHelper {
     public static Response updateSuccess() {
         return Response.ok("修改成功");
     }
-
+    public static <T> Response<T> updateSuccess(T t) {
+        return Response.ok("修改成功",t);
+    }
     public static Response deleteSuccess() {
         return Response.ok("删除成功");
     }
