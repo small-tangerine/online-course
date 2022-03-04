@@ -6,7 +6,7 @@ import com.course.commons.enums.ResultCodeEnum;
 import com.course.commons.utils.Assert;
 import com.course.config.security.JwtUtil;
 import com.course.config.security.model.LoginUser;
-import com.course.service.entity.UserToken;
+import com.course.api.entity.UserToken;
 import com.course.service.service.UserTokenService;
 import io.jsonwebtoken.SignatureException;
 import lombok.extern.slf4j.Slf4j;

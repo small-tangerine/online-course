@@ -1,6 +1,6 @@
 package com.course.service.mapper;
 
-import com.course.service.entity.UserToken;
+import com.course.api.entity.UserToken;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**

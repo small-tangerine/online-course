@@ -3,7 +3,7 @@
 <mapper namespace="com.course.service.mapper.UserTokenMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.course.service.entity.UserToken">
+    <resultMap id="BaseResultMap" type="com.course.api.entity.UserToken">
         <id column="id" property="id" />
         <result column="user_id" property="userId" />
         <result column="username" property="username"/>

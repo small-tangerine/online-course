@@ -1,6 +1,6 @@
 package com.course.service.service;
 
-import com.course.service.entity.UserToken;
+import com.course.api.entity.UserToken;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**

@@ -1,14 +1,15 @@
 package com.course.api.entity;
 
-import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import java.time.LocalDateTime;
 import com.baomidou.mybatisplus.annotation.TableField;
-import java.io.Serializable;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+
+import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
  * <p>
@@ -43,12 +44,6 @@ public class Orders implements Serializable {
      */
     @TableField("user_id")
     private Integer userId;
-
-    /**
-     * 订单详情ID
-     */
-    @TableField("detail_id")
-    private Integer detailId;
 
     /**
      * 支付状态 0未支付 1已完成 2已过期

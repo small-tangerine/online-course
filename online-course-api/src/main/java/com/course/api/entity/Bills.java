@@ -1,4 +1,4 @@
-package com.course.service.entity;
+package com.course.api.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -9,21 +9,22 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
  * <p>
- * token记录
+ * 账单
  * </p>
  *
  * @author panguangming
- * @since 2022-03-02
+ * @since 2022-03-04
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@TableName("user_token")
-public class UserToken implements Serializable {
+@TableName("bills")
+public class Bills implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -40,34 +41,46 @@ public class UserToken implements Serializable {
     private Integer userId;
 
     /**
-     * 用户ID
+     * 订单编号
      */
-    @TableField("username")
-    private String username;
+    @TableField("order_code")
+    private String orderCode;
 
     /**
-     * 类型 1用户端 2管理端
+     * 课程ID
      */
-    @TableField("type")
-    private Integer type;
+    @TableField("course_id")
+    private Integer courseId;
 
     /**
-     * token
+     * 课程名称
      */
-    @TableField("token")
-    private String token;
+    @TableField("title")
+    private String title;
 
     /**
-     * 过期时间
+     * 消费金额
      */
-    @TableField("expired_at")
-    private LocalDateTime expiredAt;
+    @TableField("cost")
+    private BigDecimal cost;
 
     /**
-     * 登录时间
+     * 支付方式 0余额支付 1支付宝 2微信
      */
-    @TableField("login_at")
-    private LocalDateTime loginAt;
+    @TableField("pay_type")
+    private Integer payType;
+
+    /**
+     * 创建时间
+     */
+    @TableField("created_at")
+    private LocalDateTime createdAt;
+
+    /**
+     * 创建人
+     */
+    @TableField("created_by")
+    private Integer createdBy;
 
 
 }

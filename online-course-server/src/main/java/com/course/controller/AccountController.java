@@ -15,7 +15,7 @@ import com.course.commons.utils.Assert;
 import com.course.component.UserComponent;
 import com.course.config.security.JwtUtil;
 import com.course.config.security.SecurityUtils;
-import com.course.service.entity.UserToken;
+import com.course.api.entity.UserToken;
 import com.course.service.service.UserService;
 import com.course.service.service.UserTokenService;
 import lombok.RequiredArgsConstructor;

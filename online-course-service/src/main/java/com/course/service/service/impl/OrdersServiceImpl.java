@@ -17,4 +17,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class OrdersServiceImpl extends ServiceImpl<OrdersMapper, Orders> implements OrdersService {
 
+    @Override
+    public Orders getOrderByCode(String code) {
+        return lambdaQuery().eq(Orders::getCode, code)
+                .last("limit 1")
+                .one();
+    }
 }

@@ -1,7 +1,11 @@
 package com.course.service.service;
 
-import com.course.api.entity.OrdersDetail;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.course.api.entity.OrdersDetail;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -13,4 +17,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface OrdersDetailService extends IService<OrdersDetail> {
 
+    Map<Integer, List<OrdersDetail>> mapListByOrderIds(Collection<Integer> orderIds);
+
+    List<OrdersDetail> listByOrderId(Integer id);
 }

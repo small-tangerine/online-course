@@ -6,7 +6,7 @@ import com.course.api.vo.LoginVo;
 import com.course.commons.constant.CommonConstant;
 import com.course.commons.enums.SexEnum;
 import com.course.commons.utils.IdUtils;
-import com.course.service.entity.UserToken;
+import com.course.api.entity.UserToken;
 import com.course.service.service.UserService;
 import com.course.service.service.UserTokenService;
 import lombok.RequiredArgsConstructor;

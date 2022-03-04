@@ -14,7 +14,7 @@ import com.course.commons.model.Response;
 import com.course.commons.utils.Assert;
 import com.course.commons.utils.ResponseHelper;
 import com.course.config.security.SecurityUtils;
-import com.course.service.entity.UserToken;
+import com.course.api.entity.UserToken;
 import com.course.service.service.UserService;
 import com.course.service.service.UserTokenService;
 import com.google.common.collect.ImmutableMap;

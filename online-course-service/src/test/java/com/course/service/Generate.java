@@ -29,7 +29,7 @@ class Generate {
 
     @Test
     public void generate() {
-        String[] tableArr = new String[]{"user_token"};
+        String[] tableArr = new String[]{"bills"};
         generate(tableArr);
     }
 
@@ -61,10 +61,10 @@ class Generate {
 
         // 数据源配置
         DataSourceConfig dsc = new DataSourceConfig();
-        dsc.setUrl("jdbc:mysql://42.192.49.200:3306/course?useUnicode=true&useSSL=false&characterEncoding=utf8&serverTimezone=Asia/Shanghai");
+        dsc.setUrl("jdbc:mysql://127.0.0.1:3306/course?useUnicode=true&useSSL=false&characterEncoding=utf8&serverTimezone=Asia/Shanghai");
         dsc.setDriverName("com.mysql.cj.jdbc.Driver");
         dsc.setUsername("root");
-        dsc.setPassword("gm13630497916@.com");
+        dsc.setPassword("root");
         mpg.setDataSource(dsc);
 
         // 包配置

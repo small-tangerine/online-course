@@ -13,4 +13,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface CartsService extends IService<Carts> {
 
+    Carts getByUserIdAndCourseId(Integer userId, Integer courseId);
 }

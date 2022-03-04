@@ -17,4 +17,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class CartsServiceImpl extends ServiceImpl<CartsMapper, Carts> implements CartsService {
 
+    @Override
+    public Carts getByUserIdAndCourseId(Integer userId, Integer courseId) {
+        return lambdaQuery().eq(Carts::getUserId, userId)
+                .eq(Carts::getCourseId, courseId)
+                .last("limit 1")
+                .one();
+    }
 }
