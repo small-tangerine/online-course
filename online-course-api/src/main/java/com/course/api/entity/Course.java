@@ -107,24 +107,6 @@ public class Course implements Serializable {
     private Integer learnPersons;
 
     /**
-     * 审核状态 0未审核 1审核通过 2审核不通过
-     */
-    @TableField("audit_status")
-    private Integer auditStatus;
-
-    /**
-     * 审核备注
-     */
-    @TableField("audit_notice")
-    private String auditNotice;
-
-    /**
-     * 是否上架 1是 0否
-     */
-    @TableField("is_shelves")
-    private Integer isShelves;
-
-    /**
      * 创建时间
      */
     @TableField("created_at")

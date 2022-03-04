@@ -6,8 +6,6 @@ import com.course.api.entity.Carts;
 import com.course.api.entity.Course;
 import com.course.api.vo.server.CartsVo;
 import com.course.commons.enums.CourseTypeEnum;
-import com.course.commons.enums.StatusEnum;
-import com.course.commons.enums.YesOrNoEnum;
 import com.course.commons.model.Paging;
 import com.course.commons.model.Response;
 import com.course.commons.utils.Assert;
@@ -19,7 +17,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import ma.glasnost.orika.MapperFacade;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -67,9 +70,7 @@ public class CartsController {
         Assert.notNull(courseId, "无效的课程");
         // 课程是否有效 是否付费课程
         Course course = courseService.getById(courseId);
-        Assert.isTrue(YesOrNoEnum.YES.equalsStatus(course.getIsShelves())
-                        && StatusEnum.SUCCESS.equalsStatus(course.getAuditStatus()),
-                "课程不存在");
+        Assert.notNull(course, "课程不存在");
         Assert.isTrue(CourseTypeEnum.UN_FREE.equalsStatus(course.getType()), "该课程是免费课程,无需购买");
         // 校验是否已经在购物车了
         Carts carts = cartsService.getByUserIdAndCourseId(userId, courseId);

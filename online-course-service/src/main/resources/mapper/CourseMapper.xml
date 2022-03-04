@@ -17,9 +17,6 @@
         <result column="discount_price" property="discountPrice" />
         <result column="is_finish" property="isFinish" />
         <result column="learn_persons" property="learnPersons" />
-        <result column="audit_status" property="auditStatus" />
-        <result column="audit_notice" property="auditNotice" />
-        <result column="is_shelves" property="isShelves" />
         <result column="created_at" property="createdAt" />
         <result column="created_by" property="createdBy" />
         <result column="updated_at" property="updatedAt" />
@@ -28,7 +25,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, title, introduction, bg_img, banner, tip, learn_what, type, price, is_discount, discount_price, is_finish, learn_persons, audit_status, audit_notice, is_shelves, created_at, created_by, updated_at, updated_by
+        id, title, introduction, bg_img, banner, tip, learn_what, type, price, is_discount, discount_price, is_finish, learn_persons, created_at, created_by, updated_at, updated_by
     </sql>
 
 </mapper>
