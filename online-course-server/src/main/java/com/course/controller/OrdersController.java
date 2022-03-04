@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.course.api.entity.Orders;
 import com.course.api.entity.OrdersDetail;
+import com.course.api.vo.server.CartsVo;
 import com.course.api.vo.server.OrdersDetailVo;
 import com.course.api.vo.server.OrdersVo;
 import com.course.commons.enums.PayStatusEnum;
@@ -12,10 +13,13 @@ import com.course.commons.enums.YesOrNoEnum;
 import com.course.commons.model.Paging;
 import com.course.commons.model.Response;
 import com.course.commons.utils.Assert;
+import com.course.commons.utils.IdUtils;
 import com.course.commons.utils.ResponseHelper;
+import com.course.component.OrdersComponent;
 import com.course.config.security.SecurityUtils;
 import com.course.service.service.OrdersDetailService;
 import com.course.service.service.OrdersService;
+import com.google.common.collect.ImmutableMap;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import ma.glasnost.orika.MapperFacade;
@@ -25,6 +29,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotBlank;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -43,6 +48,7 @@ public class OrdersController {
     private final OrdersDetailService ordersDetailService;
     private final OrdersService ordersService;
     private final MapperFacade mapperFacade;
+    private final OrdersComponent ordersComponent;
 
     /**
      * 订单列表
@@ -69,7 +75,7 @@ public class OrdersController {
             map.setPayStatusTitle(PayStatusEnum.getDescFromStatus(item.getPayStatus()))
                     .setPayTypeTitle(PayTypeEnum.getDescFromType(item.getPayType()));
             List<OrdersDetail> ordersDetails = ordersMap.get(item.getId());
-            wrapDetail(map,ordersDetails);
+            wrapDetail(map, ordersDetails);
             return map;
         });
         return Response.ok(paging);
@@ -109,7 +115,9 @@ public class OrdersController {
         Assert.isFalse(PayStatusEnum.PAY.equalsStatus(ordersServiceById.getPayStatus()), "该订单已完成,无法取消");
         Assert.isTrue(Objects.equals(userId, ordersServiceById.getUserId()), "非法操作");
         Assert.isFalse(PayStatusEnum.CANCEL.equalsStatus(ordersServiceById.getPayStatus()), "该订单已取消");
-        ordersService.updateById(new Orders().setId(ordersServiceById.getId()).setPayStatus(PayStatusEnum.CANCEL.getStatus()));
+        ordersService.updateById(new Orders().setId(ordersServiceById.getId())
+                .setCancelAt(LocalDateTime.now())
+                .setPayStatus(PayStatusEnum.CANCEL.getStatus()));
         return Response.ok("取消成功");
     }
 
@@ -122,7 +130,7 @@ public class OrdersController {
         List<OrdersDetail> detailList = ordersDetailService.listByOrderId(ordersServiceByCode.getId());
         OrdersVo map = mapperFacade.map(ordersServiceByCode, OrdersVo.class);
         map.setPayStatusTitle(PayStatusEnum.getDescFromStatus(ordersServiceByCode.getPayStatus()));
-        wrapDetail(map,detailList);
+        wrapDetail(map, detailList);
         return Response.ok(map);
     }
 
@@ -144,5 +152,30 @@ public class OrdersController {
         if (CollectionUtils.isNotEmpty(detailList)) {
             map.setList(ordersDetailVoList);
         }
+    }
+
+    @PostMapping("/create")
+    public Response orderCreate(@RequestBody @Validated OrdersVo ordersVo) {
+        Integer userId = SecurityUtils.getUserId();
+        List<CartsVo> cartsList = ordersVo.getCartsList();
+        Assert.isTrue(CollectionUtils.isNotEmpty(cartsList), "购物车商品为空");
+        // 订单
+        Orders orders = new Orders().setCode(IdUtils.orderId())
+                .setUserId(userId)
+                .setExpiredAt(LocalDateTime.now().minusHours(12L))
+                .setUpdatedAt(LocalDateTime.now()).setUpdatedBy(userId)
+                .setCreatedAt(LocalDateTime.now()).setCreatedBy(userId);
+        // 订单详情
+        List<OrdersDetail> details = cartsList.stream().map(item -> new OrdersDetail().setCourseId(item.getCourseId())
+                .setDiscountPrice(item.getDiscountPrice())
+                .setIsDiscount(item.getIsDiscount())
+                .setImg(item.getImg())
+                .setTitle(item.getTitle())
+                .setPrice(item.getPrice())
+                .setCreatedAt(LocalDateTime.now()).setCreatedBy(userId)).collect(Collectors.toList());
+        // 删除购物车元素
+        Set<Integer> cartsIds = cartsList.stream().map(CartsVo::getId).collect(Collectors.toSet());
+        ordersComponent.createOrder(orders, details, cartsIds);
+        return Response.ok(ImmutableMap.of("code", orders.getCode()));
     }
 }

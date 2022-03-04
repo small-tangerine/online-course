@@ -64,6 +64,11 @@ public class Orders implements Serializable {
     private LocalDateTime expiredAt;
 
     /**
+     * 失效时间
+     */
+    @TableField("cancel_at")
+    private LocalDateTime cancelAt;
+    /**
      * 支付时间
      */
     @TableField("pay_at")

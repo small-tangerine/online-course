@@ -44,7 +44,7 @@ public class CartsController {
     public Response cartsList(Integer page, Integer size) {
         LambdaQueryWrapper<Carts> query = Wrappers.lambdaQuery();
         query.orderByDesc(Carts::getId);
-        Paging<Carts> paging = new Paging<>(page, size);
+        Paging<Carts> paging = new Paging<>(page, 100);
         cartsService.page(paging, query);
         paging.convert(item -> mapperFacade.map(item, CartsVo.class));
         return Response.ok(paging);
@@ -61,7 +61,7 @@ public class CartsController {
     }
 
     @PostMapping("/create")
-    public Response cartsCreate(@RequestBody @Validated CartsVo cartsVo) {
+    public Response cartsCreate(@RequestBody CartsVo cartsVo) {
         Integer userId = SecurityUtils.getUserId();
         Integer courseId = cartsVo.getCourseId();
         Assert.notNull(courseId, "无效的课程");

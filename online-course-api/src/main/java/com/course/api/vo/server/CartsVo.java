@@ -3,6 +3,7 @@ package com.course.api.vo.server;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -21,6 +22,7 @@ public class CartsVo  {
     /**
      * ID
      */
+    @NotNull(message = "购物车商品编号不能为空")
     private Integer id;
 
     /**
@@ -31,6 +33,7 @@ public class CartsVo  {
     /**
      * 课程ID
      */
+    @NotNull(message = "课程编号不能为空")
     private Integer courseId;
 
     /**

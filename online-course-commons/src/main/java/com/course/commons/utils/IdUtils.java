@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -139,7 +138,6 @@ public class IdUtils {
     }
     public static String get16UUID(){
         // 2.中间四位整数，标识日期
-        SimpleDateFormat sdf = new SimpleDateFormat("MMdd");
         String dayTime = TimeUtils.format(LocalDateTime.now(),"HHmmss");
         // 3.生成uuid的hashCode值
         int hashCode = UUID.randomUUID().toString().hashCode();

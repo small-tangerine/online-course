@@ -3,6 +3,7 @@ package com.course.api.vo.server;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -19,6 +20,7 @@ public class OrdersVo {
 
     private Integer id;
     private String code;
+    private LocalDateTime cancelAt;
     private LocalDateTime expiredAt;
     private Integer payStatus;
     private String payStatusTitle;
@@ -27,5 +29,9 @@ public class OrdersVo {
     private LocalDateTime createdAt;
     private Integer userId;
     private BigDecimal cost;
+
+    @Valid
+    private List<CartsVo> cartsList;
+
     private List<OrdersDetailVo> list;
 }

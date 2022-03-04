@@ -34,6 +34,8 @@ public class JacksonConfig {
     public ObjectMapper objectMapper(){
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
+        //添加此配置
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
         objectMapper.disable(DeserializationFeature.ADJUST_DATES_TO_CONTEXT_TIME_ZONE);
         JavaTimeModule javaTimeModule = new JavaTimeModule();
