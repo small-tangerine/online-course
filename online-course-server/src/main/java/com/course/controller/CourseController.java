@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * 课程
  *
@@ -28,6 +30,20 @@ public class CourseController {
     @GetMapping("/list")
     public Response courseList(Integer page, Integer size, String keyword, String sort,
                                Integer category, Integer label, Integer type) {
+        //TODO 课程列表
+        return Response.ok();
+    }
+
+    @GetMapping("/detail")
+    public Response courseDetail(@NotNull(message = "课程编号不能为空") Integer id) {
+        // TODO 课程详情
+        return Response.ok();
+    }
+
+    @GetMapping("/video")
+    public Response courseVideo(@NotNull(message = "课程编号不能为空") Integer courseId,
+                                @NotNull(message = "课程视频编号不能为空") Integer videoId) {
+        // TODO 课程视频详情
         return Response.ok();
     }
 }

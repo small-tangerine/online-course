@@ -42,7 +42,8 @@ public class RechargesController {
     @GetMapping("/list")
     public Response rechargeList(Integer page, Integer size) {
         LambdaQueryWrapper<Recharges> query = Wrappers.lambdaQuery();
-        query.orderByDesc(Recharges::getId);
+        query.eq(Recharges::getUserId, SecurityUtils.getUserId())
+                .orderByDesc(Recharges::getId);
         Paging<Recharges> paging = new Paging<>(page, size);
         rechargesService.page(paging, query);
         paging.convert(item -> {

@@ -38,9 +38,10 @@ public class BillsController {
     private final MapperFacade mapperFacade;
 
     @GetMapping("/list")
-    public Response BillList(Integer page, Integer size) {
+    public Response billList(Integer page, Integer size) {
         LambdaQueryWrapper<Bills> query = Wrappers.lambdaQuery();
-        query.orderByDesc(Bills::getId);
+        query.eq(Bills::getUserId, SecurityUtils.getUserId())
+                .orderByDesc(Bills::getId);
         Paging<Bills> paging = new Paging<>(page, size);
         billsService.page(paging, query);
         paging.convert(item -> {

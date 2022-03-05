@@ -74,7 +74,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity webSecurity) {
         //不需要保护的资源路径允许访问: 配置白名单的不拦截
         webSecurity.ignoring().antMatchers("/account/login", "/account/register",
-                "/account/reset-password");
+                "/account/reset-password","/category/list","/course/list");
         //允许跨域请求的OPTIONS请求
         webSecurity.ignoring().antMatchers(HttpMethod.OPTIONS);
 

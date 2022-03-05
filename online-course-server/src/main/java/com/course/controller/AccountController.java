@@ -140,7 +140,8 @@ public class AccountController {
         User user = userService.findByUsername(loginVo.getUsername());
         Assert.notNull(user, "该账号不存在,请注册");
         Assert.equals(loginVo.getCheckPassword(), loginVo.getPassword(), "两次密码输入不一致");
-
+        Assert.isFalse(passwordEncoder.matches(loginVo.getPassword(), user.getPassword()),
+                "新密码不能与旧密码相同");
         UserVo map = mapperFacade.map(user, UserVo.class);
         // 生成token
         UserToken userToken = generateToken(user);
