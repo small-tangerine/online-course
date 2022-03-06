@@ -25,4 +25,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
                 .last("limit 1")
                 .one();
     }
+
+    @Override
+    public User findAdminByUsername(String username) {
+        return baseMapper.findAdminByUsername(username);
+    }
 }

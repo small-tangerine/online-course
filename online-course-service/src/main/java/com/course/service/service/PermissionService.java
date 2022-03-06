@@ -1,7 +1,9 @@
 package com.course.service.service;
 
-import com.course.api.entity.Permission;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.course.api.entity.Permission;
+
+import java.util.List;
 
 /**
  * <p>
@@ -13,4 +15,9 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface PermissionService extends IService<Permission> {
 
+    List<Permission> findAllWithChildren();
+
+    List<Permission> findByRoleId(Integer roleId);
+
+    List<Permission> findUserPermission(Integer userId);
 }

@@ -25,19 +25,6 @@ spring:
       #监控统计拦截的filters
       filters: stat
       poolPreparedStatements: true
-  #发送邮件设置
-  mail:
-    host: smtp.qq.com
-    username: 1950661299@qq.com
-    #对qq邮箱，password是授权码
-    password: yccvwplbqcthbdid
-    properties:
-      mail:
-        smtp:
-          auth: true
-          starttls:
-            enable: true
-            required: truex
   mvc:
     throw-exception-if-no-handler-found: true
     servlet:

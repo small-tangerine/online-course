@@ -19,4 +19,6 @@ public interface UserService extends IService<User> {
      * @return user
      */
     User findByUsername(String username);
+
+    User findAdminByUsername(String username);
 }

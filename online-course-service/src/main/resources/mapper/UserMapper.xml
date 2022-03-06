@@ -4,28 +4,55 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.course.api.entity.User">
-        <id column="id" property="id" />
-        <result column="uid" property="uid" />
-        <result column="username" property="username" />
-        <result column="password" property="password" />
-        <result column="mobile" property="mobile" />
-        <result column="email" property="email" />
-        <result column="nickname" property="nickname" />
-        <result column="avatar" property="avatar" />
-        <result column="job" property="job" />
-        <result column="learn_hour" property="learnHour" />
-        <result column="sex" property="sex" />
-        <result column="city" property="city" />
-        <result column="signature" property="signature" />
-        <result column="created_at" property="createdAt" />
-        <result column="created_by" property="createdBy" />
-        <result column="updated_at" property="updatedAt" />
-        <result column="updated_by" property="updatedBy" />
+        <id column="id" property="id"/>
+        <result column="uid" property="uid"/>
+        <result column="username" property="username"/>
+        <result column="password" property="password"/>
+        <result column="mobile" property="mobile"/>
+        <result column="email" property="email"/>
+        <result column="nickname" property="nickname"/>
+        <result column="avatar" property="avatar"/>
+        <result column="job" property="job"/>
+        <result column="learn_hour" property="learnHour"/>
+        <result column="sex" property="sex"/>
+        <result column="city" property="city"/>
+        <result column="signature" property="signature"/>
+        <result column="created_at" property="createdAt"/>
+        <result column="created_by" property="createdBy"/>
+        <result column="updated_at" property="updatedAt"/>
+        <result column="updated_by" property="updatedBy"/>
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         id, uid, username, password, mobile, email, nickname, avatar, job, learn_hour, sex, city, signature, created_at, created_by, updated_at, updated_by
     </sql>
+    <select id="findAdminByUsername" resultMap="BaseResultMap">
+        select id,
+               uid,
+               username,
+               password,
+               mobile,
+               email,
+               nickname,
+               avatar,
+               sex,
+               created_at,
+               created_by,
+               updated_at,
+               updated_by
+        from user u
+        where (
+                username = #{username}
+                or mobile = #{username}
+                or email = #{username}
+            )
+          and exists(
+                select role_id, user_id
+                from user_role ur
+                where ur.user_id = u.id
+                    and ur.role_id in (1,2,3)
+            )
+    </select>
 
 </mapper>

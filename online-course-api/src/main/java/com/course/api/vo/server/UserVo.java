@@ -9,6 +9,7 @@ import org.hibernate.validator.constraints.Length;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
+import java.time.LocalDateTime;
 
 /**
  * <p>
@@ -99,4 +100,9 @@ public class UserVo {
     private String signature;
 
     private String token;
+
+    private LocalDateTime createdAt;
+
+    private Integer roleId;
+    private String roleTitle;
 }

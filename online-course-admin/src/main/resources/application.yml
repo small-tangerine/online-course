@@ -1,0 +1,44 @@
+server:
+  port: 8083
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/course?useUnicode=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&useOldAliasMetadataBehavior=true&zeroDateTimeBehavior=convertToNull&allowMultiQueries=true&useSSL=false
+    username: root
+    password: root
+    name: course
+    #使用druid连接池
+    type: com.alibaba.druid.pool.DruidDataSource
+    # 设置-Ddruid.mysql.usePingMethod=false，否则会出现warn：discard long time none received connection.
+    #druid相关配置
+    druid:
+      initialSize: 5
+      minIdle: 5
+      maxActive: 20
+      maxWait: 60000
+      timeBetweenEvictionRunsMillis: 60000
+      minEvictableIdleTimeMillis: 300000
+      validationQuery: SELECT 1 FROM DUAL
+      testWhileIdle: true
+      testOnBorrow: false
+      testOnReturn: false
+      #监控统计拦截的filters
+      filters: stat
+      poolPreparedStatements: true
+  mvc:
+    throw-exception-if-no-handler-found: true
+    servlet:
+      load-on-startup: 0
+  aop:
+    auto: true
+  servlet:
+    multipart:
+      max-file-size: 1000MB
+      max-request-size: 1000MB
+  web:
+    resources:
+      add-mappings: false
+
+logging:
+  level:
+    com.course: debug
