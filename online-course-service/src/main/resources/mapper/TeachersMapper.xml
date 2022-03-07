@@ -5,6 +5,7 @@
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.course.api.entity.Teachers">
         <id column="id" property="id" />
+        <result column="user_id" property="userId" />
         <result column="name" property="name" />
         <result column="avatar" property="avatar" />
         <result column="job" property="job" />
@@ -17,7 +18,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, name, avatar, job, introduction, created_at, created_by, updated_at, updated_by
+        id, user_id, name, avatar, job, introduction, created_at, created_by, updated_at, updated_by
     </sql>
 
 </mapper>

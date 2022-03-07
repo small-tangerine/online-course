@@ -7,9 +7,9 @@ import com.course.admin.config.security.SecurityUtils;
 import com.course.api.entity.User;
 import com.course.api.entity.UserToken;
 import com.course.api.enums.LoginTypeEnum;
-import com.course.api.vo.server.UserVo;
+import com.course.api.vo.LoginVo;
+import com.course.api.vo.admin.UserVo;
 import com.course.commons.annotations.AccountInfo;
-import com.course.commons.annotations.BaseInfo;
 import com.course.commons.enums.SexEnum;
 import com.course.commons.enums.YesOrNoEnum;
 import com.course.commons.model.Response;
@@ -52,30 +52,21 @@ public class UserInfoController {
     private final UserTokenService userTokenService;
 
     @PostMapping("/update-base-info")
-    public Response updateBaseInfo(@RequestBody @Validated(BaseInfo.class) UserVo userVo) {
+    public Response updateBaseInfo(@RequestBody UserVo userVo) {
         Assert.notBlank(SexEnum.getDescFromSex(userVo.getSex()), "请选择正确的性别");
+        Assert.notBlank(userVo.getNickname(), "用户昵称不能为空");
         Integer userId = SecurityUtils.getUserId();
-        User user = userService.getById(userId);
         User updateBaseInfo = new User().setId(userId)
                 .setNickname(userVo.getNickname())
-                .setJob(userVo.getJob())
-                .setCity(userVo.getCity())
-                .setSignature(userVo.getSignature())
                 .setUpdatedBy(userId)
-                .setUpdatedAt(LocalDateTime.now())
+                .setUpdatedAt(LocalDateTime.now()).setUpdatedBy(userId)
                 .setSex(userVo.getSex());
         userService.updateById(updateBaseInfo);
-        user.setNickname(userVo.getNickname())
-                .setJob(userVo.getJob())
-                .setCity(userVo.getCity())
-                .setSignature(userVo.getSignature())
-                .setSex(userVo.getSex())
-                .setPassword(null);
-        return ResponseHelper.updateSuccess(mapperFacade.map(user, UserVo.class));
+        return ResponseHelper.updateSuccess();
     }
 
-    @PostMapping("/update-account-info")
-    public Response updateAccountInfo(@RequestBody @Validated(AccountInfo.class) UserVo userVo) {
+    @PostMapping("/update-teacher-info")
+    public Response updateAccountInfo(@RequestBody @Validated UserVo userVo) {
         Assert.isTrue(Validator.isMobile(userVo.getMobile()), "请输入正确的手机号码");
         Integer userId = SecurityUtils.getUserId();
         User user = userService.getById(userId);
@@ -129,14 +120,97 @@ public class UserInfoController {
         return ResponseHelper.updateSuccess(mapperFacade.map(user, UserVo.class));
     }
 
+    /**
+     * 更新手机号
+     *
+     * @param userVo 实体
+     * @return response
+     */
+    @PostMapping("/update-phone")
+    public Response accountUpdatePhone(@RequestBody LoginVo userVo) {
+        Integer userId = SecurityUtils.getUserId();
+        String mobile = userVo.getMobile();
+        String verifyCode = userVo.getVerifyCode();
+        String password = userVo.getPassword();
+        String username = SecurityUtils.getUsername();
+        Assert.isTrue(StringUtils.isNotBlank(mobile)
+                && Validator.isMobile(mobile), "手机号格式不正确");
+        Assert.notBlank(verifyCode, "验证码不能为空");
+        // 获取用户信息
+        User byId = userService.getById(userId);
+        Assert.isTrue(passwordEncoder.matches(password, byId.getPassword()), "密码不正确");
+        checkMobileAndEmail(mobile, null, byId);
+        User updatePhone = new User().setId(userId)
+                .setUsername(byId.getUsername())
+                .setMobile(mobile)
+                .setUpdatedAt(LocalDateTime.now()).setUpdatedBy(userId);
+        userService.updateById(updatePhone);
+        return ResponseHelper.updateSuccess(ImmutableMap.of("isUpdateUsername",
+                !Objects.equals(username, updatePhone.getUsername())));
+    }
+
+    /**
+     * 更新邮箱
+     *
+     * @param userVo 实体
+     * @return response
+     */
+    @PostMapping("/update-email")
+    public Response accountUpdateEmail(@RequestBody LoginVo userVo) {
+        Integer userId = SecurityUtils.getUserId();
+        String email = userVo.getEmail();
+        String verifyCode = userVo.getVerifyCode();
+        String password = userVo.getPassword();
+        String username = SecurityUtils.getUsername();
+        Assert.isTrue(StringUtils.isNotBlank(email)
+                && Validator.isEmail(email), "邮箱格式不正确");
+        Assert.notBlank(verifyCode, "验证码不能为空");
+        // 获取用户信息
+        User byId = userService.getById(userId);
+        Assert.isTrue(passwordEncoder.matches(password, byId.getPassword()), "密码不正确");
+        checkMobileAndEmail(null, email, byId);
+        User updateEmail = new User().setId(userId)
+                .setUsername(byId.getUsername())
+                .setEmail(email)
+                .setUpdatedAt(LocalDateTime.now()).setUpdatedBy(userId);
+        userService.updateById(updateEmail);
+        return ResponseHelper.updateSuccess(ImmutableMap.of("isUpdateUsername",
+                !Objects.equals(username, updateEmail.getUsername())));
+    }
+
+    @PostMapping("update-password")
+    public Response accountUpdatePassword(@RequestBody @Validated(AccountInfo.class) UserVo userVo) {
+        String password = userVo.getPassword();
+        String checkPassword = userVo.getCheckPassword();
+        String oldPassword = userVo.getOldPassword();
+        Integer userId = SecurityUtils.getUserId();
+        User byId = userService.getById(userId);
+        Assert.notBlank(oldPassword, "旧密码不能为空");
+        Assert.notBlank(checkPassword, "确认密码不能为空");
+        Assert.isTrue(passwordEncoder.matches(oldPassword, byId.getPassword()), "旧密码不正确");
+        Assert.equals(password, checkPassword, "两次密码不一致");
+        String newPassword = passwordEncoder.encode(password);
+        User updatePassword = new User().setId(userId).setPassword(newPassword)
+                .setUpdatedAt(LocalDateTime.now()).setUpdatedBy(userId);
+        userService.updateById(updatePassword);
+        return ResponseHelper.updateSuccess();
+    }
+
     private void checkMobileAndEmail(String mobile, String email, User user) {
         // 如果邮箱、手机号没修改直接return
+        if (Objects.equals(mobile, user.getMobile()) && StringUtils.isBlank(email)) {
+            return;
+        }
+        if (StringUtils.isBlank(mobile) && Objects.equals(email, user.getEmail())) {
+            return;
+        }
         if (Objects.equals(mobile, user.getMobile()) && Objects.equals(email, user.getEmail())) {
             return;
         }
         LambdaQueryWrapper<User> query = Wrappers.lambdaQuery();
         query.ne(User::getId, user.getId())
-                .and(item -> item.eq(User::getEmail, email).or().eq(User::getMobile, mobile))
+                .and(item -> item.eq(StringUtils.isNotBlank(email), User::getEmail, email)
+                        .or().eq(StringUtils.isNotBlank(mobile), User::getMobile, mobile))
                 .select(User::getId, User::getEmail, User::getMobile, User::getUsername);
         List<User> list = userService.list(query);
         StringBuilder error = new StringBuilder();
@@ -153,8 +227,13 @@ public class UserInfoController {
             user.setUsername(mobile);
         }
         if (Validator.isEmail(user.getUsername())) {
+            user.setUsername(email);
+        }
+        if (StringUtils.isNotBlank(email)) {
             user.setEmail(email);
         }
-        user.setMobile(mobile).setEmail(email);
+        if (StringUtils.isNotBlank(mobile)) {
+            user.setMobile(mobile);
+        }
     }
 }

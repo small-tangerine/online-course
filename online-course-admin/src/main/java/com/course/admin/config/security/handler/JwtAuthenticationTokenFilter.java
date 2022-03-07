@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.course.admin.config.security.JwtUtil;
 import com.course.admin.config.security.model.LoginUser;
 import com.course.api.entity.UserToken;
+import com.course.api.enums.LoginTypeEnum;
 import com.course.commons.enums.ResultCodeEnum;
 import com.course.commons.utils.Assert;
 import com.course.service.service.UserTokenService;
@@ -86,6 +87,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
     private boolean onlineUserUpdateStatus(String username, String token) {
         LambdaQueryWrapper<UserToken> query = Wrappers.lambdaQuery();
         query.eq(UserToken::getToken, token)
+                .eq(UserToken::getType, LoginTypeEnum.BACKEND.getTypeId())
                 .eq(UserToken::getUsername, username)
                 .gt(UserToken::getExpiredAt, LocalDateTime.now())
                 .last("limit 1");

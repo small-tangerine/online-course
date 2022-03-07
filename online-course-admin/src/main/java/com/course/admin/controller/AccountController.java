@@ -5,9 +5,11 @@ import cn.hutool.core.text.CharSequenceUtil;
 import com.course.admin.config.security.JwtUtil;
 import com.course.admin.config.security.SecurityUtils;
 import com.course.api.entity.Role;
+import com.course.api.entity.Teachers;
 import com.course.api.entity.User;
 import com.course.api.entity.UserToken;
 import com.course.api.enums.LoginTypeEnum;
+import com.course.api.enums.RoleTypeEnum;
 import com.course.api.vo.LoginVo;
 import com.course.api.vo.admin.PermissionVo;
 import com.course.api.vo.server.UserVo;
@@ -18,6 +20,7 @@ import com.course.commons.model.Response;
 import com.course.commons.utils.Assert;
 import com.course.component.component.UserComponent;
 import com.course.service.service.RoleService;
+import com.course.service.service.TeachersService;
 import com.course.service.service.UserService;
 import com.course.service.service.UserTokenService;
 import lombok.RequiredArgsConstructor;
@@ -55,6 +58,7 @@ public class AccountController {
     private final UserTokenService userTokenService;
     private final UserComponent userComponent;
     private final RoleService roleService;
+    private final TeachersService teachersService;
 
     /**
      * 登录接口
@@ -84,10 +88,13 @@ public class AccountController {
         }
         // 更新登录状态
         userTokenService.saveOrUpdate(userToken);
+        Teachers teacher = getTeacherInfo(user.getId());
+        if (Objects.nonNull(teacher)) {
+            map.setAvatar(teacher.getAvatar());
+        }
         map.setToken(userToken.getToken());
         return Response.ok(map);
     }
-
 
     @GetMapping("/info")
     public Response accountInfo() {
@@ -95,10 +102,14 @@ public class AccountController {
         User byId = userService.getById(userId);
         UserVo map = mapperFacade.map(byId, UserVo.class);
         map.setPassword(null);
-        Role role =roleService.findUserRole(userId);
-        if (Objects.nonNull(role))
-        {
+        Role role = roleService.findUserRole(userId);
+        if (Objects.nonNull(role)) {
             map.setRoleId(role.getId()).setRoleTitle(role.getTitle());
+        }
+        Teachers teacherInfo = getTeacherInfo(userId);
+        if (Objects.nonNull(teacherInfo)) {
+            map.setTeacherInfo(teacherInfo)
+                    .setAvatar(teacherInfo.getAvatar());
         }
         return Response.ok(map);
     }
@@ -177,4 +188,21 @@ public class AccountController {
                 .setType(LoginTypeEnum.BACKEND.getTypeId())
                 .setExpiredAt(expired);
     }
+
+
+    private Teachers getTeacherInfo(Integer userId) {
+        Role userRole = roleService.findUserRole(userId);
+        if (Objects.isNull(userRole)) {
+            return null;
+        }
+        if (RoleTypeEnum.TEACHER.equalsStatus(userRole.getId())) {
+            Teachers teacher = teachersService.getByUserId(userId);
+            if (Objects.isNull(teacher)) {
+                return null;
+            }
+            return teacher;
+        }
+        return null;
+    }
+
 }

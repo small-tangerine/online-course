@@ -2,15 +2,21 @@ package com.course.admin.controller;
 
 import cn.hutool.core.io.FileTypeUtil;
 import cn.hutool.core.io.FileUtil;
+import com.course.admin.config.security.SecurityUtils;
+import com.course.api.entity.Role;
+import com.course.api.entity.Teachers;
+import com.course.api.entity.User;
+import com.course.api.enums.RoleTypeEnum;
 import com.course.commons.constant.CommonConstant;
 import com.course.commons.model.Response;
 import com.course.commons.utils.Assert;
 import com.course.commons.utils.FileUtils;
+import com.course.service.service.RoleService;
+import com.course.service.service.TeachersService;
 import com.course.service.service.UserService;
 import com.google.common.collect.ImmutableMap;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import ma.glasnost.orika.MapperFacade;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,6 +29,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.util.Objects;
 
 /**
  * 头像
@@ -37,9 +45,10 @@ import java.nio.file.Paths;
 @Slf4j
 public class AvatarController {
 
-    private static final String BASE_URL = "http://localhost/avatar/";
+    private static final String BASE_URL = "http://localhost/";
     private final UserService userService;
-    private final MapperFacade mapperFacade;
+    private final RoleService roleService;
+    private final TeachersService teachersService;
 
     /**
      * 上传头像
@@ -65,6 +74,25 @@ public class AvatarController {
             String type = FileTypeUtil.getType(destFile);
             Assert.isTrue(CommonConstant.IMG_SUFFIX.contains(type), "指定文件不是图片");
             String avatar = BASE_URL + filePath;
+
+            Integer userId = SecurityUtils.getUserId();
+            Role userRole = roleService.findUserRole(userId);
+            if (RoleTypeEnum.TEACHER.equalsStatus(userRole.getId())) {
+                Teachers teacher = teachersService.getByUserId(userId);
+                Teachers updateTeacher = new Teachers().setAvatar(avatar)
+                        .setUserId(userId)
+                        .setUpdatedAt(LocalDateTime.now()).setUpdatedBy(userId);
+                if (Objects.nonNull(teacher)) {
+                    updateTeacher.setId(teacher.getId());
+                }
+                teachersService.saveOrUpdate(updateTeacher);
+                return Response.ok("上传头像成功", ImmutableMap.of("url", avatar));
+            }
+            User updateAvatar = new User().setId(SecurityUtils.getUserId())
+                    .setAvatar(avatar)
+                    .setUpdatedAt(LocalDateTime.now())
+                    .setUpdatedBy(SecurityUtils.getUserId());
+            userService.updateById(updateAvatar);
             return Response.ok("上传头像成功", ImmutableMap.of("url", avatar));
         } catch (IOException e) {
             log.error("上传头像失败", e);

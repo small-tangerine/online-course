@@ -17,4 +17,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class TeachersServiceImpl extends ServiceImpl<TeachersMapper, Teachers> implements TeachersService {
 
+    @Override
+    public Teachers getByUserId(Integer userId) {
+        return lambdaQuery().eq(Teachers::getUserId,userId)
+                .last("limit 1")
+                .one();
+    }
 }

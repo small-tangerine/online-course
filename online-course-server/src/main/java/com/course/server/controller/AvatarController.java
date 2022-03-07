@@ -40,7 +40,7 @@ import java.time.LocalDateTime;
 @Slf4j
 public class AvatarController {
 
-    private static final String BASE_URL = "http://localhost/avatar/";
+    private static final String BASE_URL = "http://localhost/";
     private final UserService userService;
     private final MapperFacade mapperFacade;
 
