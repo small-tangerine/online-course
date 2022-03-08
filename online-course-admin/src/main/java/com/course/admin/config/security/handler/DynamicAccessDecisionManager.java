@@ -34,7 +34,7 @@ public class DynamicAccessDecisionManager implements AccessDecisionManager {
             Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
             long count = authorities.stream().map(GrantedAuthority::getAuthority)
                     .filter(item -> StringUtils.equals(item, needAuthority)).count();
-            if (Objects.equals(0L, count)) {
+            if (!Objects.equals(0L, count)) {
                 return;
             }
         }

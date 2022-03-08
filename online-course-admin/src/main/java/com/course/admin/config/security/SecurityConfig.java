@@ -11,6 +11,7 @@ import com.course.admin.config.security.service.SecurityService;
 import com.course.api.vo.admin.PermissionVo;
 import com.course.component.cache.PermissionCache;
 import com.course.service.service.UserTokenService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.context.annotation.Bean;
@@ -34,6 +35,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 
 /**
@@ -148,7 +150,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             Map<String, ConfigAttribute> map = new ConcurrentHashMap<>(16);
             //获取所有权限访问资源
             List<PermissionVo> permissionVoList = permissionCache.getPermissionVoList();
-            for (PermissionVo permission : permissionVoList) {
+            List<PermissionVo> collect = permissionVoList.stream().filter(item -> StringUtils.isNotBlank(item.getPermissionTag())).collect(Collectors.toList());
+            for (PermissionVo permission : collect) {
                 map.put(permission.getPath(), new org.springframework.security.access.SecurityConfig(permission.getPermissionTag()));
             }
             return map;

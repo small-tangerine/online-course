@@ -4,10 +4,7 @@ import cn.hutool.core.lang.Validator;
 import cn.hutool.core.text.CharSequenceUtil;
 import com.course.admin.config.security.JwtUtil;
 import com.course.admin.config.security.SecurityUtils;
-import com.course.api.entity.Role;
-import com.course.api.entity.Teachers;
-import com.course.api.entity.User;
-import com.course.api.entity.UserToken;
+import com.course.api.entity.*;
 import com.course.api.enums.LoginTypeEnum;
 import com.course.api.enums.RoleTypeEnum;
 import com.course.api.vo.LoginVo;
@@ -15,28 +12,25 @@ import com.course.api.vo.admin.PermissionVo;
 import com.course.api.vo.server.UserVo;
 import com.course.commons.annotations.Forget;
 import com.course.commons.annotations.Login;
+import com.course.commons.enums.PermissionTypeEnum;
 import com.course.commons.exception.MyAuthenticationException;
 import com.course.commons.model.Response;
 import com.course.commons.utils.Assert;
 import com.course.component.component.UserComponent;
-import com.course.service.service.RoleService;
-import com.course.service.service.TeachersService;
-import com.course.service.service.UserService;
-import com.course.service.service.UserTokenService;
+import com.course.service.service.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import ma.glasnost.orika.MapperFacade;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * 用户控制器
@@ -59,6 +53,7 @@ public class AccountController {
     private final UserComponent userComponent;
     private final RoleService roleService;
     private final TeachersService teachersService;
+    private final PermissionService permissionService;
 
     /**
      * 登录接口
@@ -111,6 +106,12 @@ public class AccountController {
             map.setTeacherInfo(teacherInfo)
                     .setAvatar(teacherInfo.getAvatar());
         }
+        List<Permission> userPermission = permissionService.findUserPermission(userId);
+        Set<String> collect = userPermission.stream().filter(item -> PermissionTypeEnum.BUTTON.equalsType(item.getTypeId()))
+                .map(Permission::getPermissionTag)
+                .filter(StringUtils::isNotBlank)
+                .collect(Collectors.toSet());
+        map.setRoles(collect);
         return Response.ok(map);
     }
 

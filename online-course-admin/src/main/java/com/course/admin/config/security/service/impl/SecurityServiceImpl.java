@@ -5,7 +5,6 @@ import com.course.admin.config.security.model.LoginUser;
 import com.course.admin.config.security.service.SecurityService;
 import com.course.api.entity.Permission;
 import com.course.api.entity.User;
-import com.course.api.vo.admin.PermissionVo;
 import com.course.service.service.PermissionService;
 import com.course.service.service.UserRoleService;
 import com.course.service.service.UserService;
@@ -52,13 +51,6 @@ public class SecurityServiceImpl implements SecurityService {
         return new LoginUser(user, permissionTag, roleId);
     }
 
-    @Override
-    public List<PermissionVo> queryAllPermissionResource() {
-        List<Permission> allWithChildren = permissionService.findAllWithChildren();
-        return allWithChildren.stream()
-                .map(item -> mapperFacade.map(item, PermissionVo.class))
-                .collect(Collectors.toList());
-    }
 
     private Set<String> listPermissionTagByRoleId(Integer roleId) {
         List<Permission> permissionList = permissionService.findByRoleId(roleId);

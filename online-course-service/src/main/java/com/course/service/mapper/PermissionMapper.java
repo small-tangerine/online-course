@@ -4,6 +4,7 @@ import com.course.api.entity.Permission;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -19,4 +20,6 @@ public interface PermissionMapper extends BaseMapper<Permission> {
     List<Permission> findByRoleId(@Param("roleId") Integer roleId);
 
     List<Permission> findUserPermission(@Param("userId") Integer userId);
+
+    List<Permission> findByRoleIds(@Param("list") Collection<Integer> roleIds);
 }

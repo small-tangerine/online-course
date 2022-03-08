@@ -3,6 +3,7 @@ package com.course.component.cache;
 import cn.hutool.core.util.ObjectUtil;
 import com.course.api.entity.Permission;
 import com.course.api.vo.admin.PermissionVo;
+import com.course.commons.enums.PermissionTypeEnum;
 import com.course.commons.utils.Assert;
 import com.course.service.service.PermissionService;
 import com.google.common.cache.Cache;
@@ -54,17 +55,6 @@ public class PermissionCache {
     }
 
     /**
-     * 通过id获取数据
-     */
-    public PermissionVo getById(Integer id) {
-        if (Objects.isNull(id)) {
-            return null;
-        }
-        loadData();
-        return ObjectUtil.cloneByStream(permissionVoCache.getIfPresent(id));
-    }
-
-    /**
      * 缓存过期
      */
     public void expireAll() {
@@ -82,14 +72,12 @@ public class PermissionCache {
             if (Objects.nonNull(permissionVoCache.getIfPresent(PERMISSION_KEY))) {
                 return;
             }
-            List<Permission> allWithChildren = permissionService.findAllWithChildren();
+            List<Permission> allWithChildren = permissionService.findAllWithChildren(PermissionTypeEnum.BUTTON);
             List<PermissionVo> permissionVoList = allWithChildren.stream()
                     .map(item -> mapperFacade.map(item, PermissionVo.class))
                     .collect(Collectors.toList());
             List<PermissionVo> permissionVos = permissionVoList.stream()
                     .peek(permissionVo -> permissionVoCache.put(permissionVo.getId(), permissionVo))
-                    //筛选出权限
-                    .filter(permissionVo -> Objects.equals(0, permissionVo.getParentId()))
                     .collect(Collectors.toList());
             //权限
             permissionVoCache.put(PERMISSION_KEY, new PermissionVo().setChildren(permissionVos));
@@ -97,14 +85,4 @@ public class PermissionCache {
         }
     }
 
-    /**
-     * 获得标题
-     */
-    public String getPermissionTagById(Integer id) {
-        PermissionVo permissionVo = getById(id);
-        if (Objects.nonNull(permissionVo)) {
-            return permissionVo.getPermissionTag();
-        }
-        return "";
-    }
 }

@@ -2,8 +2,11 @@ package com.course.service.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.course.api.entity.Permission;
+import com.course.commons.enums.PermissionTypeEnum;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -15,9 +18,11 @@ import java.util.List;
  */
 public interface PermissionService extends IService<Permission> {
 
-    List<Permission> findAllWithChildren();
+    List<Permission> findAllWithChildren(PermissionTypeEnum permissionTypeEnum);
 
     List<Permission> findByRoleId(Integer roleId);
 
     List<Permission> findUserPermission(Integer userId);
+
+    Map<Integer,Permission> findByRoleIds(Collection<Integer> roleIds);
 }

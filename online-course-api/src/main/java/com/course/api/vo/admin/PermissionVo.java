@@ -5,6 +5,7 @@ import com.google.common.collect.Maps;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -20,8 +21,9 @@ import java.util.Objects;
  */
 @Data
 @Accessors(chain = true)
-public class PermissionVo {
+public class PermissionVo implements Serializable {
 
+    private static final long serialVersionUID = 1L;
     /**
      * 菜单编号
      */
@@ -36,6 +38,7 @@ public class PermissionVo {
      * 菜单名称
      */
     private String title;
+    private String name;
 
     /**
      * 菜单类型 1目录 2菜单 3按钮
@@ -98,17 +101,20 @@ public class PermissionVo {
 
     private Boolean hidden;
 
-    public PermissionVo setHidden() {
-        this.hidden = YesOrNoEnum.YES.equalsStatus(this.isHidden);
+    public PermissionVo setIsHidden(Integer hidden) {
+        this.isHidden = hidden;
+        this.hidden = YesOrNoEnum.YES.equalsStatus(hidden);
         return this;
     }
 
-    public PermissionVo setMeta() {
+    public PermissionVo setTypeId(Integer typeId) {
+        this.typeId = typeId;
         Map<String, Object> metaMap = Maps.newHashMapWithExpectedSize(2);
-        if (Objects.nonNull(this.typeId) && !Objects.equals(3, this.typeId)) {
+        if (Objects.nonNull(this.typeId) && !Objects.equals(3, typeId)) {
             metaMap.put("title", this.enTitle);
             metaMap.put("icon", this.icon);
             this.meta = metaMap;
+            this.name = this.enTitle;
         }
         return this;
     }
