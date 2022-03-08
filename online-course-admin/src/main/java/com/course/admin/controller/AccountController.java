@@ -142,23 +142,15 @@ public class AccountController {
                 || Validator.isMobile(loginVo.getUsername()), "请输入正确的手机号/邮箱");
 
         User user = userService.findByUsername(loginVo.getUsername());
-        Assert.notNull(user, "该账号不存在,请注册");
+        Assert.notNull(user, "该账号不存在,请联系管理员");
         Assert.equals(loginVo.getCheckPassword(), loginVo.getPassword(), "两次密码输入不一致");
         Assert.isFalse(passwordEncoder.matches(loginVo.getPassword(), user.getPassword()),
                 "新密码不能与旧密码相同");
-        UserVo map = mapperFacade.map(user, UserVo.class);
-        // 生成token
-        UserToken userToken = generateToken(user);
-        UserToken loginToken = userTokenService.findByUserIdAndType(user.getId(), LoginTypeEnum.BACKEND.getTypeId());
-        if (Objects.nonNull(loginToken)) {
-            userToken.setId(loginToken.getId());
-        }
+
         // 更新登录状态
         User updatePassword = new User().setId(user.getId()).setPassword(passwordEncoder.encode(loginVo.getPassword()));
-        userComponent.updatePassword(updatePassword, userToken);
-        map.setPassword(null);
-        map.setToken(userToken.getToken());
-        return Response.ok(map);
+        userService.updateById(updatePassword);
+        return Response.ok("重置密码成功");
     }
 
     /**

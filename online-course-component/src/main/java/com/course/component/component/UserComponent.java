@@ -8,6 +8,7 @@ import com.course.commons.constant.CommonConstant;
 import com.course.commons.enums.SexEnum;
 import com.course.commons.utils.IdUtils;
 import com.course.api.entity.UserToken;
+import com.course.component.cache.UserPermissionCache;
 import com.course.service.service.PermissionService;
 import com.course.service.service.UserService;
 import com.course.service.service.UserTokenService;
@@ -18,7 +19,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * 用户组件
@@ -35,6 +38,7 @@ public class UserComponent {
     private final UserService userService;
     private final UserTokenService userTokenService;
     private final PermissionService permissionService;
+    private final UserPermissionCache userPermissionCache;
 
     /**
      * 封装用户注册默认信息
@@ -75,6 +79,10 @@ public class UserComponent {
     }
 
     public List<PermissionVo> wrapUserPermissionRouters(Integer userId) {
-        return null;
+        PermissionVo byId = userPermissionCache.getById(userId);
+        if (Objects.isNull(byId)) {
+            return Collections.emptyList();
+        }
+        return byId.getChildren();
     }
 }
