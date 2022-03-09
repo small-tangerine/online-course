@@ -39,7 +39,7 @@ import java.util.Objects;
  * @author panguangming
  * @since 2022-03-03
  */
-@RequestMapping("/user")
+@RequestMapping("/user-info")
 @RestController
 @RequiredArgsConstructor
 @Validated
