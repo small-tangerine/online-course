@@ -16,10 +16,9 @@ public enum RoleTypeEnum {
     /**
      * 是或者不是
      */
-    SUPER_ADMIN(1, "超级管理员"),
-    ADMIN(2, "管理员"),
-    TEACHER(3, "讲师"),
-    STUDENT(4, "学生");
+    ADMIN(1, "管理员"),
+    TEACHER(2, "讲师"),
+    STUDENT(3, "学生");
 
     @Getter
     private final Integer type;
@@ -51,5 +50,14 @@ public enum RoleTypeEnum {
 
     public boolean equalsStatus(Integer status) {
         return this.type.equals(status);
+    }
+
+    public static boolean containsStatus(Integer typeId) {
+        for (RoleTypeEnum typeEnum : RoleTypeEnum.values()) {
+            if (Objects.equals(typeEnum.getType(), typeId)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

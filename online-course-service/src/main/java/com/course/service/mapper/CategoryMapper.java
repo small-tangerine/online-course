@@ -2,6 +2,7 @@ package com.course.service.mapper;
 
 import com.course.api.entity.Category;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * <p>
@@ -13,4 +14,5 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 public interface CategoryMapper extends BaseMapper<Category> {
 
+    Integer findMaxDisplayOrder(@Param("parentId") Integer parentId);
 }

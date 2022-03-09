@@ -1,10 +1,13 @@
 package com.course.service.service.impl;
 
 import com.course.api.entity.User;
+import com.course.commons.model.Paging;
 import com.course.service.mapper.UserMapper;
 import com.course.service.service.UserService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
+
+import java.util.Map;
 
 /**
  * <p>
@@ -29,5 +32,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public User findAdminByUsername(String username) {
         return baseMapper.findAdminByUsername(username);
+    }
+
+    @Override
+    public void findByMap(Paging<User> paging, Map<String, Object> map) {
+        baseMapper.finByMap(paging,map);
     }
 }

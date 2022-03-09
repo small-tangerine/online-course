@@ -1,11 +1,11 @@
-package com.course.api.vo.server;
+package com.course.api.vo.admin;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Collection;
 
 /**
  * <p>
@@ -17,9 +17,10 @@ import java.util.List;
  */
 @Data
 @Accessors(chain = true)
-public class CategoryVo  implements Serializable {
+public class CategoryVo implements Serializable {
 
     private static final long serialVersionUID = 1L;
+
     /**
      * ID
      */
@@ -29,8 +30,7 @@ public class CategoryVo  implements Serializable {
      * 父级ID
      */
     private Integer parentId;
-    private String  parentTitle;
-    private Integer parentDisplayOrder;
+
     /**
      * 分类名称
      */
@@ -44,24 +44,7 @@ public class CategoryVo  implements Serializable {
     /**
      * 创建时间
      */
-
     private LocalDateTime createdAt;
 
-    /**
-     * 创建人
-     */
-    private Integer createdBy;
-
-    /**
-     * 更新时间
-     */
-    private LocalDateTime updatedAt;
-
-    /**
-     * 更新人
-     */
-    private Integer updatedBy;
-
-
-    private List<CategoryVo> children;
+    private Collection<Integer> ids;
 }

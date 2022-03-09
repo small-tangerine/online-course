@@ -46,6 +46,11 @@ public class SecurityUtils {
         return Objects.nonNull(loginUser) ? loginUser.getId() : null;
     }
 
+    public static Integer getRoleId() {
+        LoginUser loginUser = getLoginUser();
+        return Objects.nonNull(loginUser) ? loginUser.getUserRole() : null;
+    }
+
     /**
      * 获取Authentication
      */

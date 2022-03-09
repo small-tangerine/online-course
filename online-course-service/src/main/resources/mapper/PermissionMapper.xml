@@ -63,7 +63,7 @@
                     role_permission rp
                 WHERE
                     rp.permission_id = p.id
-                  AND EXISTS ( SELECT role_id, user_id FROM user_role ur WHERE ur.user_id = #{userId} )
+                  AND EXISTS ( SELECT role_id, user_id FROM user_role ur WHERE ur.role_id = rp.role_id AND  ur.user_id = #{userId} )
             )
     </select>
     <select id="findByRoleIds" resultMap="BaseResultMap">

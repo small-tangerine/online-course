@@ -51,8 +51,49 @@
                 select role_id, user_id
                 from user_role ur
                 where ur.user_id = u.id
-                    and ur.role_id in (1,2,3)
+                    and ur.role_id !=3
             )
+    </select>
+    <select id="finByMap" resultMap="BaseResultMap">
+        SELECT
+            id,
+            uid,
+            username,
+            mobile,
+            email,
+            nickname,
+            avatar,
+            job,
+            learn_hour,
+            sex,
+            city,
+            signature,
+            created_at,
+            created_by,
+            updated_at,
+            updated_by
+        FROM
+            `user` u
+        WHERE
+            EXISTS (
+                    SELECT
+                        role_id,
+                        user_id
+                    FROM
+                        user_role ur
+                    WHERE
+                        ur.user_id = u.id
+                      <if test="map.role_id !=null ">
+                          AND role_id=#{map.keyword}
+                      </if>
+            )
+             <if test="map.keyword !=null and map.keyword !=''">
+                and (username like concat('%',#{map.keyword},'%')
+                    or mobile like concat('%',#{map.keyword},'%')
+                    or email like concat('%',#{map.keyword},'%')
+                    or nickname like concat('%',#{map.keyword},'%'))
+            </if>
+        order by u.id desc
     </select>
 
 </mapper>

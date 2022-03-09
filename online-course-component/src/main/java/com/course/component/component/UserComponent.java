@@ -1,7 +1,11 @@
 package com.course.component.component;
 
 import cn.hutool.core.lang.Validator;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.course.api.entity.User;
+import com.course.api.entity.UserRole;
+import com.course.api.enums.RoleTypeEnum;
 import com.course.api.vo.LoginVo;
 import com.course.api.vo.admin.PermissionVo;
 import com.course.commons.constant.CommonConstant;
@@ -10,6 +14,7 @@ import com.course.commons.utils.IdUtils;
 import com.course.api.entity.UserToken;
 import com.course.component.cache.UserPermissionCache;
 import com.course.service.service.PermissionService;
+import com.course.service.service.UserRoleService;
 import com.course.service.service.UserService;
 import com.course.service.service.UserTokenService;
 import lombok.RequiredArgsConstructor;
@@ -39,6 +44,7 @@ public class UserComponent {
     private final UserTokenService userTokenService;
     private final PermissionService permissionService;
     private final UserPermissionCache userPermissionCache;
+    private final UserRoleService userRoleService;
 
     /**
      * 封装用户注册默认信息
@@ -69,6 +75,12 @@ public class UserComponent {
     public void saveUser(User defaultUser, UserToken userToken) {
         userService.save(defaultUser);
         userToken.setUserId(defaultUser.getId());
+
+        UserRole userRole = new UserRole().setUserId(defaultUser.getId())
+                .setRoleId(RoleTypeEnum.STUDENT.getType())
+                .setCreatedAt(LocalDateTime.now()).setCreatedBy(defaultUser.getId())
+                .setUpdatedAt(LocalDateTime.now()).setUpdatedBy(defaultUser.getId());
+        userRoleService.save(userRole);
         userTokenService.save(userToken);
     }
 
@@ -84,5 +96,13 @@ public class UserComponent {
             return Collections.emptyList();
         }
         return byId.getChildren();
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void updateUsrRole(UserRole updateUserRole) {
+        LambdaQueryWrapper<UserRole> query = Wrappers.lambdaQuery();
+        query.eq(UserRole::getUserId, updateUserRole.getUserId());
+        userRoleService.remove(query);
+        userRoleService.save(updateUserRole);
     }
 }

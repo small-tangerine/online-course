@@ -18,5 +18,12 @@
     <sql id="Base_Column_List">
         id, parent_id, title, display_order, created_at, created_by, updated_at, updated_by
     </sql>
+    <select id="findMaxDisplayOrder" resultType="java.lang.Integer">
+        select
+            max(display_order)
+        from category
+        where
+            parent_id = #{parentId}
+    </select>
 
 </mapper>

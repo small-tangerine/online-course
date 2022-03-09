@@ -68,7 +68,7 @@ public class AccountController {
         if (Objects.isNull(user)) {
             log.error(CharSequenceUtil.format("用户【{}】不存在", loginVo.getUsername()));
             //对用户隐藏不存在 抛出账号或密码的异常
-            throw new MyAuthenticationException("用户帐号或密码错误");
+            throw new MyAuthenticationException("用户不存在");
         }
         Assert.isTrue(passwordEncoder.matches(loginVo.getPassword(), user.getPassword()),
                 "用户帐号或密码错误");

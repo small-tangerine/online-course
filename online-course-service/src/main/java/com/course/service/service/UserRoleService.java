@@ -1,7 +1,10 @@
 package com.course.service.service;
 
-import com.course.api.entity.UserRole;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.course.api.entity.UserRole;
+
+import java.util.Collection;
+import java.util.Map;
 
 /**
  * <p>
@@ -14,4 +17,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
 public interface UserRoleService extends IService<UserRole> {
 
     Integer getIdByUserId(Integer id);
+
+    Map<Integer, Integer> findMapByUserIds(Collection<Integer> userIds);
 }

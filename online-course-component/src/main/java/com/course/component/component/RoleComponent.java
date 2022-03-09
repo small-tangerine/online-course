@@ -1,10 +1,14 @@
 package com.course.component.component;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.course.api.entity.RolePermission;
+import com.course.api.entity.UserRole;
+import com.course.api.enums.RoleTypeEnum;
 import com.course.service.service.RolePermissionService;
 import com.course.service.service.RoleService;
+import com.course.service.service.UserRoleService;
 import com.google.common.collect.ImmutableMap;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +30,7 @@ import java.util.List;
 public class RoleComponent {
     private final RolePermissionService rolePermissionService;
     private final RoleService roleService;
+    private final UserRoleService userRoleService;
 
     @Transactional(rollbackFor = Exception.class)
     public void updateRolePermission(Integer id, List<RolePermission> collect) {
@@ -39,5 +44,9 @@ public class RoleComponent {
         LambdaQueryWrapper<RolePermission> remove = Wrappers.lambdaQuery();
         remove.in(RolePermission::getRoleId, resourceCollect);
         rolePermissionService.remove(remove);
+        LambdaUpdateWrapper<UserRole> update = Wrappers.lambdaUpdate();
+        update.in(UserRole::getRoleId, resourceCollect)
+                .set(UserRole::getRoleId, RoleTypeEnum.STUDENT.getType());
+        userRoleService.update(update);
     }
 }

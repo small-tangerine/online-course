@@ -104,5 +104,5 @@ public class CommonConstant {
             "pdf"
     );
 
-    public static  final String DEFAULT_AVATAR="https://littletangerine-1257629157.cos.ap-guangzhou.myqcloud.com/avatar/default.png";
+    public static  final String DEFAULT_AVATAR="http://localhost/image/default.png";
 }

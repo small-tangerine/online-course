@@ -87,8 +87,8 @@ public class RoleController {
         Assert.notBlank(title, "角色名称不能为空");
         Role byId = roleService.getById(id);
         Assert.notNull(byId, "角色不存在");
-        if (RoleTypeEnum.SUPER_ADMIN.equalsStatus(id)) {
-            Assert.equals(byId.getTitle(), title, "角色：超级管理员不允许修改名称");
+        if (RoleTypeEnum.containsStatus(id)) {
+            Assert.equals(byId.getTitle(), title, "基础角色不允许修改名称");
         }
 
         LambdaQueryWrapper<Role> query = Wrappers.lambdaQuery();
@@ -143,7 +143,7 @@ public class RoleController {
         if (CollectionUtils.isEmpty(resourceCollect)) {
             return ResponseHelper.deleteSuccess();
         }
-        resourceCollect.forEach(item -> Assert.isFalse(RoleTypeEnum.SUPER_ADMIN.equalsStatus(item), "角色：超级管理员禁止删除"));
+        resourceCollect.forEach(item -> Assert.isFalse(RoleTypeEnum.containsStatus(item), "基础角色禁止删除"));
         roleComponent.removeRole(resourceCollect);
         return ResponseHelper.deleteSuccess();
     }
