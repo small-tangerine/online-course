@@ -3,6 +3,7 @@ package com.course.component.component;
 import cn.hutool.core.lang.Validator;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.course.api.entity.Teachers;
 import com.course.api.entity.User;
 import com.course.api.entity.UserRole;
 import com.course.api.enums.RoleTypeEnum;
@@ -13,10 +14,7 @@ import com.course.commons.enums.SexEnum;
 import com.course.commons.utils.IdUtils;
 import com.course.api.entity.UserToken;
 import com.course.component.cache.UserPermissionCache;
-import com.course.service.service.PermissionService;
-import com.course.service.service.UserRoleService;
-import com.course.service.service.UserService;
-import com.course.service.service.UserTokenService;
+import com.course.service.service.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -45,6 +43,7 @@ public class UserComponent {
     private final PermissionService permissionService;
     private final UserPermissionCache userPermissionCache;
     private final UserRoleService userRoleService;
+    private final TeachersService teachersService;
 
     /**
      * 封装用户注册默认信息
@@ -104,5 +103,18 @@ public class UserComponent {
         query.eq(UserRole::getUserId, updateUserRole.getUserId());
         userRoleService.remove(query);
         userRoleService.save(updateUserRole);
+        // 角色是否讲师 用户讲师信息是否存在
+        Integer roleId = updateUserRole.getRoleId();
+        Integer userId = updateUserRole.getUpdatedBy();
+        if (RoleTypeEnum.TEACHER.equalsStatus(roleId)) {
+            Teachers byUserId = teachersService.getByUserId(userId);
+            if (Objects.isNull(byUserId)) {
+                Teachers saveTeacher = new Teachers().setUserId(updateUserRole.getUserId())
+                        .setAvatar(CommonConstant.DEFAULT_AVATAR)
+                        .setUpdatedBy(userId).setUpdatedAt(LocalDateTime.now())
+                        .setCreatedAt(LocalDateTime.now()).setCreatedBy(userId);
+                teachersService.save(saveTeacher);
+            }
+        }
     }
 }

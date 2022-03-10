@@ -6,6 +6,7 @@ import lombok.experimental.Accessors;
 
 import javax.validation.constraints.Pattern;
 import java.time.LocalDateTime;
+import java.util.Collection;
 
 /**
  * <p>
@@ -96,4 +97,5 @@ public class UserVo {
     private Integer roleId;
     private String roleTitle;
 
+    private Collection<Integer> ids;
 }

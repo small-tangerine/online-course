@@ -4,23 +4,20 @@ import cn.hutool.core.lang.Validator;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.course.admin.config.security.SecurityUtils;
+import com.course.api.entity.Teachers;
 import com.course.api.entity.User;
-import com.course.api.entity.UserToken;
-import com.course.api.enums.LoginTypeEnum;
 import com.course.api.vo.LoginVo;
 import com.course.api.vo.admin.UserVo;
 import com.course.commons.annotations.AccountInfo;
 import com.course.commons.enums.SexEnum;
-import com.course.commons.enums.YesOrNoEnum;
 import com.course.commons.model.Response;
 import com.course.commons.utils.Assert;
 import com.course.commons.utils.ResponseHelper;
+import com.course.service.service.TeachersService;
 import com.course.service.service.UserService;
-import com.course.service.service.UserTokenService;
 import com.google.common.collect.ImmutableMap;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import ma.glasnost.orika.MapperFacade;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.annotation.Validated;
@@ -47,9 +44,8 @@ import java.util.Objects;
 public class UserInfoController {
 
     private final UserService userService;
-    private final MapperFacade mapperFacade;
     private final PasswordEncoder passwordEncoder;
-    private final UserTokenService userTokenService;
+    private final TeachersService teachersService;
 
     @PostMapping("/update-base-info")
     public Response updateBaseInfo(@RequestBody UserVo userVo) {
@@ -66,58 +62,23 @@ public class UserInfoController {
     }
 
     @PostMapping("/update-teacher-info")
-    public Response updateAccountInfo(@RequestBody @Validated UserVo userVo) {
-        Assert.isTrue(Validator.isMobile(userVo.getMobile()), "请输入正确的手机号码");
+    public Response updateAccountInfo(@RequestBody Teachers teachers) {
         Integer userId = SecurityUtils.getUserId();
-        User user = userService.getById(userId);
-        String username = SecurityUtils.getUsername();
-
-        // 校验手机、邮箱是否已经绑定其他账号6
-        checkMobileAndEmail(userVo.getMobile(), userVo.getEmail(), user);
-        if (!Objects.equals(username, user.getUsername())) {
-            UserToken userToken = userTokenService.findByUserIdAndType(userId, LoginTypeEnum.FRONT.getTypeId());
-            if (Objects.nonNull(userToken)) {
-                userTokenService.removeById(userToken.getUserId());
-            }
-            // 更新了账号重新登录
-            return ResponseHelper.updateSuccess(ImmutableMap.of("isUpdateUsername",
-                    YesOrNoEnum.YES.getValue()));
-        }
-
-        User updateBaseInfo = new User().setId(userId)
-                .setMobile(userVo.getMobile())
-                .setEmail(userVo.getEmail())
-                .setUpdatedBy(userId)
-                .setUpdatedAt(LocalDateTime.now());
-
-        // 更新密码
-        boolean isUpdate = false;
-        if (StringUtils.isNotBlank(userVo.getPassword())) {
-            Assert.notBlank(userVo.getCheckPassword(), "请输入确认密码");
-            Assert.isFalse(passwordEncoder.matches(userVo.getPassword(), user.getPassword()),
-                    "新密码不能与旧密码相同");
-            Assert.equals(userVo.getCheckPassword(), userVo.getPassword(), "两次密码输入不一致");
-            updateBaseInfo.setPassword(passwordEncoder.encode(userVo.getPassword()));
-            isUpdate = true;
-        }
-
-        userService.updateById(updateBaseInfo);
-
-        // 更新了密码同样重新登录
-        if (isUpdate) {
-            UserToken userToken = userTokenService.findByUserIdAndType(userId, LoginTypeEnum.FRONT.getTypeId());
-            if (Objects.nonNull(userToken)) {
-                userTokenService.removeById(userToken.getUserId());
-            }
-            // 更新了账号重新登录
-            return ResponseHelper.updateSuccess(ImmutableMap.of("isUpdateUsername",
-                    YesOrNoEnum.YES.getValue()));
-        }
-        user.setEmail(userVo.getEmail())
-                .setMobile(userVo.getMobile())
-                .setPassword(null);
-
-        return ResponseHelper.updateSuccess(mapperFacade.map(user, UserVo.class));
+        String name = StringUtils.trim(teachers.getName());
+        Assert.notBlank(name, "讲师名称不能为空");
+        Teachers byUserId = teachersService.getByUserId(userId);
+        Assert.notNull(byUserId, "讲师信息不存在");
+        LambdaQueryWrapper<Teachers> query = Wrappers.lambdaQuery();
+        query.eq(Teachers::getName, name)
+                .ne(Teachers::getId,byUserId.getId());
+        int count = teachersService.count(query);
+        Assert.equals(0, count, "该讲师名称已被占用");
+        Teachers updateTeacher = new Teachers().setId(byUserId.getId()).setName(name)
+                .setJob(teachers.getJob())
+                .setIntroduction(teachers.getIntroduction())
+                .setUpdatedAt(LocalDateTime.now()).setUpdatedBy(userId);
+        teachersService.updateById(updateTeacher);
+        return ResponseHelper.updateSuccess();
     }
 
     /**
