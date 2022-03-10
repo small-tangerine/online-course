@@ -34,6 +34,8 @@ public class Course implements Serializable {
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
+    @TableField("alias")
+    private String alias;
     /**
      * 标题
      */
@@ -105,6 +107,18 @@ public class Course implements Serializable {
      */
     @TableField("learn_persons")
     private Integer learnPersons;
+
+    /**
+     * 审核状态 0未审核 1审核通过 2审核不通过
+     */
+    @TableField("audit_status")
+    private Integer auditStatus;
+
+    /**
+     * 审核备注
+     */
+    @TableField("audit_notice")
+    private String auditNotice;
 
     /**
      * 创建时间

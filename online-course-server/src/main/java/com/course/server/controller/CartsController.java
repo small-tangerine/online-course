@@ -6,9 +6,11 @@ import com.course.api.entity.Carts;
 import com.course.api.entity.Course;
 import com.course.api.vo.server.CartsVo;
 import com.course.commons.enums.CourseTypeEnum;
+import com.course.commons.enums.StatusEnum;
 import com.course.commons.model.Paging;
 import com.course.commons.model.Response;
 import com.course.commons.utils.Assert;
+import com.course.commons.utils.IdUtils;
 import com.course.commons.utils.ResponseHelper;
 import com.course.server.config.security.SecurityUtils;
 import com.course.service.service.CartsService;
@@ -71,6 +73,8 @@ public class CartsController {
         // 课程是否有效 是否付费课程
         Course course = courseService.getById(courseId);
         Assert.notNull(course, "课程不存在");
+        Assert.isTrue(StatusEnum.SUCCESS.equalsStatus(course.getAuditStatus()),
+                "课程不存在");
         Assert.isTrue(CourseTypeEnum.UN_FREE.equalsStatus(course.getType()), "该课程是免费课程,无需购买");
         // 校验是否已经在购物车了
         Carts carts = cartsService.getByUserIdAndCourseId(userId, courseId);
@@ -86,5 +90,9 @@ public class CartsController {
                 .setUpdatedAt(LocalDateTime.now()).setUpdatedBy(userId);
         cartsService.save(createCarts);
         return Response.ok("添加成功");
+    }
+
+    public static void main(String[] args) {
+        System.out.println(IdUtils.uuid());
     }
 }

@@ -5,6 +5,7 @@
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.course.api.entity.Course">
         <id column="id" property="id" />
+        <result column="alias" property="alias"/>
         <result column="title" property="title" />
         <result column="introduction" property="introduction" />
         <result column="bg_img" property="bgImg" />
@@ -17,6 +18,8 @@
         <result column="discount_price" property="discountPrice" />
         <result column="is_finish" property="isFinish" />
         <result column="learn_persons" property="learnPersons" />
+        <result column="audit_status" property="auditStatus" />
+        <result column="audit_notice" property="auditNotice" />
         <result column="created_at" property="createdAt" />
         <result column="created_by" property="createdBy" />
         <result column="updated_at" property="updatedAt" />
@@ -25,7 +28,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, title, introduction, bg_img, banner, tip, learn_what, type, price, is_discount, discount_price, is_finish, learn_persons, created_at, created_by, updated_at, updated_by
+        id,alias, title, introduction, bg_img, banner, tip, learn_what, type, price, is_discount, discount_price, is_finish, learn_persons, audit_status, audit_notice, created_at, created_by, updated_at, updated_by
     </sql>
 
 </mapper>
