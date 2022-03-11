@@ -11,7 +11,6 @@ import com.course.commons.utils.Assert;
 import com.course.service.service.UserTokenService;
 import io.jsonwebtoken.SignatureException;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -54,10 +53,6 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
                                     FilterChain chain) throws ServletException, IOException {
         // 进入校验token
         String authToken = request.getHeader(AUTH_HEADER);
-        if (StringUtils.isBlank(authToken)){
-            chain.doFilter(request,response);
-            return;
-        }
         try {
             //通过token获取用信息
             String username = jwtUtil.getUserNameFromToken(authToken);

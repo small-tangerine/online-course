@@ -2,13 +2,13 @@ package com.course.server.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.course.api.entity.Orders;
-import com.course.api.entity.OrdersDetail;
+import com.course.api.entity.*;
 import com.course.api.vo.server.CartsVo;
 import com.course.api.vo.server.OrdersDetailVo;
 import com.course.api.vo.server.OrdersVo;
 import com.course.commons.enums.PayStatusEnum;
 import com.course.commons.enums.PayTypeEnum;
+import com.course.commons.enums.RechargeTypeEnum;
 import com.course.commons.enums.YesOrNoEnum;
 import com.course.commons.model.Paging;
 import com.course.commons.model.Response;
@@ -17,8 +17,7 @@ import com.course.commons.utils.IdUtils;
 import com.course.commons.utils.ResponseHelper;
 import com.course.component.component.OrdersComponent;
 import com.course.server.config.security.SecurityUtils;
-import com.course.service.service.OrdersDetailService;
-import com.course.service.service.OrdersService;
+import com.course.service.service.*;
 import com.google.common.collect.ImmutableMap;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -162,7 +161,7 @@ public class OrdersController {
         // 订单
         Orders orders = new Orders().setCode(IdUtils.orderId())
                 .setUserId(userId)
-                .setExpiredAt(LocalDateTime.now().minusHours(12L))
+                .setExpiredAt(LocalDateTime.now().plusHours(12L))
                 .setUpdatedAt(LocalDateTime.now()).setUpdatedBy(userId)
                 .setCreatedAt(LocalDateTime.now()).setCreatedBy(userId);
         // 订单详情
@@ -173,9 +172,78 @@ public class OrdersController {
                 .setTitle(item.getTitle())
                 .setPrice(item.getPrice())
                 .setCreatedAt(LocalDateTime.now()).setCreatedBy(userId)).collect(Collectors.toList());
+        // 总金额
+        BigDecimal cost = details.stream().map(item -> {
+            if (YesOrNoEnum.YES.equalsStatus(item.getIsDiscount())) {
+                return item.getDiscountPrice();
+            }
+            return item.getPrice();
+        }).reduce(BigDecimal.ZERO, BigDecimal::add);
+        orders.setCost(cost);
         // 删除购物车元素
         Set<Integer> cartsIds = cartsList.stream().map(CartsVo::getId).collect(Collectors.toSet());
         ordersComponent.createOrder(orders, details, cartsIds);
         return Response.ok(ImmutableMap.of("code", orders.getCode()));
+    }
+
+    @PostMapping("/pay")
+    public Response orderPay(@RequestBody OrdersVo ordersVo) {
+        Integer userId = SecurityUtils.getUserId();
+        String code = ordersVo.getCode();
+        Assert.notBlank(code, "订单编号不能为空");
+        Integer payType = ordersVo.getPayType();
+        Assert.isTrue(PayTypeEnum.containsStatus(payType), "请选择正确的支付方式，余额、支付宝、微信");
+        Orders orderByCode = ordersService.getOrderByCode(code);
+        Assert.notNull(orderByCode, "该订单不存在");
+        Assert.isFalse(PayStatusEnum.PAY.equalsStatus(orderByCode.getPayStatus()), "该订单已完成");
+        Assert.isTrue(Objects.equals(userId, orderByCode.getUserId()), "非法操作");
+        Assert.isFalse(PayStatusEnum.CANCEL.equalsStatus(orderByCode.getPayStatus()), "该订单已取消");
+
+        // 更新订单表
+        Orders updateOrders = new Orders().setId(orderByCode.getId()).setPayAt(LocalDateTime.now())
+                .setUpdatedAt(LocalDateTime.now()).setUpdatedBy(userId)
+                .setPayStatus(PayStatusEnum.PAY.getStatus()).setPayType(payType);
+
+        // 计算订单金额
+        List<OrdersDetail> detailList = ordersDetailService.listByOrderId(orderByCode.getId());
+        BigDecimal cost = detailList.stream().map(item -> {
+            if (YesOrNoEnum.YES.equalsStatus(item.getIsDiscount())) {
+                return item.getDiscountPrice();
+            }
+            return item.getPrice();
+        }).reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        Assert.equals(cost,orderByCode.getCost(),"订单异常支付失败,请联系管理员");
+
+        //recharge
+        Recharges recharges = null;
+        if (PayTypeEnum.BALANCE.equalsStatus(payType)) {
+            recharges = new Recharges().setAmount(cost)
+                    .setPayType(payType)
+                    .setActionType(RechargeTypeEnum.OUT.getType())
+                    .setUserId(userId).setRemark("订单支出，订单号：" + code)
+                    .setCreatedBy(userId).setCreatedAt(LocalDateTime.now());
+        }
+        // bill
+        List<Bills> billsList = detailList.stream().map(item -> {
+            Bills bills = new Bills().setPayType(payType).setCourseId(item.getCourseId())
+                    .setOrderCode(code).setTitle(item.getTitle()).setUserId(userId)
+                    .setCreatedAt(LocalDateTime.now()).setCreatedBy(userId);
+            if (YesOrNoEnum.YES.equalsStatus(item.getIsDiscount())) {
+                return bills.setCost(item.getDiscountPrice());
+            }
+            return bills.setCost(item.getPrice());
+        }).collect(Collectors.toList());
+
+        //user_course
+        List<UserCourse> userCourseList = detailList.stream()
+                .map(item -> new UserCourse().setCourseId(item.getCourseId()).setUserId(userId)
+                        .setCreatedAt(LocalDateTime.now()).setCreatedBy(userId)).collect(Collectors.toList());
+
+        // course learn_persons
+        Set<Integer> courseIds = detailList.stream().map(OrdersDetail::getCourseId).collect(Collectors.toSet());
+
+        ordersComponent.pay(updateOrders, recharges, billsList, userCourseList, courseIds);
+        return Response.ok("支付成功");
     }
 }

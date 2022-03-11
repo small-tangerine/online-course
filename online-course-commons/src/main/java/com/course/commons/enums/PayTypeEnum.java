@@ -52,4 +52,17 @@ public enum PayTypeEnum {
         }
         return null;
     }
+
+    public static boolean containsStatus(Integer typeId) {
+        for (PayTypeEnum typeEnum : PayTypeEnum.values()) {
+            if (Objects.equals(typeEnum.getType(), typeId)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean equalsStatus(Integer status) {
+        return this.type.equals(status);
+    }
 }

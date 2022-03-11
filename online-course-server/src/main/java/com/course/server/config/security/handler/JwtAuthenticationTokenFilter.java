@@ -2,18 +2,22 @@ package com.course.server.config.security.handler;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.course.api.entity.UserToken;
 import com.course.commons.enums.ResultCodeEnum;
 import com.course.commons.utils.Assert;
 import com.course.server.config.security.JwtUtil;
 import com.course.server.config.security.model.LoginUser;
-import com.course.api.entity.UserToken;
 import com.course.service.service.UserTokenService;
+import com.google.common.collect.ImmutableList;
 import io.jsonwebtoken.SignatureException;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.util.AntPathMatcher;
+import org.springframework.util.PathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -23,6 +27,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.rmi.AccessException;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -38,6 +43,8 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
     private final JwtUtil jwtUtil;
     private final UserTokenService userTokenService;
 
+    private static final List<String> WHITE_URL = ImmutableList.of("/course/list", "/home/recommend");
+
     public JwtAuthenticationTokenFilter(UserDetailsService userDetailsService, JwtUtil jwtUtil, UserTokenService userTokenService) {
         this.userDetailsService = userDetailsService;
         this.jwtUtil = jwtUtil;
@@ -52,6 +59,16 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
                                     FilterChain chain) throws ServletException, IOException {
         // 进入校验token
         String authToken = request.getHeader(AUTH_HEADER);
+        if (StringUtils.isBlank(authToken)) {
+            //白名单请求直接放行
+            PathMatcher pathMatcher = new AntPathMatcher();
+            for (String path : WHITE_URL) {
+                if (pathMatcher.match(path, request.getRequestURI())) {
+                    chain.doFilter(request, response);
+                    return;
+                }
+            }
+        }
         try {
             //通过token获取用信息
             String username = jwtUtil.getUserNameFromToken(authToken);

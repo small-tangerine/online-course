@@ -9,6 +9,7 @@
         <result column="user_id" property="userId" />
         <result column="pay_status" property="payStatus" />
         <result column="pay_type" property="payType" />
+        <result column="cost" property="cost"/>
         <result column="expired_at" property="expiredAt" />
         <result column="cancel_at" property="cancelAt" />
         <result column="pay_at" property="payAt" />
@@ -20,7 +21,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, code, user_id, pay_status, pay_type, expired_at, cancel_at, pay_at, created_at, created_by, updated_at, updated_by
+        id, code, user_id, pay_status, pay_type, cost, expired_at, cancel_at, pay_at, created_at, created_by, updated_at, updated_by
     </sql>
 
 </mapper>

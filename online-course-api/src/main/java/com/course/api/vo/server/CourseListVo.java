@@ -72,5 +72,7 @@ public class CourseListVo implements Serializable {
     private String introduction;
 
     private String avatar;
-    private Teachers teachers;
+    private Teachers teacher;
+
+    private Integer isBuy;
 }

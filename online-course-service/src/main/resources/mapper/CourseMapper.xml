@@ -30,5 +30,109 @@
     <sql id="Base_Column_List">
         id,alias, title, introduction, bg_img, banner, tip, learn_what, type, price, is_discount, discount_price, is_finish, learn_persons, audit_status, audit_notice, created_at, created_by, updated_at, updated_by
     </sql>
+    <update id="increaseByColumn">
+        update course
+            set  ${column} = ${column} + #{incr}
+        where id in <foreach collection="ids" item="item" open="(" separator="," close=")">#{item}</foreach>
+    </update>
+    <select id="listByParamsMap" resultMap="BaseResultMap">
+        SELECT
+            id,
+            alias,
+            title,
+            introduction,
+            banner,
+            type,
+            price,
+            is_discount,
+            discount_price,
+            learn_persons,
+            audit_status,
+            created_at
+        FROM
+            course c
+        WHERE
+            audit_status = 1
+          AND type = #{paramsMap.type}
+          <if test="paramsMap.keyword !='' and paramsMap.keyword != null">
+              AND (
+                  title LIKE CONCAT( '%', #{paramsMap.keyword}, '%' )
+                  OR introduction LIKE CONCAT( '%', #{paramsMap.keyword}, '%' )
+                  OR EXISTS (
+                    SELECT
+                        teacher_id,
+                        course_id
+                    FROM
+                        teacher_course tc
+                    WHERE
+                            tc.teacher_id IN (
+                            SELECT
+                                id
+                            FROM
+                                teachers t
+
+                                WHERE
+                                    t.`name` LIKE CONCAT( '%', #{paramsMap.keyword}, '%' )
+                                )
+                      AND tc.course_id = c.id))
+          </if>
+          <if test="(paramsMap.category !=null and paramsMap.label !=null) and (paramsMap.category !=0 or paramsMap.label !=0)">
+            AND EXISTS (
+                SELECT
+                    category_id,
+                    course_id
+                FROM
+                    course_category cc
+                WHERE
+                        cc.category_id IN (
+                        SELECT
+                            id
+                        FROM
+                            category cy
+                        <where>
+                            <if test="paramsMap.category == 0 or paramsMap.label != 0">
+                                and cy.id = #{paramsMap.label}
+                            </if>
+                            <if test="paramsMap.category != 0 and paramsMap.label == 0">
+                                and parent_id = #{paramsMap.category}
+                            </if>
+                            )
+                        </where>
+                    and cc.course_id =c.id
+            )
+          </if>
+        ORDER BY
+                 <if test="paramsMap.sort == 0">
+                     id DESC
+                 </if>
+                 <if test="paramsMap.sort == 1">
+                     learn_persons desc,id DESC
+                 </if>
+    </select>
+    <select id="listByUserCourse" resultMap="BaseResultMap">
+        SELECT
+            id,
+            alias,
+            title,
+            introduction,
+            banner,
+            type,
+            price,
+            is_discount,
+            discount_price,
+            learn_persons,
+            audit_status,
+            created_at
+        FROM
+            course c
+        WHERE
+            audit_status = 1
+          <if test="type !=null and type != 0 ">
+              AND type = #{type}
+          </if>
+            AND EXISTS(select user_id, course_id from user_course uc where uc.user_id = #{userId}
+                and uc.course_id = c.id)
+        order by type desc,id desc
+    </select>
 
 </mapper>

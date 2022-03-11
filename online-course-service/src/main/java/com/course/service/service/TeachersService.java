@@ -1,7 +1,10 @@
 package com.course.service.service;
 
-import com.course.api.entity.Teachers;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.course.api.entity.Teachers;
+
+import java.util.Collection;
+import java.util.Map;
 
 /**
  * <p>
@@ -14,4 +17,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
 public interface TeachersService extends IService<Teachers> {
 
     Teachers getByUserId(Integer userId);
+
+    Map<Integer, Teachers> findMapByTeacherIds(Collection<Integer> teacherIds);
 }

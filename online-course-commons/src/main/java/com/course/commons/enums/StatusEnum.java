@@ -14,9 +14,9 @@ public enum StatusEnum {
     /**
      * status枚举
      */
-    WAIT(1, "待审核"),
-    SUCCESS(3, "审核通过"),
-    FAIL(0,"审核不通过");
+    WAIT(0, "待审核"),
+    SUCCESS(1, "审核通过"),
+    FAIL(2,"审核不通过");
 
     public static StatusEnum fromStatus(Integer status) {
         for (StatusEnum value : StatusEnum.values()) {

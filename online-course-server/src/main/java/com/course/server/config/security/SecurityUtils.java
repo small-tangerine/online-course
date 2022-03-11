@@ -2,6 +2,7 @@ package com.course.server.config.security;
 
 
 import com.course.server.config.security.model.LoginUser;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -14,6 +15,7 @@ import java.util.Objects;
  *
  * @author ruoyi
  */
+@Slf4j
 public class SecurityUtils {
 
     private SecurityUtils() {
@@ -35,8 +37,13 @@ public class SecurityUtils {
      * 获取用户
      **/
     public static LoginUser getLoginUser() {
-        Object principal = getAuthentication().getPrincipal();
-        return Objects.nonNull(principal) ? (LoginUser) principal : null;
+        Object principal = null;
+        try {
+            principal = getAuthentication().getPrincipal();
+        } catch (Exception e) {
+            log.error("获取用户登录信息失败：{}", e.getMessage());
+        }
+        return Objects.nonNull(principal) ? (principal instanceof LoginUser ? (LoginUser) principal : null) : null;
     }
 
     /**

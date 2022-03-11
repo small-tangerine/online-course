@@ -1,9 +1,10 @@
 package com.course.service.service;
 
-import com.course.api.entity.User;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.course.api.entity.User;
 import com.course.commons.model.Paging;
 
+import java.util.Collection;
 import java.util.Map;
 
 /**
@@ -26,4 +27,6 @@ public interface UserService extends IService<User> {
     User findAdminByUsername(String username);
 
     void findByMap(Paging<User> paging, Map<String, Object> map);
+
+    Map<Integer, User> findMapByUserIds(Collection<Integer> userIds);
 }

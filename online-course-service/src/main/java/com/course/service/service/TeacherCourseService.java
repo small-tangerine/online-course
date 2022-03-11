@@ -1,7 +1,10 @@
 package com.course.service.service;
 
-import com.course.api.entity.TeacherCourse;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.course.api.entity.TeacherCourse;
+
+import java.util.Collection;
+import java.util.List;
 
 /**
  * <p>
@@ -13,4 +16,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface TeacherCourseService extends IService<TeacherCourse> {
 
+    List<TeacherCourse> listByCourseIds(Collection<Integer> courseIds);
 }

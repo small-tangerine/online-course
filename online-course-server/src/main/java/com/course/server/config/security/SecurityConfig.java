@@ -5,6 +5,7 @@ import com.course.server.config.security.handler.RestAuthenticationEntryPoint;
 import com.course.server.config.security.handler.RestfulAccessDeniedHandler;
 import com.course.server.config.security.service.SecurityService;
 import com.course.service.service.UserTokenService;
+import com.google.common.collect.ImmutableList;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -21,6 +22,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import java.util.List;
+
 
 /**
  * 对SpringSecurity的配置的扩展，支持自定义白名单资源路径和查询用户逻辑
@@ -35,6 +38,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final SecurityService securityService;
     private final UserTokenService userTokenService;
 
+    private static final List<String> WHITE_URL_ALL = ImmutableList.of("/account/login", "/account/register",
+            "/account/reset-password","/category/list");
+    private static final List<String> WHITE_URL = ImmutableList.of("/course/list", "/home/recommend");
+
     public SecurityConfig(SecurityService securityService, UserTokenService userTokenService) {
         this.securityService = securityService;
         this.userTokenService = userTokenService;
@@ -46,6 +53,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry registry = httpSecurity
                 .authorizeRequests();
 
+        for (String url : WHITE_URL) {
+            registry.antMatchers(url).permitAll();
+        }
         // 任何请求需要身份认证
         registry.and()
                 .authorizeRequests()
@@ -73,8 +83,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity webSecurity) {
         //不需要保护的资源路径允许访问: 配置白名单的不拦截
-        webSecurity.ignoring().antMatchers("/account/login", "/account/register",
-                "/account/reset-password","/category/list","/course/list","/home/recommend");
+        for (String url : WHITE_URL_ALL) {
+            webSecurity.ignoring().antMatchers(url);
+        }
         //允许跨域请求的OPTIONS请求
         webSecurity.ignoring().antMatchers(HttpMethod.OPTIONS);
 
