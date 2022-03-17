@@ -4,3 +4,6 @@
 
     2、运行管理端和用户端后台，如下图
 <img src='assets/img.png' alt="">
+    
+    3、建数据库，数据库名称course，字符集选择utf8mb4，排序规则选择utf8mb4_general_ci，建好后导入建表的SQL，表结构SQL文件如图所示
+<img src='assets/img_2.png' alt="">
