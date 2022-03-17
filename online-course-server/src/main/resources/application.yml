@@ -3,9 +3,12 @@ server:
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://42.192.49.200:3306/course?useUnicode=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&useOldAliasMetadataBehavior=true&zeroDateTimeBehavior=convertToNull&allowMultiQueries=true&useSSL=false
-    username: course
-    password: course-online
+#    url: jdbc:mysql://42.192.49.200:3306/course?useUnicode=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&useOldAliasMetadataBehavior=true&zeroDateTimeBehavior=convertToNull&allowMultiQueries=true&useSSL=false
+#    username: course
+#    password: course-online
+    url: jdbc:mysql://127.0.0.1:3306/course?useUnicode=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&useOldAliasMetadataBehavior=true&zeroDateTimeBehavior=convertToNull&allowMultiQueries=true&useSSL=false
+    username: root
+    password: root
     name: course
     #使用druid连接池
     type: com.alibaba.druid.pool.DruidDataSource

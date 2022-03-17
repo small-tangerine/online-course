@@ -4,21 +4,43 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.course.api.entity.Teachers">
-        <id column="id" property="id" />
-        <result column="user_id" property="userId" />
-        <result column="name" property="name" />
-        <result column="avatar" property="avatar" />
-        <result column="job" property="job" />
-        <result column="introduction" property="introduction" />
-        <result column="created_at" property="createdAt" />
-        <result column="created_by" property="createdBy" />
-        <result column="updated_at" property="updatedAt" />
-        <result column="updated_by" property="updatedBy" />
+        <id column="id" property="id"/>
+        <result column="user_id" property="userId"/>
+        <result column="name" property="name"/>
+        <result column="avatar" property="avatar"/>
+        <result column="job" property="job"/>
+        <result column="introduction" property="introduction"/>
+        <result column="created_at" property="createdAt"/>
+        <result column="created_by" property="createdBy"/>
+        <result column="updated_at" property="updatedAt"/>
+        <result column="updated_by" property="updatedBy"/>
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         id, user_id, name, avatar, job, introduction, created_at, created_by, updated_at, updated_by
     </sql>
+    <select id="getByCourseId" resultMap="BaseResultMap">
+        SELECT
+            id,
+            user_id,
+            NAME,
+            avatar,
+            job,
+            introduction,
+            created_at
+        FROM
+            teachers t
+        WHERE
+            EXISTS (
+                    SELECT
+                        teacher_id,
+                        course_id
+                    FROM
+                        teacher_course tc
+                    WHERE
+                        tc.course_id = #{courseId}
+                      AND tc.teacher_id = t.id)
+    </select>
 
 </mapper>

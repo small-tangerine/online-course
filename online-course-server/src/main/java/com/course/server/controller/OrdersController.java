@@ -237,9 +237,14 @@ public class OrdersController {
 
         //user_course
         List<UserCourse> userCourseList = detailList.stream()
-                .map(item -> new UserCourse().setCourseId(item.getCourseId()).setUserId(userId)
-                        .setCreatedAt(LocalDateTime.now()).setCreatedBy(userId)).collect(Collectors.toList());
-
+                .map(item ->{
+                    UserCourse userCourse = new UserCourse().setCourseId(item.getCourseId()).setUserId(userId)
+                            .setCreatedAt(LocalDateTime.now()).setCreatedBy(userId);
+                    if (YesOrNoEnum.YES.equalsStatus(item.getIsDiscount())) {
+                        return userCourse.setCost(item.getDiscountPrice());
+                    }
+                    return userCourse.setCost(item.getPrice());
+                }).collect(Collectors.toList());
         // course learn_persons
         Set<Integer> courseIds = detailList.stream().map(OrdersDetail::getCourseId).collect(Collectors.toSet());
 

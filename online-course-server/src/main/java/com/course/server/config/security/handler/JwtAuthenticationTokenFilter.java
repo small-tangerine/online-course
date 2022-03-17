@@ -43,7 +43,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
     private final JwtUtil jwtUtil;
     private final UserTokenService userTokenService;
 
-    private static final List<String> WHITE_URL = ImmutableList.of("/course/list", "/home/recommend");
+    private static final List<String> WHITE_URL = ImmutableList.of("/course/list", "/home/recommend","/course/detail");
 
     public JwtAuthenticationTokenFilter(UserDetailsService userDetailsService, JwtUtil jwtUtil, UserTokenService userTokenService) {
         this.userDetailsService = userDetailsService;

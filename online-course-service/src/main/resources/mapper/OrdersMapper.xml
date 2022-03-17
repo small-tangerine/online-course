@@ -4,24 +4,51 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.course.api.entity.Orders">
-        <id column="id" property="id" />
-        <result column="code" property="code" />
-        <result column="user_id" property="userId" />
-        <result column="pay_status" property="payStatus" />
-        <result column="pay_type" property="payType" />
+        <id column="id" property="id"/>
+        <result column="code" property="code"/>
+        <result column="user_id" property="userId"/>
+        <result column="pay_status" property="payStatus"/>
+        <result column="pay_type" property="payType"/>
         <result column="cost" property="cost"/>
-        <result column="expired_at" property="expiredAt" />
-        <result column="cancel_at" property="cancelAt" />
-        <result column="pay_at" property="payAt" />
-        <result column="created_at" property="createdAt" />
-        <result column="created_by" property="createdBy" />
-        <result column="updated_at" property="updatedAt" />
-        <result column="updated_by" property="updatedBy" />
+        <result column="expired_at" property="expiredAt"/>
+        <result column="cancel_at" property="cancelAt"/>
+        <result column="pay_at" property="payAt"/>
+        <result column="created_at" property="createdAt"/>
+        <result column="created_by" property="createdBy"/>
+        <result column="updated_at" property="updatedAt"/>
+        <result column="updated_by" property="updatedBy"/>
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         id, code, user_id, pay_status, pay_type, cost, expired_at, cancel_at, pay_at, created_at, created_by, updated_at, updated_by
     </sql>
+    <select id="listByTeacherId" resultMap="BaseResultMap">
+        select id,
+               code,
+               user_id,
+               pay_status,
+               pay_type,
+               cost,
+               expired_at,
+               cancel_at,
+               pay_at,
+               created_at
+        from orders o
+        where pay_status =1
+            and exists(
+                select
+                       order_id,
+                       course_id
+                from orders_detail od
+                where od.order_id=o.id
+                  and exists(
+                      select
+                             teacher_id,
+                             course_id
+                      from teacher_course tc
+                      where tc.course_id = od.course_id
+                        and tc.teacher_id= #{id}))
+    </select>
 
 </mapper>

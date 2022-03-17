@@ -39,4 +39,14 @@ public class OrdersDetailServiceImpl extends ServiceImpl<OrdersDetailMapper, Ord
         return lambdaQuery().eq(OrdersDetail::getOrderId, id)
                 .list();
     }
+
+    @Override
+    public List<OrdersDetail> listByTeacherId(Integer id) {
+        return baseMapper.listByTeacherId(id);
+    }
+
+    @Override
+    public List<OrdersDetail> listByParamsMap(Map<String, Object> paramsMap) {
+        return baseMapper.listByParamsMap(paramsMap);
+    }
 }

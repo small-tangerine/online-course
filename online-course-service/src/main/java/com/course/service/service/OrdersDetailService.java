@@ -20,4 +20,8 @@ public interface OrdersDetailService extends IService<OrdersDetail> {
     Map<Integer, List<OrdersDetail>> mapListByOrderIds(Collection<Integer> orderIds);
 
     List<OrdersDetail> listByOrderId(Integer id);
+
+    List<OrdersDetail> listByTeacherId(Integer id);
+
+    List<OrdersDetail> listByParamsMap(Map<String, Object> paramsMap);
 }

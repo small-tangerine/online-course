@@ -75,4 +75,6 @@ public class CourseListVo implements Serializable {
     private Teachers teacher;
 
     private Integer isBuy;
+
+    private Long current;
 }

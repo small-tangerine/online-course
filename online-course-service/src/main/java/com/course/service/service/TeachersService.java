@@ -19,4 +19,6 @@ public interface TeachersService extends IService<Teachers> {
     Teachers getByUserId(Integer userId);
 
     Map<Integer, Teachers> findMapByTeacherIds(Collection<Integer> teacherIds);
+
+    Teachers getByCourseId(Integer courseId);
 }

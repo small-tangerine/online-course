@@ -17,4 +17,18 @@ import org.springframework.stereotype.Service;
 @Service
 public class HomeRecommendServiceImpl extends ServiceImpl<HomeRecommendMapper, HomeRecommend> implements HomeRecommendService {
 
+    @Override
+    public HomeRecommend getByCourseId(Integer id) {
+        return lambdaQuery().eq(HomeRecommend::getCourseId,id)
+                .last("limit 1")
+                .one();
+    }
+
+    @Override
+    public HomeRecommend getByCourseIdAndType(Integer id, Integer recommend) {
+        return lambdaQuery().eq(HomeRecommend::getCourseId,id)
+                .eq(HomeRecommend::getType,recommend)
+                .last("limit 1")
+                .one();
+    }
 }

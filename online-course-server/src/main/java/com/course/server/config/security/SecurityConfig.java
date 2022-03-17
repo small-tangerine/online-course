@@ -40,7 +40,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private static final List<String> WHITE_URL_ALL = ImmutableList.of("/account/login", "/account/register",
             "/account/reset-password","/category/list");
-    private static final List<String> WHITE_URL = ImmutableList.of("/course/list", "/home/recommend");
+    private static final List<String> WHITE_URL = ImmutableList.of("/course/list", "/home/recommend","/course/detail");
 
     public SecurityConfig(SecurityService securityService, UserTokenService userTokenService) {
         this.securityService = securityService;

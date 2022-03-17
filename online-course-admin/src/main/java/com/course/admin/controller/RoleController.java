@@ -110,6 +110,15 @@ public class RoleController {
         return Response.ok(menuCache.getPermissionVoList());
     }
 
+    /**
+     * 菜单列表用于分配权限
+     */
+    @GetMapping("/menu-cache-clean")
+    public Response roleMenuCacheClean() {
+        menuCache.expireAll();
+        return Response.ok("权限菜单缓存清理成功");
+    }
+
 
     @PostMapping("/permission-scope")
     public Response rolePermissionScope(@RequestBody RoleVo roleVo) {

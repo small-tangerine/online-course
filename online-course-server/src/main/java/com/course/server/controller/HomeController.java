@@ -47,6 +47,8 @@ public class HomeController {
 
     @GetMapping("/recommend")
     public Response homeRecommend() {
+
+
         List<HomeRecommend> list = homeRecommendService.list();
         Map<Integer, List<HomeRecommend>> collectMap = list.stream().collect(Collectors.groupingBy(HomeRecommend::getType));
         if (MapUtils.isEmpty(collectMap)) {

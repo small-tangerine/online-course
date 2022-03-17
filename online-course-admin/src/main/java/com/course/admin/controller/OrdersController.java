@@ -3,12 +3,15 @@ package com.course.admin.controller;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.course.api.entity.Orders;
+import com.course.api.entity.OrdersDetail;
 import com.course.api.entity.User;
 import com.course.api.vo.admin.OrdersVo;
 import com.course.commons.enums.PayStatusEnum;
 import com.course.commons.enums.PayTypeEnum;
 import com.course.commons.model.Paging;
 import com.course.commons.model.Response;
+import com.course.commons.utils.Assert;
+import com.course.service.service.OrdersDetailService;
 import com.course.service.service.OrdersService;
 import com.course.service.service.UserService;
 import com.google.common.collect.ImmutableMap;
@@ -21,7 +24,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -42,6 +47,7 @@ public class OrdersController {
     private final OrdersService ordersService;
     private final UserService userService;
     private final MapperFacade mapperFacade;
+    private final OrdersDetailService ordersDetailService;
 
     @GetMapping("/list")
     public Response orderList(Integer page, Integer pageSize, String code, Integer payType, Integer payStatus) {
@@ -53,10 +59,10 @@ public class OrdersController {
         ordersService.page(paging, query);
         Set<Integer> userIds = paging.getItems().stream().map(Orders::getUserId).collect(Collectors.toSet());
         Map<Integer, User> userMap = userService.findMapByUserIds(userIds);
-        BigDecimal payCost = paging.getItems().stream().filter(item->PayStatusEnum.PAY.equalsStatus(item.getPayStatus()))
+        BigDecimal payCost = paging.getItems().stream().filter(item -> PayStatusEnum.PAY.equalsStatus(item.getPayStatus()))
                 .map(Orders::getCost).reduce(BigDecimal.ZERO, BigDecimal::add);
         BigDecimal totalCost = paging.getItems().stream().map(Orders::getCost).reduce(BigDecimal.ZERO, BigDecimal::add);
-        paging.setExtra(ImmutableMap.of("payCost", payCost,"totalCost",totalCost));
+        paging.setExtra(ImmutableMap.of("payCost", payCost, "totalCost", totalCost));
         paging.convert(item -> {
             OrdersVo map = mapperFacade.map(item, OrdersVo.class);
             User user = userMap.get(item.getUserId());
@@ -68,5 +74,13 @@ public class OrdersController {
             return map.setUserTitle("用户已删除");
         });
         return Response.ok(paging);
+    }
+
+    @GetMapping("/detail-list")
+    public Response orderDetailList(@NotNull(message = "订单编号不能为空") Integer id) {
+        Orders byId = ordersService.getById(id);
+        Assert.notNull(byId, "订单不存在");
+        List<OrdersDetail> details = ordersDetailService.listByOrderId(byId.getId());
+        return Response.ok(details);
     }
 }

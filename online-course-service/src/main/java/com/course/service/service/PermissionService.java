@@ -25,4 +25,5 @@ public interface PermissionService extends IService<Permission> {
     List<Permission> findUserPermission(Integer userId);
 
     Map<Integer,Permission> findByRoleIds(Collection<Integer> roleIds);
+
 }

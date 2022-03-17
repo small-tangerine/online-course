@@ -9,11 +9,21 @@
         <result column="course_id" property="courseId" />
         <result column="created_at" property="createdAt" />
         <result column="created_by" property="createdBy" />
+        <result column="cost" property="cost"/>
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         id, user_id, course_id, created_at, created_by
     </sql>
+    <select id="listPagingByMap" resultMap="BaseResultMap">
+        select
+            id, user_id, course_id,cost , created_at
+        from user_course uc
+        where course_id = #{paramsMap.courseId}
+        <if test="paramsMap.keyword !='' and paramsMap.keyword !=null">
+            and exists(select id from user u where nickname like concat('%',#{paramsMap.keyword},'%') and u.id =uc.user_id)
+        </if>
+    </select>
 
 </mapper>

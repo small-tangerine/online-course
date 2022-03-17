@@ -3,6 +3,8 @@ package com.course.service.service;
 import com.course.api.entity.Orders;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.List;
+
 /**
  * <p>
  * 订单 服务类
@@ -14,4 +16,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
 public interface OrdersService extends IService<Orders> {
 
     Orders getOrderByCode(String code);
+
+    List<Orders> listByTeacherId(Integer id);
 }

@@ -7,6 +7,7 @@ import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -118,4 +119,5 @@ public class PermissionVo implements Serializable {
         }
         return this;
     }
+    private Collection<Integer> ids;
 }

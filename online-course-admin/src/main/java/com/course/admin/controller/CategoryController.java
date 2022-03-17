@@ -10,6 +10,7 @@ import com.course.commons.model.Response;
 import com.course.commons.utils.Assert;
 import com.course.commons.utils.ResponseHelper;
 import com.course.component.cache.CategoryCache;
+import com.course.component.cache.CategoryTreeCache;
 import com.course.component.component.CategoryComponent;
 import com.course.service.service.CategoryService;
 import lombok.RequiredArgsConstructor;
@@ -41,6 +42,7 @@ public class CategoryController {
     private final MapperFacade mapperFacade;
     private final CategoryComponent categoryComponent;
     private final CategoryCache categoryCache;
+    private final CategoryTreeCache categoryTreeCache;
 
     @GetMapping("/list")
     public Response categoryList(Integer page, Integer pageSize, String keyword) {
@@ -101,6 +103,7 @@ public class CategoryController {
         boolean isUpdate = Objects.equals(title, byId.getTitle());
         categoryComponent.updateCategory(updateCategory, isUpdate);
         categoryCache.expireAll();
+        categoryTreeCache.expireAll();
         return ResponseHelper.updateSuccess();
     }
 
@@ -112,6 +115,7 @@ public class CategoryController {
         }
         categoryComponent.deleteCategory(ids);
         categoryCache.expireAll();
+        categoryTreeCache.expireAll();
         return ResponseHelper.deleteSuccess();
     }
 
@@ -144,6 +148,12 @@ public class CategoryController {
                 .setUpdatedAt(LocalDateTime.now()).setUpdatedBy(SecurityUtils.getUserId());
         categoryService.save(category);
         categoryCache.expireAll();
+        categoryTreeCache.expireAll();
         return Response.ok("创建分类成功");
+    }
+
+    @GetMapping("/select")
+    public Response categorySelect() {
+        return Response.ok(categoryTreeCache.getCategoryVoList());
     }
 }

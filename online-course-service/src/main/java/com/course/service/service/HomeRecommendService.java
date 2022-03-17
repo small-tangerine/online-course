@@ -13,4 +13,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface HomeRecommendService extends IService<HomeRecommend> {
 
+    HomeRecommend getByCourseId(Integer id);
+
+    HomeRecommend getByCourseIdAndType(Integer id, Integer recommend);
 }

@@ -99,4 +99,35 @@ public class AvatarController {
             return Response.fail("上传头像失败");
         }
     }
+
+    /**
+     * 上传头像
+     *
+     * @param image 图片
+     * @return response
+     */
+    @PostMapping("/user-upload")
+    public Response Userupload(@RequestParam("image") MultipartFile image) {
+        Assert.notNull(image, "没有图片");
+
+        String originalFilename = image.getOriginalFilename();
+        String suffix = FileUtil.getSuffix(originalFilename);
+        Assert.notBlank(suffix, "未知文件类型");
+        Assert.isTrue(CommonConstant.IMG_SUFFIX.contains(suffix), "该文件不是图片");
+
+        try {
+            InputStream inputStream = image.getInputStream();
+            // 文件路径
+            String filePath = FileUtils.saveImg(inputStream, originalFilename);
+            Path path = Paths.get(CommonConstant.FILE_PREFIX, filePath);
+            File destFile = path.toFile();
+            String type = FileTypeUtil.getType(destFile);
+            Assert.isTrue(CommonConstant.IMG_SUFFIX.contains(type), "指定文件不是图片");
+            String avatar = BASE_URL + filePath;
+            return Response.ok("上传头像成功", ImmutableMap.of("url", avatar));
+        } catch (IOException e) {
+            log.error("上传头像失败", e);
+            return Response.fail("上传头像失败");
+        }
+    }
 }

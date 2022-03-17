@@ -2,6 +2,7 @@ package com.course.service.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.course.api.entity.UserCourse;
+import com.course.commons.model.Paging;
 
 import java.util.Collection;
 import java.util.Map;
@@ -17,4 +18,8 @@ import java.util.Map;
 public interface UserCourseService extends IService<UserCourse> {
 
     Map<Integer, UserCourse> findMapByCourseIds(Collection<Integer> courseIds, Integer userId);
+
+    void listPagingByMap(Paging<UserCourse> paging, Map<String, Object> paramsMap);
+
+    UserCourse getByUserIdAndCourseId(Integer userId, Integer courseId);
 }

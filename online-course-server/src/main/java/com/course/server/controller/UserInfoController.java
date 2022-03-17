@@ -4,6 +4,8 @@ import cn.hutool.core.lang.Validator;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.course.api.entity.User;
+import com.course.api.entity.UserCourseVideo;
+import com.course.api.entity.UserToken;
 import com.course.api.enums.LoginTypeEnum;
 import com.course.api.vo.server.UserVo;
 import com.course.commons.annotations.AccountInfo;
@@ -14,7 +16,7 @@ import com.course.commons.model.Response;
 import com.course.commons.utils.Assert;
 import com.course.commons.utils.ResponseHelper;
 import com.course.server.config.security.SecurityUtils;
-import com.course.api.entity.UserToken;
+import com.course.service.service.UserCourseVideoService;
 import com.course.service.service.UserService;
 import com.course.service.service.UserTokenService;
 import com.google.common.collect.ImmutableMap;
@@ -24,6 +26,7 @@ import ma.glasnost.orika.MapperFacade;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -50,6 +53,7 @@ public class UserInfoController {
     private final MapperFacade mapperFacade;
     private final PasswordEncoder passwordEncoder;
     private final UserTokenService userTokenService;
+    private final UserCourseVideoService userCourseVideoService;
 
     @PostMapping("/update-base-info")
     public Response updateBaseInfo(@RequestBody @Validated(BaseInfo.class) UserVo userVo) {
@@ -156,5 +160,14 @@ public class UserInfoController {
             user.setEmail(email);
         }
         user.setMobile(mobile).setEmail(email);
+    }
+
+    @GetMapping("/learn")
+    public Response userLearn() {
+        LambdaQueryWrapper<UserCourseVideo> query=Wrappers.lambdaQuery();
+        query.eq(UserCourseVideo::getUserId,SecurityUtils.getUserId());
+        List<UserCourseVideo> list = userCourseVideoService.list(query);
+        Long reduce = list.stream().map(UserCourseVideo::getCumulativeDuration).reduce(0L, Long::sum);
+        return Response.ok(ImmutableMap.of("learn",reduce));
     }
 }

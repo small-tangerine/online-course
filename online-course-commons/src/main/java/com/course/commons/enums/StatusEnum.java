@@ -47,7 +47,14 @@ public enum StatusEnum {
         }
         return "";
     }
-
+    public static boolean containsStatus(Integer typeId) {
+        for (StatusEnum typeEnum : StatusEnum.values()) {
+            if (Objects.equals(typeEnum.getStatus(), typeId)) {
+                return true;
+            }
+        }
+        return false;
+    }
     /**
      * 判断status是否等于当前
      * @return true：等于

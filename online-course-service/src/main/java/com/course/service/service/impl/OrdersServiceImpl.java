@@ -6,6 +6,8 @@ import com.course.service.service.OrdersService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * <p>
  * 订单 服务实现类
@@ -22,5 +24,10 @@ public class OrdersServiceImpl extends ServiceImpl<OrdersMapper, Orders> impleme
         return lambdaQuery().eq(Orders::getCode, code)
                 .last("limit 1")
                 .one();
+    }
+
+    @Override
+    public List<Orders> listByTeacherId(Integer id) {
+        return baseMapper.listByTeacherId(id);
     }
 }

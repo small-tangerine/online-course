@@ -3,6 +3,7 @@ package com.course.service.service.impl;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.course.api.entity.Permission;
 import com.course.commons.enums.PermissionTypeEnum;
+import com.course.commons.model.Paging;
 import com.course.service.mapper.PermissionMapper;
 import com.course.service.service.PermissionService;
 import org.springframework.stereotype.Service;
@@ -48,4 +49,5 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
         List<Permission> byRoleIds = baseMapper.findByRoleIds(roleIds);
         return byRoleIds.stream().collect(Collectors.toMap(Permission::getId, Function.identity()));
     }
+
 }

@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -193,4 +194,26 @@ public class MathUtils {
             return null;
         }
     }
+
+    /**
+     * 将一个数字处理为以万为单位的字符串，保留两位小数
+     *
+     * @param number 需要格式化的数字
+     * @return 格式化后的字符串
+     */
+    public static String getTenThousandOfANumber(int number) {
+        if (number < 10000) {
+            return String.valueOf(number);
+        }
+        String numStr = new DecimalFormat("#.00").format(number / 10000d);
+        String[] ss = numStr.split("\\.");
+        if ("00".equals(ss[1])) {
+            return ss[0] + "万";
+        } else if ('0' == (ss[1].charAt(1))) {
+            return ss[0] + "." + ss[1].charAt(0) + "万";
+        } else {
+            return numStr + "万";
+        }
+    }
+
 }

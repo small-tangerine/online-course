@@ -49,6 +49,15 @@ public enum CourseTypeEnum {
         return null;
     }
 
+    public static String getDescByValue(Integer value) {
+        for (CourseTypeEnum yesOrNoEnum : CourseTypeEnum.values()) {
+            if (Objects.equals(value, yesOrNoEnum.value)) {
+                return yesOrNoEnum.getDesc();
+            }
+        }
+        return "";
+    }
+
     public boolean equalsStatus(Integer status) {
         return this.value.equals(status);
     }

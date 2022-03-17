@@ -1,14 +1,15 @@
 package com.course.api.entity;
 
-import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import java.time.LocalDateTime;
 import com.baomidou.mybatisplus.annotation.TableField;
-import java.io.Serializable;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+
+import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
  * <p>
@@ -54,13 +55,13 @@ public class UserCourseVideo implements Serializable {
      * 当前学习时长
      */
     @TableField("learn_length")
-    private Integer learnLength;
+    private Long learnLength;
 
     /**
      * 累计学习时长
      */
     @TableField("cumulative_duration")
-    private Integer cumulativeDuration;
+    private Long cumulativeDuration;
 
     /**
      * 学习状态 0未学习 1已完成 2学习中
@@ -80,5 +81,15 @@ public class UserCourseVideo implements Serializable {
     @TableField("created_by")
     private Integer createdBy;
 
+    /**
+     * 更新时间
+     */
+    @TableField("updated_at")
+    private LocalDateTime updatedAt;
 
+    /**
+     * 更新人ID
+     */
+    @TableField("updated_by")
+    private Integer updatedBy;
 }

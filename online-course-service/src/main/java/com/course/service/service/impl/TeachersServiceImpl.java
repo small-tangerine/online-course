@@ -39,4 +39,9 @@ public class TeachersServiceImpl extends ServiceImpl<TeachersMapper, Teachers> i
         return lambdaQuery().in(Teachers::getId, teacherIds)
                 .list().stream().collect(Collectors.toMap(Teachers::getId, Function.identity()));
     }
+
+    @Override
+    public Teachers getByCourseId(Integer courseId) {
+        return baseMapper.getByCourseId(courseId);
+    }
 }

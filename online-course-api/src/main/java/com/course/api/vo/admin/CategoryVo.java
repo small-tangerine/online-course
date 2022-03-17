@@ -6,6 +6,7 @@ import lombok.experimental.Accessors;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * <p>
@@ -47,4 +48,6 @@ public class CategoryVo implements Serializable {
     private LocalDateTime createdAt;
 
     private Collection<Integer> ids;
+
+    private List<CategoryVo> children;
 }

@@ -4,26 +4,49 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.course.api.entity.CourseVideo">
-        <id column="id" property="id" />
-        <result column="course_id" property="courseId" />
-        <result column="title" property="title" />
-        <result column="file_url" property="fileUrl" />
-        <result column="file_size" property="fileSize" />
-        <result column="thumb_url" property="thumbUrl" />
-        <result column="url" property="url" />
-        <result column="video_length" property="videoLength" />
-        <result column="display_order" property="displayOrder" />
-        <result column="audit_status" property="auditStatus" />
-        <result column="audit_notice" property="auditNotice" />
-        <result column="created_at" property="createdAt" />
-        <result column="created_by" property="createdBy" />
-        <result column="updated_by" property="updatedBy" />
-        <result column="updated_at" property="updatedAt" />
+        <id column="id" property="id"/>
+        <result column="course_id" property="courseId"/>
+        <result column="title" property="title"/>
+        <result column="file_url" property="fileUrl"/>
+        <result column="file_size" property="fileSize"/>
+        <result column="thumb_url" property="thumbUrl"/>
+        <result column="url" property="url"/>
+        <result column="video_length" property="videoLength"/>
+        <result column="display_order" property="displayOrder"/>
+        <result column="audit_status" property="auditStatus"/>
+        <result column="audit_notice" property="auditNotice"/>
+        <result column="created_at" property="createdAt"/>
+        <result column="created_by" property="createdBy"/>
+        <result column="updated_by" property="updatedBy"/>
+        <result column="updated_at" property="updatedAt"/>
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         id, course_id, title, file_url, file_size, thumb_url, url, video_length, display_order, audit_status, audit_notice, created_at, created_by, updated_by, updated_at
     </sql>
+    <select id="pagingByParamsMap" resultMap="BaseResultMap">
+        select id,
+               course_id,
+               title,
+               file_url,
+               file_size,
+               thumb_url,
+               url,
+               video_length,
+               display_order,
+               audit_status,
+               audit_notice,
+               created_at
+        from course_video
+        where course_id =#{paramsMap.courseId}
+            <if test="paramsMap.auditStatus !=null">
+                and audit_status = #{paramsMap.auditStatus}
+            </if>
+            <if test="paramsMap.keyword !='' and paramsMap.keyword!=null">
+                and title like concat('%',#{paramsMap.keyword},'%')
+            </if>
+        order by id desc
+    </select>
 
 </mapper>

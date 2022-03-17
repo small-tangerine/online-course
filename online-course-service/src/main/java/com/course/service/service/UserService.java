@@ -29,4 +29,6 @@ public interface UserService extends IService<User> {
     void findByMap(Paging<User> paging, Map<String, Object> map);
 
     Map<Integer, User> findMapByUserIds(Collection<Integer> userIds);
+
+    User findUserNotContain(Integer id, String username);
 }

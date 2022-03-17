@@ -134,5 +134,109 @@
                 and uc.course_id = c.id)
         order by type desc,id desc
     </select>
+    <select id="countCourse" resultType="com.course.api.dto.CourseDto">
+        SELECT
+            type,
+            COUNT( id ) AS count
+        FROM
+            course cs
+        <where>
+            <if test="paramsMap.teacherId !=null">
+            and  EXISTS (
+                    SELECT
+                        teacher_id,
+                        course_id
+                    FROM teacher_course tc
+                    WHERE tc.teacher_id = #{paramsMap.teacherId}
+                            AND tc.course_id = cs.id )
+            </if>
+        </where>
+        GROUP BY type
+    </select>
+    <select id="pagingByMap" resultMap="BaseResultMap">
+        SELECT
+            id,
+            alias,
+            title,
+            introduction,
+            bg_img,
+            banner,
+            tip,
+            learn_what,
+            type,
+            price,
+            is_discount,
+            discount_price,
+            is_finish,
+            learn_persons,
+            audit_status,
+            audit_notice,
+            created_at
+        FROM
+            course c
+        WHERE
+            1 = 1
+          <if test="paramsMap.type !=null">
+              AND type = #{paramsMap.type}
+          </if>
+            <if test="paramsMap.auditStatus !=null">
+                AND audit_status = #{paramsMap.auditStatus}
+            </if>
+            <if test="paramsMap.isDiscount !=null">
+                AND is_discount = #{paramsMap.isDiscount}
+            </if>
+            <if test="paramsMap.keyword !=null and paramsMap.keyword !=''">
+                AND (
+                    title LIKE CONCAT( '%', #{paramsMap.keyword}, '%' )
+                    OR introduction LIKE CONCAT( '%', #{paramsMap.keyword}, '%' ))
+            </if>
+            <if test="paramsMap.teacherId !=null">
+                AND EXISTS (
+                    SELECT
+                           teacher_id,
+                           course_id
+                    FROM teacher_course tc
+                    WHERE tc.teacher_id = #{paramsMap.teacherId}
+                      AND tc.course_id = c.id )
+            </if>
+        ORDER BY id desc
+    </select>
+    <select id="listParamsMap" resultMap="BaseResultMap">
+        SELECT
+            id,
+            alias,
+            title,
+            introduction,
+            bg_img,
+            banner,
+            tip,
+            learn_what,
+            type,
+            price,
+            is_discount,
+            discount_price,
+            is_finish,
+            learn_persons,
+            audit_status,
+            audit_notice,
+            created_at
+        FROM
+            course cs
+        <where>
+            <if test="paramsMap.dateStart !=null and paramsMap.dateEnd !=null">
+                and created_at <![CDATA[ >= ]]> #{paramsMap.dateStart} and created_at <![CDATA[ <= ]]> #{paramsMap.dateEnd}
+            </if>
+            <if test="paramsMap.teacherId !=null">
+                and  EXISTS (
+                SELECT
+                teacher_id,
+                course_id
+                FROM teacher_course tc
+                WHERE tc.teacher_id = #{paramsMap.teacherId}
+                AND tc.course_id = cs.id )
+            </if>
+        </where>
+        order by id desc
+    </select>
 
 </mapper>

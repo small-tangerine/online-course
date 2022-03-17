@@ -2,6 +2,7 @@ package com.course.service.mapper;
 
 import com.course.api.entity.Teachers;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * <p>
@@ -13,4 +14,5 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 public interface TeachersMapper extends BaseMapper<Teachers> {
 
+    Teachers getByCourseId(@Param("courseId") Integer courseId);
 }

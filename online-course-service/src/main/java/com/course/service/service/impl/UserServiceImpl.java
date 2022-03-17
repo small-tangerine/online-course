@@ -29,7 +29,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public User findByUsername(String username) {
         return lambdaQuery().eq(User::getUsername, username)
                 .or().eq(User::getMobile, username)
-                .eq(User::getEmail, username)
+                .or().eq(User::getEmail, username)
                 .last("limit 1")
                 .one();
     }
@@ -52,5 +52,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         return lambdaQuery().in(User::getId, userIds)
                 .select(User::getId, User::getUsername, User::getNickname, User::getMobile, User::getEmail)
                 .list().stream().collect(Collectors.toMap(User::getId, Function.identity()));
+    }
+
+    @Override
+    public User findUserNotContain(Integer id, String username) {
+        return lambdaQuery().ne(User::getId, id)
+                .and(item -> item.eq(User::getUsername, username).or().eq(User::getEmail, username).or().eq(User::getMobile, username))
+                .select(User::getId, User::getEmail, User::getMobile, User::getUsername)
+                .last("limit 1")
+                .one();
     }
 }

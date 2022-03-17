@@ -117,4 +117,46 @@ public class UserComponent {
             }
         }
     }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void updateUser(User user, UserRole userRole) {
+        userService.updateById(user);
+        if (Objects.nonNull(userRole)) {
+            LambdaQueryWrapper<UserRole> query = Wrappers.lambdaQuery();
+            query.eq(UserRole::getUserId, userRole.getUserId());
+            userRoleService.remove(query);
+            userRoleService.save(userRole);
+            // 角色是否讲师 用户讲师信息是否存在
+            Integer roleId = userRole.getRoleId();
+            Integer userId = userRole.getUpdatedBy();
+            if (RoleTypeEnum.TEACHER.equalsStatus(roleId)) {
+                Teachers byUserId = teachersService.getByUserId(userId);
+                if (Objects.isNull(byUserId)) {
+                    Teachers saveTeacher = new Teachers().setUserId(userRole.getUserId())
+                            .setAvatar(CommonConstant.DEFAULT_AVATAR)
+                            .setUpdatedBy(userId).setUpdatedAt(LocalDateTime.now())
+                            .setCreatedAt(LocalDateTime.now()).setCreatedBy(userId);
+                    teachersService.save(saveTeacher);
+                }
+            }
+        }
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void createUser(User user, UserRole userRole) {
+        userService.save(user);
+        userRole.setUserId(user.getId());
+        userRoleService.save(userRole);
+        // 角色是否讲师 用户讲师信息是否存在
+        Integer roleId = userRole.getRoleId();
+        Integer userId = userRole.getUpdatedBy();
+        if (RoleTypeEnum.TEACHER.equalsStatus(roleId)) {
+            Teachers saveTeacher = new Teachers().setUserId(user.getId())
+                    .setAvatar(CommonConstant.DEFAULT_AVATAR)
+                    .setUpdatedBy(userId).setUpdatedAt(LocalDateTime.now())
+                    .setCreatedAt(LocalDateTime.now()).setCreatedBy(userId);
+            teachersService.save(saveTeacher);
+
+        }
+    }
 }

@@ -2,6 +2,10 @@ package com.course.service.service;
 
 import com.course.api.entity.CourseVideo;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.course.commons.model.Paging;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -13,4 +17,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface CourseVideoService extends IService<CourseVideo> {
 
+    List<CourseVideo> listByCourseId(Integer id);
+
+    void pagingByParamsMap(Paging<CourseVideo> paging, Map<String, Object> paramsMap);
 }
