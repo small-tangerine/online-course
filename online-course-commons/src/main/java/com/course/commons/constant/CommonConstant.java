@@ -63,6 +63,7 @@ public class CommonConstant {
 
     public static final String DEFAULT_BG_IMG ="http://localhost/image/20220307/5e1d991809c5318e40000800.png";
     public static final String DEFAULT_BANNER ="http://localhost/image/20220307/5d31765d08c90cba06000338-360-202.jpg";
+    public static final String DEFAULT_THUMB_URL= "http://localhost/image/default.png";
     /**
      * 手机号校验的正则
      */

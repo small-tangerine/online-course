@@ -8,6 +8,7 @@ import com.course.api.entity.User;
 import com.course.api.entity.UserCourseVideo;
 import com.course.api.vo.admin.CourseVideoVo;
 import com.course.api.vo.admin.UserCourseVideoVo;
+import com.course.commons.constant.CommonConstant;
 import com.course.commons.enums.StatusEnum;
 import com.course.commons.model.Paging;
 import com.course.commons.model.Response;
@@ -130,6 +131,9 @@ public class CourseVideoController {
         Assert.notNull(courseId, "课程编号不能为空");
 
         CourseVideo map = mapperFacade.map(courseVo, CourseVideo.class);
+        if (StringUtils.isBlank(courseVo.getThumbUrl())){
+            map.setThumbUrl(CommonConstant.DEFAULT_THUMB_URL);
+        }
         map.setAuditNotice(StringUtils.EMPTY)
                 .setAuditStatus(StatusEnum.WAIT.getStatus())
                 .setCreatedAt(LocalDateTime.now()).setCreatedBy(SecurityUtils.getUserId())
@@ -183,6 +187,9 @@ public class CourseVideoController {
         CourseVideo byId = courseVideoService.getById(id);
         Assert.notNull(byId,"课程视频不存在");
         CourseVideo map = mapperFacade.map(courseVo, CourseVideo.class);
+        if (StringUtils.isBlank(courseVo.getThumbUrl())){
+            map.setThumbUrl(CommonConstant.DEFAULT_THUMB_URL);
+        }
         map.setAuditNotice(StringUtils.EMPTY)
                 .setAuditStatus(StatusEnum.WAIT.getStatus())
                 .setCreatedAt(LocalDateTime.now()).setCreatedBy(SecurityUtils.getUserId())
