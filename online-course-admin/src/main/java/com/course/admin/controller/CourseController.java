@@ -372,7 +372,7 @@ public class CourseController {
             if (Objects.isNull(byCourseId)){
                 homeRecommend = new HomeRecommend()
                         .setCourseId(courseVo.getId())
-                        .setType(courseVo.getType()).setCreatedBy(userId).setCreatedAt(LocalDateTime.now());
+                        .setType(courseVo.getRecommend()).setCreatedBy(userId).setCreatedAt(LocalDateTime.now());
             }
         }
         course.setAuditStatus(StatusEnum.WAIT.getStatus())
