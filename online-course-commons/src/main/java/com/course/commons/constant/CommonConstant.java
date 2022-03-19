@@ -53,14 +53,16 @@ public class CommonConstant {
     /**
      * 保存在本地中的前缀
      */
-//    public static final String FILE_PREFIX = "C:/nginx-1.16.1/upload/";
     public static final String FILE_PREFIX = "D:/nginx-1.16.1/upload/";
+    public static final String Video_PREFIX = "D:/nginx-1.16.1/upload/video/";
+//    public static final String FILE_PREFIX = "D:/nginx-1.16.1/upload/";
     /**
      * 文件暂存列表
      */
     public static final String FILE_TEMP_PREFIX = FILE_PREFIX + "temp";
 
-
+    public static final String DEFAULT_BG_IMG = FILE_PREFIX + "http://localhost/image/20220307/5e1d991809c5318e40000800.png";
+    public static final String DEFAULT_BANNER = FILE_PREFIX + "http://localhost/image/20220307/5d31765d08c90cba06000338-360-202.jpg";
     /**
      * 手机号校验的正则
      */

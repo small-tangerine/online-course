@@ -5,6 +5,7 @@ import cn.hutool.core.io.IoUtil;
 import com.course.api.dto.FileChunkDTO;
 import com.course.api.dto.FileChunkResultDTO;
 import com.course.api.vo.admin.CourseVideoVo;
+import com.course.commons.constant.CommonConstant;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -120,7 +121,7 @@ public class UploadComponent {
                     .setUrl("http://localhost/video/" + getSuffixFilePath(identifier, filename))
                     .setFileUrl(filePath);
         }
-        FileUtil.del(uploadFolder + identifier);
+        FileUtil.del(CommonConstant.Video_PREFIX + identifier);
         return courseVideoVo;
     }
 
@@ -156,7 +157,7 @@ public class UploadComponent {
      */
     private String getFilePath(String identifier, String filename) {
         String ext = filename.substring(filename.lastIndexOf("."));
-        return uploadFolder + identifier+ext;
+        return CommonConstant.Video_PREFIX + identifier+ext;
     }
 
     /**
@@ -204,6 +205,6 @@ public class UploadComponent {
      * @return
      */
     private String getFileFolderPath(String identifier) {
-        return uploadFolder + identifier + File.separator;
+        return CommonConstant.Video_PREFIX + identifier + File.separator;
     }
 }

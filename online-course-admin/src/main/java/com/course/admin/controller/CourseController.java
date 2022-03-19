@@ -239,7 +239,12 @@ public class CourseController {
             course.setIsDiscount(courseVo.getIsDiscount()).setDiscountPrice(courseVo.getDiscountPrice())
                     .setPrice(courseVo.getPrice());
         }
-
+        if (StringUtils.isBlank(courseVo.getBgImg())) {
+            course.setBgImg(CommonConstant.DEFAULT_BG_IMG);
+        }
+        if (StringUtils.isBlank(courseVo.getBanner())) {
+            course.setBanner(CommonConstant.DEFAULT_BANNER);
+        }
         // 须知
         if (CollectionUtils.isNotEmpty(courseVo.getTipList())) {
             String tips = courseVo.getTipList().stream().filter(StringUtils::isNotBlank)
@@ -335,10 +340,9 @@ public class CourseController {
     }
 
 
-
     @PostMapping("/update")
     public Response courseUpdate(@RequestBody CourseVo courseVo) {
-        Assert.notNull(courseVo.getId(),"课程编号不能为空");
+        Assert.notNull(courseVo.getId(), "课程编号不能为空");
         Integer userId = SecurityUtils.getUserId();
         Course course = newCourse(courseVo);
         Teachers byUserId = teachersService.getByUserId(userId);
@@ -368,8 +372,8 @@ public class CourseController {
         // 是否首页推荐
         HomeRecommend homeRecommend = null;
         if (RecommendTypeEnum.containsStatus(courseVo.getRecommend())) {
-            HomeRecommend byCourseId = homeRecommendService.getByCourseIdAndType(courseVo.getId(),courseVo.getRecommend());
-            if (Objects.isNull(byCourseId)){
+            HomeRecommend byCourseId = homeRecommendService.getByCourseIdAndType(courseVo.getId(), courseVo.getRecommend());
+            if (Objects.isNull(byCourseId)) {
                 homeRecommend = new HomeRecommend()
                         .setCourseId(courseVo.getId())
                         .setType(courseVo.getRecommend()).setCreatedBy(userId).setCreatedAt(LocalDateTime.now());
