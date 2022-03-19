@@ -11,7 +11,7 @@
  Target Server Version : 50736
  File Encoding         : 65001
 
- Date: 19/03/2022 12:09:58
+ Date: 17/03/2022 13:25:39
 */
 
 SET NAMES utf8mb4;
@@ -32,7 +32,7 @@ CREATE TABLE `bills`  (
   `created_at` datetime NOT NULL COMMENT '创建时间',
   `created_by` int(10) UNSIGNED NOT NULL DEFAULT 0 COMMENT '创建人',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 11 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '账单' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 10 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '账单' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for carts
@@ -52,7 +52,7 @@ CREATE TABLE `carts`  (
   `updated_at` datetime NULL DEFAULT NULL COMMENT '更新时间',
   `updated_by` int(10) UNSIGNED NULL DEFAULT 0 COMMENT '更新人',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 16 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '购物车' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 15 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '购物车' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for category
@@ -112,7 +112,7 @@ CREATE TABLE `course_category`  (
   `created_by` int(10) UNSIGNED NOT NULL DEFAULT 0 COMMENT '创建人',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `idx_category_course`(`category_id`, `course_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 11 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '课程分类关联' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 8 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '课程分类关联' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for course_video
@@ -135,7 +135,7 @@ CREATE TABLE `course_video`  (
   `updated_by` int(10) NOT NULL DEFAULT 0 COMMENT '更新人',
   `updated_at` datetime NOT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 12 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '课程视频关联' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 10 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '课程视频关联' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for home_recommend
@@ -148,7 +148,7 @@ CREATE TABLE `home_recommend`  (
   `created_at` datetime NOT NULL COMMENT '创建时间',
   `created_by` int(10) UNSIGNED NOT NULL DEFAULT 0 COMMENT '创建人',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 84 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '首页推荐' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 82 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '首页推荐' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for orders
@@ -169,7 +169,7 @@ CREATE TABLE `orders`  (
   `updated_at` datetime NOT NULL COMMENT '更新时间',
   `updated_by` int(10) UNSIGNED NOT NULL DEFAULT 0 COMMENT '更新人',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 16 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '订单' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 15 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '订单' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for orders_detail
@@ -187,7 +187,7 @@ CREATE TABLE `orders_detail`  (
   `created_at` datetime NOT NULL COMMENT '创建时间',
   `created_by` int(10) UNSIGNED NOT NULL DEFAULT 0 COMMENT '创建人',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 18 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '订单详情' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 17 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '订单详情' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for permission
@@ -318,7 +318,7 @@ CREATE TABLE `user`  (
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `idx_phone`(`mobile`) USING BTREE,
   INDEX `idx_email`(`email`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 11 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '用户' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 10 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '用户' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for user_course
@@ -332,7 +332,7 @@ CREATE TABLE `user_course`  (
   `created_at` datetime NOT NULL COMMENT '创建时间',
   `created_by` int(10) UNSIGNED NOT NULL DEFAULT 0 COMMENT '创建人',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 13 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '用户课程关联' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 11 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '用户课程关联' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for user_course_video
@@ -351,7 +351,7 @@ CREATE TABLE `user_course_video`  (
   `updated_at` datetime NOT NULL,
   `updated_by` int(10) UNSIGNED NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '用户课程视频关联' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '用户课程视频关联' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for user_role
@@ -367,7 +367,7 @@ CREATE TABLE `user_role`  (
   `updated_by` int(10) UNSIGNED NOT NULL DEFAULT 0 COMMENT '更新人ID',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `idx_user_role`(`user_id`, `role_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 22 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '用户角色关联' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 20 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '用户角色关联' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for user_token
@@ -383,6 +383,6 @@ CREATE TABLE `user_token`  (
   `login_at` datetime NOT NULL COMMENT '登录时间',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `idx_user_type`(`user_id`, `type`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 82 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = 'token记录' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 79 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = 'token记录' ROW_FORMAT = Dynamic;
 
 SET FOREIGN_KEY_CHECKS = 1;
