@@ -222,7 +222,7 @@ public class CourseController {
         // 是否首页推荐
         HomeRecommend homeRecommend = null;
         if (RecommendTypeEnum.containsStatus(courseVo.getRecommend())) {
-            homeRecommend = new HomeRecommend().setType(courseVo.getType()).setCreatedBy(userId).setCreatedAt(LocalDateTime.now());
+            homeRecommend = new HomeRecommend().setType(courseVo.getRecommend()).setCreatedBy(userId).setCreatedAt(LocalDateTime.now());
         }
         courseComponent.createCourse(course, byUserId, teacherCourse, courseCategoryList, homeRecommend);
         return Response.ok("课程创建成功");

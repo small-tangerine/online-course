@@ -58,13 +58,19 @@ public class HomeController {
         List<HomeRecommend> recommends = collectMap.get(RecommendTypeEnum.RECOMMEND.getType());
         List<HomeRecommend> news = collectMap.get(RecommendTypeEnum.NEW.getType());
         Set<Integer> courseIds = Sets.newHashSet();
-        Set<Integer> recommendCourseIds = recommends.stream().map(HomeRecommend::getCourseId).collect(Collectors.toSet());
-        if (CollectionUtils.isNotEmpty(recommendCourseIds)) {
-            courseIds.addAll(recommendCourseIds);
+        Set<Integer> recommendCourseIds = Sets.newHashSet();
+        if (CollectionUtils.isNotEmpty(recommends)) {
+            recommendCourseIds = recommends.stream().map(HomeRecommend::getCourseId).collect(Collectors.toSet());
+            if (CollectionUtils.isNotEmpty(recommendCourseIds)) {
+                courseIds.addAll(recommendCourseIds);
+            }
         }
-        Set<Integer> newsCourseIds = news.stream().map(HomeRecommend::getCourseId).collect(Collectors.toSet());
-        if (CollectionUtils.isNotEmpty(newsCourseIds)) {
-            courseIds.addAll(newsCourseIds);
+        Set<Integer> newsCourseIds = Sets.newHashSet();
+        if (CollectionUtils.isNotEmpty(news)) {
+            newsCourseIds = news.stream().map(HomeRecommend::getCourseId).collect(Collectors.toSet());
+            if (CollectionUtils.isNotEmpty(newsCourseIds)) {
+                courseIds.addAll(newsCourseIds);
+            }
         }
         Map<Integer, List<CourseCategory>> courseCategoryMap = courseCategoryService.findMapByCourseIds(courseIds);
         Map<Integer, Course> courseMap = courseService.findMapByIds(courseIds);

@@ -52,7 +52,7 @@ public class UserComponent {
      * @return user
      */
     public User wrapDefaultUserInfo(LoginVo loginVo) {
-        String encodePassword = passwordEncoder.encode(loginVo.getPassword());
+        String encodePassword =loginVo.getPassword();
         User user = new User().setUsername(loginVo.getUsername())
                 .setPassword(encodePassword)
                 .setSex(SexEnum.UN_KNOW.getSex())

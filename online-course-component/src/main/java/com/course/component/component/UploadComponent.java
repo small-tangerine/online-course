@@ -76,6 +76,8 @@ public class UploadComponent {
         FileOutputStream outputStream = new FileOutputStream(chunkFileFolderPath + chunkDTO.getChunkNumber());
         IoUtil.copy(inputStream, outputStream);
         log.info("文件标识:{},chunkNumber:{}", chunkDTO.getIdentifier(), chunkDTO.getChunkNumber());
+        outputStream.close();
+        inputStream.close();
     }
 
 

@@ -70,7 +70,7 @@ public class AccountController {
             //对用户隐藏不存在 抛出账号或密码的异常
             throw new MyAuthenticationException("用户不存在");
         }
-        Assert.isTrue(passwordEncoder.matches(loginVo.getPassword(), user.getPassword()),
+        Assert.isTrue(Objects.equals(loginVo.getPassword(), user.getPassword()),
                 "用户帐号或密码错误");
         UserVo map = mapperFacade.map(user, UserVo.class);
 
@@ -145,11 +145,11 @@ public class AccountController {
         User user = userService.findByUsername(loginVo.getUsername());
         Assert.notNull(user, "该账号不存在,请联系管理员");
         Assert.equals(loginVo.getCheckPassword(), loginVo.getPassword(), "两次密码输入不一致");
-        Assert.isFalse(passwordEncoder.matches(loginVo.getPassword(), user.getPassword()),
+        Assert.isFalse(Objects.equals(loginVo.getPassword(), user.getPassword()),
                 "新密码不能与旧密码相同");
 
         // 更新登录状态
-        User updatePassword = new User().setId(user.getId()).setPassword(passwordEncoder.encode(loginVo.getPassword()));
+        User updatePassword = new User().setId(user.getId()).setPassword(loginVo.getPassword());
         userService.updateById(updatePassword);
         return Response.ok("重置密码成功");
     }

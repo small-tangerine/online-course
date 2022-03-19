@@ -7,10 +7,12 @@
 <div style="text-align: center;">
 
 ![](assets\img.png)
+
 </div>
     
     3、建数据库，数据库名称course，字符集选择utf8mb4，排序规则选择utf8mb4_general_ci，建好后导入建表的SQL，表结构SQL文件如图所示
 <div style="text-align: center;">
 
 ![](assets\img_2.png)
+
 </div>

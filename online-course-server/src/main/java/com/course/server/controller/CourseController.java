@@ -236,6 +236,7 @@ public class CourseController {
                     .setCreatedAt(LocalDateTime.now()).setCreatedBy(SecurityUtils.getUserId())
                     .setUpdatedAt(LocalDateTime.now()).setUpdatedBy(SecurityUtils.getUserId());
         } else {
+            flag=videoLength.compareTo(userCourseVideo.getLearnLength())<=0;
             Long aLong = length.compareTo(userCourseVideo.getLearnLength()) >= 0 ? length : null;
             if (Objects.nonNull(aLong)) {
                 userCourseVideo = new UserCourseVideo().setId(userCourseVideo.getId()).setLearnLength(aLong)
@@ -252,7 +253,7 @@ public class CourseController {
         } else {
             userCourseVideo.setLearnStatus(2);
         }
-        courseComponent.updateUserVideo(userCourseVideo, userCourse, length);
+        courseComponent.updateUserVideo(userCourseVideo, userCourse, 10L);
         return Response.ok();
     }
 

@@ -4,8 +4,10 @@ import com.course.api.dto.FileChunkDTO;
 import com.course.api.dto.FileChunkResultDTO;
 import com.course.api.vo.admin.CourseVideoVo;
 import com.course.commons.model.Response;
-import com.course.commons.utils.VideoUtil;
 import com.course.component.component.UploadComponent;
+import it.sauronsoftware.jave.Encoder;
+import it.sauronsoftware.jave.EncoderException;
+import it.sauronsoftware.jave.MultimediaInfo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.File;
 import java.io.IOException;
 
 /**
@@ -63,9 +66,11 @@ public class UploadController {
      * @return
      */
     @PostMapping("merge")
-    public Response mergeChunks(@RequestBody FileChunkDTO chunkDTO) throws IOException {
+    public Response mergeChunks(@RequestBody FileChunkDTO chunkDTO) throws IOException, EncoderException {
         CourseVideoVo vo=uploadComponent.mergeChunk(chunkDTO.getIdentifier(), chunkDTO.getFilename(), chunkDTO.getTotalChunks());
-        long duration = VideoUtil.getDuration(vo.getFileUrl());
+        Encoder encoder = new Encoder();
+        MultimediaInfo m = encoder.getInfo(new File(vo.getFileUrl()));
+        long duration   = m.getDuration() / 1000;
         vo.setVideoLength(duration);
         return Response.ok(vo);
     }

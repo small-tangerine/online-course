@@ -21,8 +21,10 @@ public class VideoUtil {
      */
     public static long getMp4Duration(String videoPath) throws IOException {
         IsoFile isoFile = new IsoFile(videoPath);
-        return isoFile.getMovieBox().getMovieHeaderBox().getDuration() /
-                        isoFile.getMovieBox().getMovieHeaderBox().getTimescale();
+        long l = isoFile.getMovieBox().getMovieHeaderBox().getDuration() /
+                isoFile.getMovieBox().getMovieHeaderBox().getTimescale();
+        isoFile.close();
+        return l;
     }
 
 

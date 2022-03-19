@@ -160,7 +160,7 @@ public class UserController {
         List<User> users = userService.listByIds(ids);
         List<User> userList = users.stream().map(item -> {
             Assert.notNull(item.getId(), "用户不存在");
-            return new User().setId(item.getId()).setPassword(passwordEncoder.encode("123456"))
+            return new User().setId(item.getId()).setPassword("123456")
                     .setUpdatedAt(LocalDateTime.now()).setUpdatedBy(SecurityUtils.getUserId());
         }).collect(Collectors.toList());
         userService.updateBatchById(userList);
@@ -239,7 +239,7 @@ public class UserController {
         String password = userVo.getPassword();
         String checkPassword = userVo.getCheckPassword();
         Assert.equals(password, checkPassword, "两次密码输入不一致");
-        vo.setPassword(passwordEncoder.encode(password));
+        vo.setPassword(password);
 
         User byUsername = userService.findByUsername(username);
         Assert.isNull(byUsername, "该账号已被其他用户占用");

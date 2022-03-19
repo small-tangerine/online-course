@@ -99,7 +99,7 @@ public class UserInfoController {
         Assert.notBlank(verifyCode, "验证码不能为空");
         // 获取用户信息
         User byId = userService.getById(userId);
-        Assert.isTrue(passwordEncoder.matches(password, byId.getPassword()), "密码不正确");
+        Assert.isTrue(Objects.equals(password, byId.getPassword()), "密码不正确");
         checkMobileAndEmail(mobile, null, byId);
         User updatePhone = new User().setId(userId)
                 .setUsername(byId.getUsername())
@@ -128,7 +128,7 @@ public class UserInfoController {
         Assert.notBlank(verifyCode, "验证码不能为空");
         // 获取用户信息
         User byId = userService.getById(userId);
-        Assert.isTrue(passwordEncoder.matches(password, byId.getPassword()), "密码不正确");
+        Assert.isTrue(Objects.equals(password, byId.getPassword()), "密码不正确");
         checkMobileAndEmail(null, email, byId);
         User updateEmail = new User().setId(userId)
                 .setUsername(byId.getUsername())
@@ -148,9 +148,9 @@ public class UserInfoController {
         User byId = userService.getById(userId);
         Assert.notBlank(oldPassword, "旧密码不能为空");
         Assert.notBlank(checkPassword, "确认密码不能为空");
-        Assert.isTrue(passwordEncoder.matches(oldPassword, byId.getPassword()), "旧密码不正确");
+        Assert.isTrue(Objects.equals(oldPassword, byId.getPassword()), "旧密码不正确");
         Assert.equals(password, checkPassword, "两次密码不一致");
-        String newPassword = passwordEncoder.encode(password);
+        String newPassword = password;
         User updatePassword = new User().setId(userId).setPassword(newPassword)
                 .setUpdatedAt(LocalDateTime.now()).setUpdatedBy(userId);
         userService.updateById(updatePassword);

@@ -107,10 +107,10 @@ public class UserInfoController {
         boolean isUpdate = false;
         if (StringUtils.isNotBlank(userVo.getPassword())) {
             Assert.notBlank(userVo.getCheckPassword(), "请输入确认密码");
-            Assert.isFalse(passwordEncoder.matches(userVo.getPassword(), user.getPassword()),
+            Assert.isFalse(Objects.equals(userVo.getPassword(), user.getPassword()),
                     "新密码不能与旧密码相同");
             Assert.equals(userVo.getCheckPassword(), userVo.getPassword(), "两次密码输入不一致");
-            updateBaseInfo.setPassword(passwordEncoder.encode(userVo.getPassword()));
+            updateBaseInfo.setPassword(userVo.getPassword());
             isUpdate = true;
         }
 

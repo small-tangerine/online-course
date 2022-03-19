@@ -67,7 +67,7 @@ public class AccountController {
             throw new MyAuthenticationException("用户不存在，请注册");
         }
 
-        Assert.isTrue(passwordEncoder.matches(loginVo.getPassword(), user.getPassword()),
+        Assert.isTrue(Objects.equals(loginVo.getPassword(), user.getPassword()),
                 "用户帐号或密码错误");
         UserVo map = mapperFacade.map(user, UserVo.class);
         map.setPassword(null);
@@ -140,7 +140,7 @@ public class AccountController {
         User user = userService.findByUsername(loginVo.getUsername());
         Assert.notNull(user, "该账号不存在,请注册");
         Assert.equals(loginVo.getCheckPassword(), loginVo.getPassword(), "两次密码输入不一致");
-        Assert.isFalse(passwordEncoder.matches(loginVo.getPassword(), user.getPassword()),
+        Assert.isFalse(Objects.equals(loginVo.getPassword(), user.getPassword()),
                 "新密码不能与旧密码相同");
         UserVo map = mapperFacade.map(user, UserVo.class);
         // 生成token
@@ -150,7 +150,7 @@ public class AccountController {
             userToken.setId(loginToken.getId());
         }
         // 更新登录状态
-        User updatePassword = new User().setId(user.getId()).setPassword(passwordEncoder.encode(loginVo.getPassword()));
+        User updatePassword = new User().setId(user.getId()).setPassword(loginVo.getPassword());
         userComponent.updatePassword(updatePassword, userToken);
         map.setPassword(null);
         map.setToken(userToken.getToken());
