@@ -53,8 +53,8 @@ public class CommonConstant {
     /**
      * 保存在本地中的前缀
      */
-    public static final String FILE_PREFIX = "C:/nginx-1.16.1/upload/";
-    public static final String Video_PREFIX = "C:/nginx-1.16.1/upload/video/";
+    public static final String FILE_PREFIX = "D:/nginx-1.16.1/upload/";
+    public static final String Video_PREFIX = "D:/nginx-1.16.1/upload/video/";
 //    public static final String FILE_PREFIX = "D:/nginx-1.16.1/upload/";
     /**
      * 文件暂存列表
