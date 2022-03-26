@@ -43,4 +43,14 @@
             and exists(select id from user u where nickname like concat('%',#{paramsMap.keyword},'%') and u.id =uc.user_id)
         </if>
     </select>
+    <select id="countLearn" resultType="com.course.api.dto.CountDto">
+        SELECT
+            user_id as id,
+            SUM( learn_length ) as count
+        FROM
+            user_course_video
+        WHERE user_id IN <foreach collection="list" item="item" open="(" separator="," close=")">#{item}</foreach>
+        GROUP BY
+            user_id
+    </select>
 </mapper>

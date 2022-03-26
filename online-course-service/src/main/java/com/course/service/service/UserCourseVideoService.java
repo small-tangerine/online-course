@@ -30,4 +30,6 @@ public interface UserCourseVideoService extends IService<UserCourseVideo> {
     Map<Integer, List<UserCourseVideo>> findMapByUserIdAndCourseIds(Integer userId, Set<Integer> courseId);
 
     void listPagingByMap(Paging<UserCourseVideo> paging, Map<String, Object> paramsMap);
+
+    Map<Integer,Integer> countLearn(Set<Integer> userIds);
 }

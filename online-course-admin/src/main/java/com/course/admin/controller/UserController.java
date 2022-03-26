@@ -20,6 +20,7 @@ import com.course.component.cache.UserPermissionCache;
 import com.course.component.component.UserComponent;
 import com.course.service.service.RoleService;
 import com.course.service.service.TeachersService;
+import com.course.service.service.UserCourseVideoService;
 import com.course.service.service.UserRoleService;
 import com.course.service.service.UserService;
 import com.google.common.collect.Maps;
@@ -31,11 +32,20 @@ import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -58,6 +68,7 @@ public class UserController {
     private final UserPermissionCache userPermissionCache;
     private final TeachersService teachersService;
     private final PasswordEncoder passwordEncoder;
+    private final UserCourseVideoService userCourseVideoService;
 
     @GetMapping("/list")
     public Response UserList(Integer page, Integer pageSize, String keyword, Integer roleId) {
@@ -75,6 +86,7 @@ public class UserController {
             roleIds.addAll(userRoleMap.values());
         }
         Map<Integer, String> roleMap = roleService.listByIds(roleIds).stream().collect(Collectors.toMap(Role::getId, Role::getTitle));
+        Map<Integer,Integer> countDtoMap=userCourseVideoService.countLearn(userIds);
         paging.convert(item -> {
             UserVo userVo = mapperFacade.map(item, UserVo.class);
             Integer integer = userRoleMap.get(item.getId());
@@ -83,6 +95,11 @@ public class UserController {
                 if (StringUtils.isNotBlank(roleTitle)) {
                     userVo.setRoleTitle(roleTitle).setRoleId(integer);
                 }
+            }
+            Integer learn = countDtoMap.get(item.getId());
+            userVo.setLearnHour(0L);
+            if (Objects.nonNull(learn)){
+                userVo.setLearnHour(Long.parseLong(String.valueOf(learn)));
             }
             return userVo;
         });

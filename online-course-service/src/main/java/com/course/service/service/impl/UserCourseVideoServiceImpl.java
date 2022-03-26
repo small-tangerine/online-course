@@ -1,5 +1,6 @@
 package com.course.service.service.impl;
 
+import com.course.api.dto.CountDto;
 import com.course.api.entity.UserCourseVideo;
 import com.course.commons.model.Paging;
 import com.course.service.mapper.UserCourseVideoMapper;
@@ -72,5 +73,14 @@ public class UserCourseVideoServiceImpl extends ServiceImpl<UserCourseVideoMappe
     @Override
     public void listPagingByMap(Paging<UserCourseVideo> paging, Map<String, Object> paramsMap) {
         baseMapper.listPagingByMap(paging, paramsMap);
+    }
+
+    @Override
+    public Map<Integer, Integer> countLearn(Set<Integer> userIds) {
+        if (CollectionUtils.isEmpty(userIds)) {
+            return Collections.emptyMap();
+        }
+        List<CountDto> countDtoList = baseMapper.countLearn(userIds);
+        return countDtoList.stream().collect(Collectors.toMap(CountDto::getId, CountDto::getCount));
     }
 }
