@@ -103,7 +103,7 @@
           </if>
         ORDER BY
                  <if test="paramsMap.sort == 0">
-                     id DESC
+                     updated_at DESC,id DESC
                  </if>
                  <if test="paramsMap.sort == 1">
                      learn_persons desc,id DESC
