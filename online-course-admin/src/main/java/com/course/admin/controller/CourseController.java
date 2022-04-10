@@ -119,6 +119,14 @@ public class CourseController {
     }
 
 
+    /**
+     * 课程学生列表
+     * @param page
+     * @param pagesSize
+     * @param keyword
+     * @param courseId
+     * @return
+     */
     @GetMapping("/student-list")
     public Response courseUserList(Integer page, Integer pagesSize, String keyword, @NotNull(message = "课程编号不能为空") Integer courseId) {
         Course byId = courseService.getById(courseId);
@@ -158,6 +166,11 @@ public class CourseController {
     }
 
 
+    /**
+     * 获取课程详情
+     * @param id
+     * @return
+     */
     @GetMapping("/detail")
     public Response courseDetail(@NotNull(message = "课程编号不能为空") Integer id) {
         Course byId = courseService.getById(id);
@@ -190,6 +203,11 @@ public class CourseController {
         return Response.ok(map);
     }
 
+    /**
+     * 新增课程
+     * @param courseVo
+     * @return
+     */
     @PostMapping("/create")
     public Response courseCreate(@RequestBody CourseVo courseVo) {
         Integer userId = SecurityUtils.getUserId();
@@ -277,6 +295,11 @@ public class CourseController {
         return course;
     }
 
+    /**
+     * 课程审核
+     * @param course
+     * @return
+     */
     @PostMapping("/audit")
     public Response courseAudit(@RequestBody Course course) {
         Integer id = course.getId();
@@ -294,6 +317,11 @@ public class CourseController {
     }
 
 
+    /**
+     * 删除课程
+     * @param courseVo
+     * @return
+     */
     @PostMapping("/delete")
     public Response courseDelete(@RequestBody CourseVo courseVo) {
         Integer id = courseVo.getId();
@@ -308,7 +336,11 @@ public class CourseController {
         return ResponseHelper.deleteSuccess();
     }
 
-
+    /**
+     * 查看课程
+     * @param id
+     * @return
+     */
     @GetMapping("/view")
     public Response courseView(@NotNull(message = "课程编号不能为空") Integer id) {
         Course byId = courseService.getById(id);
@@ -340,6 +372,11 @@ public class CourseController {
     }
 
 
+    /**
+     * 更新课程
+     * @param courseVo
+     * @return
+     */
     @PostMapping("/update")
     public Response courseUpdate(@RequestBody CourseVo courseVo) {
         Assert.notNull(courseVo.getId(), "课程编号不能为空");

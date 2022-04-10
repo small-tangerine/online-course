@@ -39,6 +39,12 @@ public class CartsController {
     private final MapperFacade mapperFacade;
     private final CourseService courseService;
 
+    /**
+     * 购物车列表
+     * @param page
+     * @param size
+     * @return
+     */
     @GetMapping("/list")
     public Response cartsList(Integer page, Integer size) {
         LambdaQueryWrapper<Carts> query = Wrappers.lambdaQuery();
@@ -49,6 +55,11 @@ public class CartsController {
         return Response.ok(paging);
     }
 
+    /**
+     * 删除购物商品
+     * @param id
+     * @return
+     */
     @PostMapping("/delete/{id}")
     public Response cartsDelete(@PathVariable("id") Integer id) {
         Integer userId = SecurityUtils.getUserId();

@@ -44,6 +44,13 @@ public class CategoryController {
     private final CategoryCache categoryCache;
     private final CategoryTreeCache categoryTreeCache;
 
+    /**
+     * 一级分类列表
+     * @param page
+     * @param pageSize
+     * @param keyword
+     * @return
+     */
     @GetMapping("/list")
     public Response categoryList(Integer page, Integer pageSize, String keyword) {
         LambdaQueryWrapper<Category> query = Wrappers.lambdaQuery();
@@ -56,6 +63,14 @@ public class CategoryController {
         return Response.ok(paging);
     }
 
+    /**
+     * 二级分类
+     * @param parentId
+     * @param page
+     * @param pageSize
+     * @param keyword
+     * @return
+     */
     @GetMapping("/level-list")
     public Response categoryLevelList(@NotNull(message = "父级分类编号不能为空") Integer parentId,
                                       Integer page, Integer pageSize, String keyword) {
@@ -69,6 +84,11 @@ public class CategoryController {
         return Response.ok(paging);
     }
 
+    /**
+     * 更新分类
+     * @param categoryVo
+     * @return
+     */
     @PostMapping("/update")
     public Response categoryUpdate(@RequestBody CategoryVo categoryVo) {
         Integer id = categoryVo.getId();
@@ -107,6 +127,11 @@ public class CategoryController {
         return ResponseHelper.updateSuccess();
     }
 
+    /**
+     * 删除分类
+     * @param categoryVo
+     * @return
+     */
     @PostMapping("/delete")
     public Response categoryDelete(@RequestBody CategoryVo categoryVo) {
         Collection<Integer> ids = categoryVo.getIds();
@@ -119,6 +144,11 @@ public class CategoryController {
         return ResponseHelper.deleteSuccess();
     }
 
+    /**
+     * 创建分类
+     * @param categoryVo
+     * @return
+     */
     @PostMapping("/create")
     public Response categoryCreate(@RequestBody CategoryVo categoryVo) {
         String title = StringUtils.trim(categoryVo.getTitle());
@@ -152,6 +182,10 @@ public class CategoryController {
         return Response.ok("创建分类成功");
     }
 
+    /**
+     * 分类选择列表
+     * @return
+     */
     @GetMapping("/select")
     public Response categorySelect() {
         return Response.ok(categoryTreeCache.getCategoryVoList());

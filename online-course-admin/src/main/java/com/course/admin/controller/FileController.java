@@ -68,7 +68,6 @@ public class FileController {
             Assert.isTrue(CommonConstant.IMG_SUFFIX.contains(type), "指定文件不是图片");
             String avatar = BASE_URL + filePath;
 
-           
             return Response.ok("图片上传成功", ImmutableMap.of("url", avatar));
         } catch (IOException e) {
             log.error("图片上传失败", e);

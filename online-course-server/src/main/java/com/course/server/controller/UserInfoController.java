@@ -157,7 +157,7 @@ public class UserInfoController {
             user.setUsername(mobile);
         }
         if (Validator.isEmail(user.getUsername())) {
-            user.setEmail(email);
+            user.setUsername(email);
         }
         user.setMobile(mobile).setEmail(email);
     }

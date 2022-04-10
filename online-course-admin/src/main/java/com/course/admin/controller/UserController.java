@@ -86,7 +86,7 @@ public class UserController {
             roleIds.addAll(userRoleMap.values());
         }
         Map<Integer, String> roleMap = roleService.listByIds(roleIds).stream().collect(Collectors.toMap(Role::getId, Role::getTitle));
-        Map<Integer,Integer> countDtoMap=userCourseVideoService.countLearn(userIds);
+        Map<Integer, Integer> countDtoMap = userCourseVideoService.countLearn(userIds);
         paging.convert(item -> {
             UserVo userVo = mapperFacade.map(item, UserVo.class);
             Integer integer = userRoleMap.get(item.getId());
@@ -98,7 +98,7 @@ public class UserController {
             }
             Integer learn = countDtoMap.get(item.getId());
             userVo.setLearnHour(0L);
-            if (Objects.nonNull(learn)){
+            if (Objects.nonNull(learn)) {
                 userVo.setLearnHour(Long.parseLong(String.valueOf(learn)));
             }
             return userVo;
@@ -106,6 +106,11 @@ public class UserController {
         return Response.ok(paging);
     }
 
+    /**
+     * 角色选择
+     *
+     * @return
+     */
     @GetMapping("/role-select")
     public Response userRoleSelect() {
         List<Role> list = roleService.list();
@@ -117,6 +122,12 @@ public class UserController {
         }).collect(Collectors.toList()));
     }
 
+    /**
+     * 分配用户角色
+     *
+     * @param userRole
+     * @return
+     */
     @PostMapping("/assign-role")
     public Response userAssignRole(@RequestBody UserRole userRole) {
         Integer userId = userRole.getUserId();
@@ -146,6 +157,12 @@ public class UserController {
         return Response.ok("分配角色成功");
     }
 
+    /**
+     * 获取讲师信息
+     *
+     * @param id 用户ID
+     * @return
+     */
     @GetMapping("/teacher-info")
     public Response userTeacherInfo(@NotNull(message = "用户编号不能为空") Integer id) {
         Role userRole = roleService.findUserRole(id);
@@ -155,6 +172,12 @@ public class UserController {
         return Response.ok(byUserId);
     }
 
+    /**
+     * 删除用户
+     *
+     * @param user
+     * @return
+     */
     @PostMapping("/delete")
     public Response userDelete(@RequestBody UserVo user) {
         Collection<Integer> ids = user.getIds();
@@ -170,6 +193,12 @@ public class UserController {
         return ResponseHelper.deleteSuccess();
     }
 
+    /**
+     * 重置密码
+     *
+     * @param userVo
+     * @return
+     */
     @PostMapping("/reset-password")
     public Response resetPassword(@RequestBody UserVo userVo) {
         Collection<Integer> ids = userVo.getIds();
@@ -184,6 +213,12 @@ public class UserController {
         return Response.ok("重置密码成功");
     }
 
+    /**
+     * 更新用户信息
+     *
+     * @param userVo
+     * @return
+     */
     @PostMapping("/update")
     public Response userUpdate(@RequestBody UserVo userVo) {
 
@@ -280,6 +315,12 @@ public class UserController {
         return vo;
     }
 
+    /**
+     * 新增用户
+     *
+     * @param userVo
+     * @return
+     */
     @PostMapping("/create")
     public Response userCreate(@RequestBody UserVo userVo) {
         UserVo checkParams = checkParams(userVo);
@@ -293,6 +334,12 @@ public class UserController {
         return ResponseHelper.createSuccess();
     }
 
+    /**
+     * 修改讲师信息
+     *
+     * @param teachers
+     * @return
+     */
     @PostMapping("/teacher-update")
     public Response updateAccountInfo(@RequestBody Teachers teachers) {
         Integer teacherId = teachers.getId();

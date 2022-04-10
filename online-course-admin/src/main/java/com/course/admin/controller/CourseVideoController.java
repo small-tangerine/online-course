@@ -99,7 +99,15 @@ public class CourseVideoController {
         return Response.ok(paging);
     }
 
-
+    /**
+     * 课程视频学生列表
+     *
+     * @param page
+     * @param pagesSize
+     * @param keyword
+     * @param courseId
+     * @return
+     */
     @GetMapping("/student-list")
     public Response courseUserList(Integer page, Integer pagesSize, String keyword, @NotNull(message = "课程视频编号不能为空") Integer courseId) {
         CourseVideo byId = courseVideoService.getById(courseId);
@@ -125,13 +133,18 @@ public class CourseVideoController {
         return Response.ok(paging);
     }
 
+    /**
+     * 新增课程视频
+     * @param courseVo
+     * @return
+     */
     @PostMapping("/create")
     public Response courseCreate(@RequestBody @Validated CourseVideoVo courseVo) {
         Integer courseId = courseVo.getCourseId();
         Assert.notNull(courseId, "课程编号不能为空");
 
         CourseVideo map = mapperFacade.map(courseVo, CourseVideo.class);
-        if (StringUtils.isBlank(courseVo.getThumbUrl())){
+        if (StringUtils.isBlank(courseVo.getThumbUrl())) {
             map.setThumbUrl(CommonConstant.DEFAULT_THUMB_URL);
         }
         map.setAuditNotice(StringUtils.EMPTY)
@@ -143,6 +156,11 @@ public class CourseVideoController {
         return Response.ok("课程视频创建成功");
     }
 
+    /**
+     * 视频审核
+     * @param course
+     * @return
+     */
     @PostMapping("/audit")
     public Response courseAudit(@RequestBody CourseVideo course) {
         Integer id = course.getId();
@@ -160,6 +178,11 @@ public class CourseVideoController {
     }
 
 
+    /**
+     * 删除视频
+     * @param courseVo
+     * @return
+     */
     @PostMapping("/delete")
     public Response courseDelete(@RequestBody CourseVideoVo courseVo) {
         Integer id = courseVo.getId();
@@ -176,18 +199,21 @@ public class CourseVideoController {
     }
 
 
-
-
+    /**
+     * 更新视频
+     * @param courseVo
+     * @return
+     */
     @PostMapping("/update")
     public Response courseUpdate(@RequestBody @Validated CourseVideoVo courseVo) {
         Integer courseId = courseVo.getCourseId();
         Assert.notNull(courseId, "课程编号不能为空");
         Integer id = courseVo.getId();
-        Assert.notNull(id,"课程视频编号不能为空");
+        Assert.notNull(id, "课程视频编号不能为空");
         CourseVideo byId = courseVideoService.getById(id);
-        Assert.notNull(byId,"课程视频不存在");
+        Assert.notNull(byId, "课程视频不存在");
         CourseVideo map = mapperFacade.map(courseVo, CourseVideo.class);
-        if (StringUtils.isBlank(courseVo.getThumbUrl())){
+        if (StringUtils.isBlank(courseVo.getThumbUrl())) {
             map.setThumbUrl(CommonConstant.DEFAULT_THUMB_URL);
         }
         map.setAuditNotice(StringUtils.EMPTY)

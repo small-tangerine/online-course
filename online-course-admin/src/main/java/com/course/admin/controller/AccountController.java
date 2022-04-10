@@ -91,6 +91,10 @@ public class AccountController {
         return Response.ok(map);
     }
 
+    /**
+     * 获取账号信息
+     * @return
+     */
     @GetMapping("/info")
     public Response accountInfo() {
         Integer userId = SecurityUtils.getUserId();

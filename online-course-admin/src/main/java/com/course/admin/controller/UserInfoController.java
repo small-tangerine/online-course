@@ -47,6 +47,12 @@ public class UserInfoController {
     private final PasswordEncoder passwordEncoder;
     private final TeachersService teachersService;
 
+    /**
+     * 个人基本信息
+     *
+     * @param userVo
+     * @return
+     */
     @PostMapping("/update-base-info")
     public Response updateBaseInfo(@RequestBody UserVo userVo) {
         Assert.notBlank(SexEnum.getDescFromSex(userVo.getSex()), "请选择正确的性别");
@@ -61,6 +67,12 @@ public class UserInfoController {
         return ResponseHelper.updateSuccess();
     }
 
+    /**
+     * 更新讲师信息
+     *
+     * @param teachers
+     * @return
+     */
     @PostMapping("/update-teacher-info")
     public Response updateAccountInfo(@RequestBody Teachers teachers) {
         Integer userId = SecurityUtils.getUserId();
@@ -70,7 +82,7 @@ public class UserInfoController {
         Assert.notNull(byUserId, "讲师信息不存在");
         LambdaQueryWrapper<Teachers> query = Wrappers.lambdaQuery();
         query.eq(Teachers::getName, name)
-                .ne(Teachers::getId,byUserId.getId());
+                .ne(Teachers::getId, byUserId.getId());
         int count = teachersService.count(query);
         Assert.equals(0, count, "该讲师名称已被占用");
         Teachers updateTeacher = new Teachers().setId(byUserId.getId()).setName(name)
@@ -139,6 +151,11 @@ public class UserInfoController {
                 !Objects.equals(username, updateEmail.getUsername())));
     }
 
+    /**
+     * 更新密码
+     * @param userVo
+     * @return
+     */
     @PostMapping("update-password")
     public Response accountUpdatePassword(@RequestBody @Validated(AccountInfo.class) UserVo userVo) {
         String password = userVo.getPassword();
@@ -169,6 +186,7 @@ public class UserInfoController {
             return;
         }
         LambdaQueryWrapper<User> query = Wrappers.lambdaQuery();
+        // "select id,email,mobile,username from user where id=!#{userId} and (email = #{email} or mobile = #{mobile})"
         query.ne(User::getId, user.getId())
                 .and(item -> item.eq(StringUtils.isNotBlank(email), User::getEmail, email)
                         .or().eq(StringUtils.isNotBlank(mobile), User::getMobile, mobile))

@@ -73,6 +73,17 @@ public class CourseController {
     private final CourseComponent courseComponent;
     private final UserCourseVideoService userCourseVideoService;
 
+    /**
+     * 获取课程列表
+     * @param page
+     * @param size
+     * @param keyword
+     * @param sort
+     * @param category
+     * @param label
+     * @param type
+     * @return
+     */
     @GetMapping("/list")
     public Response courseList(Integer page, Integer size, String keyword, Integer sort,
                                @NotNull(message = "一级分类编号不能为空") Integer category,
@@ -201,7 +212,7 @@ public class CourseController {
 
     @GetMapping("/video")
     public Response courseVideo(Integer videoId) {
-        // TODO 课程视频详情
+        // 课程视频详情
         CourseVideo byId = courseVideoService.getById(videoId);
         Assert.notNull(byId, "视频不存在");
         CourseVideoVo map = mapperFacade.map(byId, CourseVideoVo.class);
@@ -219,7 +230,7 @@ public class CourseController {
         if (Objects.isNull(byId)) {
             return Response.ok();
         }
-        // TODO 用户是否添加了这门课程
+        // 用户是否添加了这门课程
         UserCourse userCourse = userCourseService.getByUserIdAndCourseId(SecurityUtils.getUserId(), byId.getCourseId());
         if (Objects.isNull(userCourse)) {
             userCourse = new UserCourse().setCourseId(byId.getCourseId()).setUserId(SecurityUtils.getUserId())

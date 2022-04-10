@@ -77,10 +77,6 @@ public class CourseComponent {
         queryTeacherCourse.eq(TeacherCourse::getCourseId, id);
         teacherCourseService.remove(queryTeacherCourse);
 
-        LambdaQueryWrapper<UserCourse> queryUserCourse = Wrappers.lambdaQuery();
-        queryUserCourse.eq(UserCourse::getCourseId, id);
-        userCourseService.remove(queryUserCourse);
-
         LambdaQueryWrapper<HomeRecommend> queryHomeRecommend = Wrappers.lambdaQuery();
         queryHomeRecommend.eq(HomeRecommend::getCourseId, id);
         homeRecommendService.remove(queryHomeRecommend);

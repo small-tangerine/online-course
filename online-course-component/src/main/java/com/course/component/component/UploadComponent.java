@@ -6,6 +6,7 @@ import com.course.api.dto.FileChunkDTO;
 import com.course.api.dto.FileChunkResultDTO;
 import com.course.api.vo.admin.CourseVideoVo;
 import com.course.commons.constant.CommonConstant;
+import com.course.commons.utils.Assert;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -47,7 +48,6 @@ public class UploadComponent {
         String filePath = getFilePath(chunkDTO.getIdentifier(), chunkDTO.getFilename());
         File file = new File(filePath);
         boolean exists = file.exists();
-        //1.2)检查Redis中是否存在,并且所有分片已经上传完成。
         File fileFolder = new File(fileFolderPath);
         if (!fileFolder.exists()) {
             boolean mkdirs = fileFolder.mkdirs();
@@ -120,6 +120,9 @@ public class UploadComponent {
              courseVideoVo = new CourseVideoVo().setFileSize(mergeFile.length())
                     .setUrl("http://localhost/video/" + getSuffixFilePath(identifier, filename))
                     .setFileUrl(filePath);
+        }else {
+            FileUtil.del(CommonConstant.Video_PREFIX + identifier);
+            Assert.isTrue(false,"文件分片上传不完整请重新上传");
         }
         FileUtil.del(CommonConstant.Video_PREFIX + identifier);
         return courseVideoVo;
