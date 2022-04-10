@@ -105,7 +105,7 @@ public class UserComponent {
         userRoleService.save(updateUserRole);
         // 角色是否讲师 用户讲师信息是否存在
         Integer roleId = updateUserRole.getRoleId();
-        Integer userId = updateUserRole.getUpdatedBy();
+        Integer userId = updateUserRole.getUserId();
         if (RoleTypeEnum.TEACHER.equalsStatus(roleId)) {
             Teachers byUserId = teachersService.getByUserId(userId);
             if (Objects.isNull(byUserId)) {
