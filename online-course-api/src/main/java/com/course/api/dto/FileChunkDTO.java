@@ -7,7 +7,6 @@ import org.springframework.web.multipart.MultipartFile;
 /**
  * 文件分片
  *
- * @Author zhangyukang
  * @Date 2021/1/16 19:35
  * @Version 1.0
  **/

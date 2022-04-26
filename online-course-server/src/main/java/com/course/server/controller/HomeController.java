@@ -31,7 +31,6 @@ import java.util.stream.Collectors;
 /**
  * 首页
  *
- * @author panguangming
  * @since 2022-03-05
  */
 @RequestMapping("/home")
@@ -45,6 +44,10 @@ public class HomeController {
     private final HomeRecommendService homeRecommendService;
     private final MapperFacade mapperFacade;
 
+    /**
+     * 首页信息
+     * @return
+     */
     @GetMapping("/recommend")
     public Response homeRecommend() {
         List<HomeRecommend> list = homeRecommendService.list();
@@ -53,7 +56,9 @@ public class HomeController {
             return Response.ok(ImmutableMap.of("recommend", Collections.emptyList(),
                     "new", Collections.emptyList()));
         }
+        // 实战推荐
         List<HomeRecommend> recommends = collectMap.get(RecommendTypeEnum.RECOMMEND.getType());
+        // 新上好课
         List<HomeRecommend> news = collectMap.get(RecommendTypeEnum.NEW.getType());
         Set<Integer> courseIds = Sets.newHashSet();
         Set<Integer> recommendCourseIds = Sets.newHashSet();

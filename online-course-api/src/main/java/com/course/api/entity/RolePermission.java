@@ -15,7 +15,6 @@ import lombok.experimental.Accessors;
  * 角色权限关联
  * </p>
  *
- * @author panguangming
  * @since 2022-03-02
  */
 @Data

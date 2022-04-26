@@ -14,7 +14,6 @@ import javax.validation.constraints.Pattern;
  * 用户
  * </p>
  *
- * @author panguangming
  * @since 2022-03-02
  */
 @Data

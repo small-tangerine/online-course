@@ -3,7 +3,6 @@ package com.course.commons.constant;
 /**
  * 时间默认格式
  *
- * @author panguangming
  * @since 2022-01-25
  */
 public class TimeConstants {

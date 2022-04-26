@@ -8,7 +8,6 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * 购物车 Mapper 接口
  * </p>
  *
- * @author panguangming
  * @since 2022-03-02
  */
 public interface CartsMapper extends BaseMapper<Carts> {

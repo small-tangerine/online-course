@@ -12,7 +12,6 @@ import java.util.Map;
  * 订单详情 服务类
  * </p>
  *
- * @author panguangming
  * @since 2022-03-02
  */
 public interface OrdersDetailService extends IService<OrdersDetail> {

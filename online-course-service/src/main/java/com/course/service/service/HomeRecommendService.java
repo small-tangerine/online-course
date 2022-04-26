@@ -8,7 +8,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * 首页推荐 服务类
  * </p>
  *
- * @author panguangming
  * @since 2022-03-02
  */
 public interface HomeRecommendService extends IService<HomeRecommend> {

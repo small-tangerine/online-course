@@ -4,7 +4,6 @@ package com.course.server.config.security.service;
 import org.springframework.security.core.userdetails.UserDetails;
 
 /**
- * @author panguangming
  */
 public interface SecurityService  {
     /**

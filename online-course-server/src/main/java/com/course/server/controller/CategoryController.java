@@ -24,7 +24,6 @@ import java.util.stream.Collectors;
 /**
  * 分类
  *
- * @author panguangming
  * @since 2022-03-04
  */
 @RequestMapping("/category")
@@ -37,6 +36,11 @@ public class CategoryController {
     private final CategoryService categoryService;
     private final MapperFacade mapperFacade;
 
+    /**
+     * 获取分类列表
+     *
+     * @return response
+     */
     @GetMapping("/list")
     public Response categoryList() {
         LambdaQueryWrapper<Category> query = Wrappers.lambdaQuery();

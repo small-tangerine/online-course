@@ -8,7 +8,6 @@ import java.io.Serializable;
 /**
  * 课程Dto
  *
- * @author panguangming
  * @since 2022-03-12
  */
 @Data

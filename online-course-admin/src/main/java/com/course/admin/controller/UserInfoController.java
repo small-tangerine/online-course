@@ -33,7 +33,6 @@ import java.util.Objects;
 /**
  * 用户信息
  *
- * @author panguangming
  * @since 2022-03-03
  */
 @RequestMapping("/user-info")
@@ -50,14 +49,15 @@ public class UserInfoController {
     /**
      * 个人基本信息
      *
-     * @param userVo
-     * @return
+     * @param userVo 用户实体
+     * @return response
      */
     @PostMapping("/update-base-info")
     public Response updateBaseInfo(@RequestBody UserVo userVo) {
         Assert.notBlank(SexEnum.getDescFromSex(userVo.getSex()), "请选择正确的性别");
         Assert.notBlank(userVo.getNickname(), "用户昵称不能为空");
         Integer userId = SecurityUtils.getUserId();
+        // 更新用户实体
         User updateBaseInfo = new User().setId(userId)
                 .setNickname(userVo.getNickname())
                 .setUpdatedBy(userId)
@@ -70,8 +70,8 @@ public class UserInfoController {
     /**
      * 更新讲师信息
      *
-     * @param teachers
-     * @return
+     * @param teachers 讲师实体
+     * @return response
      */
     @PostMapping("/update-teacher-info")
     public Response updateAccountInfo(@RequestBody Teachers teachers) {
@@ -85,6 +85,7 @@ public class UserInfoController {
                 .ne(Teachers::getId, byUserId.getId());
         int count = teachersService.count(query);
         Assert.equals(0, count, "该讲师名称已被占用");
+        // 更新讲师实体信息
         Teachers updateTeacher = new Teachers().setId(byUserId.getId()).setName(name)
                 .setJob(teachers.getJob())
                 .setIntroduction(teachers.getIntroduction())
@@ -153,8 +154,9 @@ public class UserInfoController {
 
     /**
      * 更新密码
-     * @param userVo
-     * @return
+     *
+     * @param userVo 用户实体
+     * @return response
      */
     @PostMapping("update-password")
     public Response accountUpdatePassword(@RequestBody @Validated(AccountInfo.class) UserVo userVo) {
@@ -167,8 +169,8 @@ public class UserInfoController {
         Assert.notBlank(checkPassword, "确认密码不能为空");
         Assert.isTrue(Objects.equals(oldPassword, byId.getPassword()), "旧密码不正确");
         Assert.equals(password, checkPassword, "两次密码不一致");
-        String newPassword = password;
-        User updatePassword = new User().setId(userId).setPassword(newPassword)
+        // 更新用户信息
+        User updatePassword = new User().setId(userId).setPassword(password)
                 .setUpdatedAt(LocalDateTime.now()).setUpdatedBy(userId);
         userService.updateById(updatePassword);
         return ResponseHelper.updateSuccess();

@@ -12,7 +12,6 @@ import java.util.List;
  * 分类
  * </p>
  *
- * @author panguangming
  * @since 2022-03-02
  */
 @Data

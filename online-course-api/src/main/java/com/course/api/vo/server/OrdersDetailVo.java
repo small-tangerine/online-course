@@ -10,7 +10,6 @@ import java.math.BigDecimal;
  * 订单详情
  * </p>
  *
- * @author panguangming
  * @since 2022-03-02
  */
 @Data

@@ -16,7 +16,6 @@ import java.util.Collection;
 /**
  * 权限
  *
- * @author panguangming
  * @since 2022-03-16
  */
 @RequiredArgsConstructor

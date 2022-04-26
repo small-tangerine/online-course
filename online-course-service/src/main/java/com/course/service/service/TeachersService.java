@@ -11,7 +11,6 @@ import java.util.Map;
  * 讲师 服务类
  * </p>
  *
- * @author panguangming
  * @since 2022-03-02
  */
 public interface TeachersService extends IService<Teachers> {

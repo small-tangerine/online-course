@@ -51,7 +51,6 @@ import java.util.stream.Collectors;
 /**
  * 用户
  *
- * @author panguangming
  * @since 2022-03-09
  */
 @RequestMapping("/user")
@@ -125,8 +124,8 @@ public class UserController {
     /**
      * 分配用户角色
      *
-     * @param userRole
-     * @return
+     * @param userRole 用户角色实体
+     * @return response
      */
     @PostMapping("/assign-role")
     public Response userAssignRole(@RequestBody UserRole userRole) {
@@ -148,6 +147,7 @@ public class UserController {
                 return Response.ok("分配角色成功");
             }
         }
+        // 更新用户角色
         UserRole updateUserRole = new UserRole().setUserId(userId).setRoleId(roleId)
                 .setCreatedAt(LocalDateTime.now()).setCreatedBy(SecurityUtils.getUserId())
                 .setUpdatedAt(LocalDateTime.now()).setUpdatedBy(SecurityUtils.getUserId());
@@ -175,8 +175,8 @@ public class UserController {
     /**
      * 删除用户
      *
-     * @param user
-     * @return
+     * @param user 用户实体
+     * @return response
      */
     @PostMapping("/delete")
     public Response userDelete(@RequestBody UserVo user) {
@@ -196,8 +196,8 @@ public class UserController {
     /**
      * 重置密码
      *
-     * @param userVo
-     * @return
+     * @param userVo 用户实体
+     * @return response
      */
     @PostMapping("/reset-password")
     public Response resetPassword(@RequestBody UserVo userVo) {
@@ -216,8 +216,8 @@ public class UserController {
     /**
      * 更新用户信息
      *
-     * @param userVo
-     * @return
+     * @param userVo 用户实体
+     * @return response
      */
     @PostMapping("/update")
     public Response userUpdate(@RequestBody UserVo userVo) {
@@ -228,15 +228,21 @@ public class UserController {
 
         Role roleServiceUserRole = roleService.findUserRole(checkParams.getId());
         UserRole userRole = null;
+        // 是否更新用户角色
         if (!Objects.equals(checkParams.getRoleId(), roleServiceUserRole.getId())) {
             userRole = new UserRole().setUserId(checkParams.getId()).setRoleId(checkParams.getRoleId())
                     .setUpdatedAt(LocalDateTime.now()).setUpdatedBy(SecurityUtils.getUserId());
         }
         userComponent.updateUser(user, userRole);
-
         return ResponseHelper.updateSuccess();
     }
 
+    /**
+     * 参数校验
+     *
+     * @param userVo 用户实体
+     * @return response
+     */
     private UserVo checkParams(UserVo userVo) {
         String username = userVo.getUsername();
         Assert.isTrue(Validator.isMobile(username)
@@ -318,8 +324,8 @@ public class UserController {
     /**
      * 新增用户
      *
-     * @param userVo
-     * @return
+     * @param userVo 用户实体
+     * @return response
      */
     @PostMapping("/create")
     public Response userCreate(@RequestBody UserVo userVo) {
@@ -337,8 +343,8 @@ public class UserController {
     /**
      * 修改讲师信息
      *
-     * @param teachers
-     * @return
+     * @param teachers 讲师实体
+     * @return response
      */
     @PostMapping("/teacher-update")
     public Response updateAccountInfo(@RequestBody Teachers teachers) {
@@ -353,6 +359,7 @@ public class UserController {
                 .ne(Teachers::getId, byUserId.getId());
         int count = teachersService.count(query);
         Assert.equals(0, count, "该讲师名称已被占用");
+        // 更新讲师信息
         Teachers updateTeacher = new Teachers().setId(byUserId.getId()).setName(name)
                 .setJob(teachers.getJob())
                 .setIntroduction(teachers.getIntroduction())

@@ -26,7 +26,6 @@ import java.util.stream.Collectors;
 /**
  * 权限缓存
  *
- * @author panguangming
  * @since 2022-03-06
  */
 @Component

@@ -16,7 +16,6 @@ import lombok.experimental.Accessors;
  * 订单详情
  * </p>
  *
- * @author panguangming
  * @since 2022-03-02
  */
 @Data

@@ -39,7 +39,6 @@ import java.util.Objects;
 /**
  * 用户信息
  *
- * @author panguangming
  * @since 2022-03-03
  */
 @RequestMapping("/user")
@@ -55,11 +54,18 @@ public class UserInfoController {
     private final UserTokenService userTokenService;
     private final UserCourseVideoService userCourseVideoService;
 
+    /**
+     * 更新用户基础信息
+     *
+     * @param userVo 用户实体
+     * @return response
+     */
     @PostMapping("/update-base-info")
     public Response updateBaseInfo(@RequestBody @Validated(BaseInfo.class) UserVo userVo) {
         Assert.notBlank(SexEnum.getDescFromSex(userVo.getSex()), "请选择正确的性别");
         Integer userId = SecurityUtils.getUserId();
         User user = userService.getById(userId);
+        // 更新用户基础信息
         User updateBaseInfo = new User().setId(userId)
                 .setNickname(userVo.getNickname())
                 .setJob(userVo.getJob())
@@ -78,6 +84,12 @@ public class UserInfoController {
         return ResponseHelper.updateSuccess(mapperFacade.map(user, UserVo.class));
     }
 
+    /**
+     * 修改用户账号信息
+     *
+     * @param userVo 用户实体
+     * @return response
+     */
     @PostMapping("/update-account-info")
     public Response updateAccountInfo(@RequestBody @Validated(AccountInfo.class) UserVo userVo) {
         Assert.isTrue(Validator.isMobile(userVo.getMobile()), "请输入正确的手机号码");
@@ -96,7 +108,7 @@ public class UserInfoController {
             return ResponseHelper.updateSuccess(ImmutableMap.of("isUpdateUsername",
                     YesOrNoEnum.YES.getValue()));
         }
-
+        // 更新用户信息
         User updateBaseInfo = new User().setId(userId)
                 .setMobile(userVo.getMobile())
                 .setEmail(userVo.getEmail())
@@ -162,12 +174,17 @@ public class UserInfoController {
         user.setMobile(mobile).setEmail(email);
     }
 
+    /**
+     * 用户学习总时长
+     *
+     * @return response
+     */
     @GetMapping("/learn")
     public Response userLearn() {
-        LambdaQueryWrapper<UserCourseVideo> query=Wrappers.lambdaQuery();
-        query.eq(UserCourseVideo::getUserId,SecurityUtils.getUserId());
+        LambdaQueryWrapper<UserCourseVideo> query = Wrappers.lambdaQuery();
+        query.eq(UserCourseVideo::getUserId, SecurityUtils.getUserId());
         List<UserCourseVideo> list = userCourseVideoService.list(query);
         Long reduce = list.stream().map(UserCourseVideo::getCumulativeDuration).reduce(0L, Long::sum);
-        return Response.ok(ImmutableMap.of("learn",reduce));
+        return Response.ok(ImmutableMap.of("learn", reduce));
     }
 }

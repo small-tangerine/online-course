@@ -29,7 +29,6 @@ import java.util.Objects;
 /**
  * 分类
  *
- * @author panguangming
  * @since 2022-03-09
  */
 @RequestMapping("/category")
@@ -46,14 +45,16 @@ public class CategoryController {
 
     /**
      * 一级分类列表
-     * @param page
-     * @param pageSize
-     * @param keyword
-     * @return
+     *
+     * @param page     页码
+     * @param pageSize 页大小
+     * @param keyword  关键词
+     * @return response
      */
     @GetMapping("/list")
     public Response categoryList(Integer page, Integer pageSize, String keyword) {
         LambdaQueryWrapper<Category> query = Wrappers.lambdaQuery();
+        // 分页参数
         query.eq(Category::getParentId, 0)
                 .like(StringUtils.isNotBlank(keyword), Category::getTitle, StringUtils.trim(keyword))
                 .orderByAsc(Category::getDisplayOrder);
@@ -65,11 +66,12 @@ public class CategoryController {
 
     /**
      * 二级分类
-     * @param parentId
-     * @param page
-     * @param pageSize
-     * @param keyword
-     * @return
+     *
+     * @param parentId 父级ID
+     * @param page     页码
+     * @param pageSize 页大小
+     * @param keyword  关键词
+     * @return response
      */
     @GetMapping("/level-list")
     public Response categoryLevelList(@NotNull(message = "父级分类编号不能为空") Integer parentId,
@@ -86,8 +88,9 @@ public class CategoryController {
 
     /**
      * 更新分类
-     * @param categoryVo
-     * @return
+     *
+     * @param categoryVo 分类实体
+     * @return response
      */
     @PostMapping("/update")
     public Response categoryUpdate(@RequestBody CategoryVo categoryVo) {
@@ -122,6 +125,7 @@ public class CategoryController {
         // 是否修改标题
         boolean isUpdate = Objects.equals(title, byId.getTitle());
         categoryComponent.updateCategory(updateCategory, isUpdate);
+        //清除分类缓存
         categoryCache.expireAll();
         categoryTreeCache.expireAll();
         return ResponseHelper.updateSuccess();
@@ -129,8 +133,9 @@ public class CategoryController {
 
     /**
      * 删除分类
-     * @param categoryVo
-     * @return
+     *
+     * @param categoryVo 分类实体
+     * @return response
      */
     @PostMapping("/delete")
     public Response categoryDelete(@RequestBody CategoryVo categoryVo) {
@@ -139,6 +144,7 @@ public class CategoryController {
             return ResponseHelper.deleteSuccess();
         }
         categoryComponent.deleteCategory(ids);
+        // 清除缓存
         categoryCache.expireAll();
         categoryTreeCache.expireAll();
         return ResponseHelper.deleteSuccess();
@@ -146,8 +152,9 @@ public class CategoryController {
 
     /**
      * 创建分类
-     * @param categoryVo
-     * @return
+     *
+     * @param categoryVo 分类实体
+     * @return response
      */
     @PostMapping("/create")
     public Response categoryCreate(@RequestBody CategoryVo categoryVo) {
@@ -161,7 +168,7 @@ public class CategoryController {
                 .eq(Category::getTitle, title);
         int count = categoryService.count(query);
         Assert.isTrue(Objects.equals(0, count), "分类名称已存在");
-
+        // 是否二级分类
         if (Objects.nonNull(parentId) && !Objects.equals(0, parentId)) {
             Category parent = categoryService.getById(parentId);
             Assert.notNull(parent, "父级分类不存在");
@@ -172,7 +179,7 @@ public class CategoryController {
         if (Objects.isNull(displayOrder)) {
             displayOrder = categoryService.findNextDisplayOrder(parentId);
         }
-
+        // 新建分类实体
         Category category = new Category().setParentId(parentId).setDisplayOrder(displayOrder)
                 .setTitle(title).setCreatedAt(LocalDateTime.now()).setCreatedBy(SecurityUtils.getUserId())
                 .setUpdatedAt(LocalDateTime.now()).setUpdatedBy(SecurityUtils.getUserId());
@@ -184,7 +191,8 @@ public class CategoryController {
 
     /**
      * 分类选择列表
-     * @return
+     *
+     * @return response
      */
     @GetMapping("/select")
     public Response categorySelect() {

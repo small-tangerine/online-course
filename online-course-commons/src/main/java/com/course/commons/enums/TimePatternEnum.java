@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
- * @author zhongjiahua
  * @date 2019-12-16
  * @Description: 时间模板工具类
  */

@@ -22,7 +22,6 @@ import java.util.Objects;
 /**
  * 自动生成 entity service
  *
- * @author panguangming
  * @since 2021-12-27
  */
 class Generate {

@@ -17,7 +17,6 @@ import java.util.Objects;
  * 菜单权限
  * </p>
  *
- * @author panguangming
  * @since 2022-03-02
  */
 @Data

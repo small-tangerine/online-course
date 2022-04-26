@@ -17,7 +17,6 @@ import java.time.LocalDateTime;
  * 账单
  * </p>
  *
- * @author panguangming
  * @since 2022-03-04
  */
 @Data

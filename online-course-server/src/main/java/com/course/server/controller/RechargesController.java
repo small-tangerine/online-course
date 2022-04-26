@@ -27,7 +27,6 @@ import java.util.List;
 /**
  * 充值消费
  *
- * @author panguangming
  * @since 2022-03-04
  */
 @RequestMapping("/recharge")
@@ -39,6 +38,13 @@ public class RechargesController {
     private final RechargesService rechargesService;
     private final MapperFacade mapperFacade;
 
+    /**
+     * 充值消费列表
+     *
+     * @param page 页码
+     * @param size 页大小
+     * @return response
+     */
     @GetMapping("/list")
     public Response rechargeList(Integer page, Integer size) {
         LambdaQueryWrapper<Recharges> query = Wrappers.lambdaQuery();
@@ -51,6 +57,7 @@ public class RechargesController {
             map.setActionTypeTitle(RechargeTypeEnum.getDescFromType(item.getActionType()));
             return map;
         });
+        // 统计总费用
         BigDecimal cost = totalCost(SecurityUtils.getUserId());
         paging.setExtra(ImmutableMap.of("cost", cost));
         return Response.ok(paging);

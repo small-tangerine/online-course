@@ -35,7 +35,6 @@ import java.util.stream.Collectors;
 /**
  * 用户控制器
  *
- * @author panguangming
  * @since 2022-03-02
  */
 @RequestMapping("/account")
@@ -93,24 +92,29 @@ public class AccountController {
 
     /**
      * 获取账号信息
-     * @return
+     *
+     * @return response
      */
     @GetMapping("/info")
     public Response accountInfo() {
         Integer userId = SecurityUtils.getUserId();
         User byId = userService.getById(userId);
         UserVo map = mapperFacade.map(byId, UserVo.class);
+        // 密码置空
         map.setPassword(null);
+        //获取用户角色
         Role role = roleService.findUserRole(userId);
         if (Objects.nonNull(role)) {
             map.setRoleId(role.getId()).setRoleTitle(role.getTitle());
         }
+        // 讲师信息
         Teachers teacherInfo = getTeacherInfo(userId);
         if (Objects.nonNull(teacherInfo)) {
             map.setTeacherInfo(teacherInfo)
                     .setAvatar(teacherInfo.getAvatar());
         }
         List<Permission> userPermission = permissionService.findUserPermission(userId);
+        // 获取用户权限标签
         Set<String> collect = userPermission.stream().filter(item -> PermissionTypeEnum.BUTTON.equalsType(item.getTypeId()))
                 .map(Permission::getPermissionTag)
                 .filter(StringUtils::isNotBlank)
@@ -127,6 +131,7 @@ public class AccountController {
     @PostMapping("/logout")
     public Response logout() {
         Integer userId = SecurityUtils.getUserId();
+        // 获取用户登录token信息
         UserToken userToken = userTokenService.findByUserIdAndType(userId, LoginTypeEnum.BACKEND.getTypeId());
         if (Objects.nonNull(userToken)) {
             userTokenService.removeById(userToken.getId());
@@ -179,6 +184,7 @@ public class AccountController {
     private UserToken generateToken(User user) {
         String token = jwtUtil.generateToken(user);
         LocalDateTime now = LocalDateTime.now();
+        //有效期30分钟
         LocalDateTime expired = now.plusMinutes(30L);
         return new UserToken().setToken(token).setUserId(user.getId())
                 .setUsername(user.getUsername()).setLoginAt(now)
@@ -187,8 +193,15 @@ public class AccountController {
     }
 
 
+    /**
+     * 获取教师信息
+     *
+     * @param userId 用户ID
+     * @return teacher实体
+     */
     private Teachers getTeacherInfo(Integer userId) {
         Role userRole = roleService.findUserRole(userId);
+        // 教师角色是否存在
         if (Objects.isNull(userRole)) {
             return null;
         }

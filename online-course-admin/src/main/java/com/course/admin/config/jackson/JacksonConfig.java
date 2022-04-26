@@ -24,7 +24,6 @@ import java.time.format.DateTimeFormatter;
 /**
  * 时间格式
  *
- * @author panguangming
  * @since 2022-01-25
  */
 @Configuration

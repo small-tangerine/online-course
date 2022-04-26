@@ -33,7 +33,6 @@ import java.util.stream.Collectors;
 /**
  * 角色
  *
- * @author panguangming
  * @since 2022-03-08
  */
 @RequestMapping("/role")
@@ -78,6 +77,12 @@ public class RoleController {
         return Response.ok(paging);
     }
 
+    /**
+     * 更新角色信息
+     *
+     * @param role 角色实体
+     * @return response
+     */
     @PostMapping("/update")
     public Response roleUpdate(@RequestBody Role role) {
         Integer id = role.getId();
@@ -95,7 +100,7 @@ public class RoleController {
         query.ne(Role::getId, id).eq(Role::getTitle, StringUtils.trim(title));
         List<Role> list = roleService.list(query);
         Assert.isTrue(Objects.equals(list.size(), 0), "该角色名称已被占用");
-
+        // 更新角色实体
         Role updateRole = new Role().setId(id).setNote(note).setTitle(title)
                 .setUpdatedAt(LocalDateTime.now()).setUpdatedBy(SecurityUtils.getUserId());
         roleService.updateById(updateRole);
@@ -119,7 +124,12 @@ public class RoleController {
         return Response.ok("权限菜单缓存清理成功");
     }
 
-
+    /**
+     * 分配角色权限
+     *
+     * @param roleVo 角色实体
+     * @return response
+     */
     @PostMapping("/permission-scope")
     public Response rolePermissionScope(@RequestBody RoleVo roleVo) {
         Integer id = roleVo.getId();
@@ -132,6 +142,7 @@ public class RoleController {
             map.put("role_id", id);
             rolePermissionService.removeByMap(map);
         }
+        // 去重
         List<RolePermission> collect = resourceCollect.stream()
                 .distinct()
                 .map(item -> new RolePermission().setPermissionId(item)
@@ -141,22 +152,36 @@ public class RoleController {
         Assert.equals(collect.size(), resourceCollect.size(), "请勿重复勾选");
 
         roleComponent.updateRolePermission(id, collect);
+        // 清除缓存
         userPermissionCache.expireAll();
         dynamicSecurityMetadataSource.clearDataSource();
         return Response.ok("分配权限成功");
     }
 
+    /**
+     * 删除角色
+     *
+     * @param roleVo 角色实体
+     * @return response
+     */
     @PostMapping("/delete")
     public Response roleDelete(@RequestBody RoleVo roleVo) {
         Collection<Integer> resourceCollect = roleVo.getResourceCollect();
         if (CollectionUtils.isEmpty(resourceCollect)) {
             return ResponseHelper.deleteSuccess();
         }
+        // 判断是否基础角色
         resourceCollect.forEach(item -> Assert.isFalse(RoleTypeEnum.containsStatus(item), "基础角色禁止删除"));
         roleComponent.removeRole(resourceCollect);
         return ResponseHelper.deleteSuccess();
     }
 
+    /**
+     * 新增角色
+     *
+     * @param role 角色实体
+     * @return response
+     */
     @PostMapping("/create")
     public Response roleCreate(@RequestBody Role role) {
         String title = role.getTitle();
@@ -166,6 +191,7 @@ public class RoleController {
         query.eq(Role::getTitle, StringUtils.trim(title));
         List<Role> list = roleService.list(query);
         Assert.isTrue(Objects.equals(list.size(), 0), "该角色名称已被占用");
+        // 新增角色实体
         Role createRole = new Role().setTitle(title).setNote(note)
                 .setCreatedAt(LocalDateTime.now()).setCreatedBy(SecurityUtils.getUserId())
                 .setUpdatedAt(LocalDateTime.now()).setUpdatedBy(SecurityUtils.getUserId());

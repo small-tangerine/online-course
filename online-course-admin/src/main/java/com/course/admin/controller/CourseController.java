@@ -68,7 +68,6 @@ import java.util.stream.Collectors;
 /**
  * 课程
  *
- * @author panguangming
  * @since 2022-03-12
  */
 @RequestMapping("/course")
@@ -89,6 +88,18 @@ public class CourseController {
     private final CourseComponent courseComponent;
     private final HomeRecommendService homeRecommendService;
 
+    /**
+     * 获取课程列表
+     *
+     * @param page        页码
+     * @param pageSize    页大小
+     * @param auditStatus 审核状态
+     * @param type        类型
+     * @param isDiscount  是否折扣
+     * @param keyword     关键词
+     * @param userId      用户ID
+     * @return response
+     */
     @GetMapping("/list")
     public Response courseList(Integer page, Integer pageSize, Integer auditStatus,
                                Integer type, Integer isDiscount, String keyword, Integer userId) {
@@ -121,11 +132,12 @@ public class CourseController {
 
     /**
      * 课程学生列表
-     * @param page
-     * @param pagesSize
-     * @param keyword
-     * @param courseId
-     * @return
+     *
+     * @param page      页码
+     * @param pagesSize 页大小
+     * @param keyword   关键词
+     * @param courseId  课程ID
+     * @return response
      */
     @GetMapping("/student-list")
     public Response courseUserList(Integer page, Integer pagesSize, String keyword, @NotNull(message = "课程编号不能为空") Integer courseId) {
@@ -168,8 +180,9 @@ public class CourseController {
 
     /**
      * 获取课程详情
-     * @param id
-     * @return
+     *
+     * @param id 课程ID
+     * @return response
      */
     @GetMapping("/detail")
     public Response courseDetail(@NotNull(message = "课程编号不能为空") Integer id) {
@@ -190,10 +203,12 @@ public class CourseController {
             }).collect(Collectors.toList());
             map.setVideo(collect);
         }
+        // 讲师信息
         Teachers byCourseId = teachersService.getByCourseId(id);
         if (Objects.nonNull(byCourseId)) {
             map.setTeacher(byCourseId);
         }
+        // 课程分类
         Map<Integer, List<CourseCategory>> mapByCourseIds = courseCategoryService.findMapByCourseIds(Collections.singletonList(id));
         List<CourseCategory> courseCategories = mapByCourseIds.get(id);
         if (CollectionUtils.isNotEmpty(courseCategories)) {
@@ -205,8 +220,9 @@ public class CourseController {
 
     /**
      * 新增课程
-     * @param courseVo
-     * @return
+     *
+     * @param courseVo 课程实体
+     * @return response
      */
     @PostMapping("/create")
     public Response courseCreate(@RequestBody CourseVo courseVo) {
@@ -297,8 +313,9 @@ public class CourseController {
 
     /**
      * 课程审核
-     * @param course
-     * @return
+     *
+     * @param course 课程实体
+     * @return response
      */
     @PostMapping("/audit")
     public Response courseAudit(@RequestBody Course course) {
@@ -310,6 +327,7 @@ public class CourseController {
         Assert.isTrue(StatusEnum.WAIT.equalsStatus(byId.getAuditStatus()), "该课程不处于待审核状态");
         Assert.isTrue(StatusEnum.containsStatus(auditStatus), "审核决定不正确");
         Assert.isFalse(StringUtils.isBlank(auditNotice) && StatusEnum.FAIL.equalsStatus(auditStatus), "审核不通过原因不能为空");
+        // 更新课程审核信息
         Course updatedBy = new Course().setId(id).setAuditStatus(auditStatus).setAuditNotice(auditNotice)
                 .setUpdatedAt(LocalDateTime.now()).setUpdatedBy(SecurityUtils.getUserId());
         courseService.updateById(updatedBy);
@@ -319,8 +337,9 @@ public class CourseController {
 
     /**
      * 删除课程
-     * @param courseVo
-     * @return
+     *
+     * @param courseVo 课程实体
+     * @return response
      */
     @PostMapping("/delete")
     public Response courseDelete(@RequestBody CourseVo courseVo) {
@@ -338,8 +357,9 @@ public class CourseController {
 
     /**
      * 查看课程
-     * @param id
-     * @return
+     *
+     * @param id 课程ID
+     * @return response
      */
     @GetMapping("/view")
     public Response courseView(@NotNull(message = "课程编号不能为空") Integer id) {
@@ -352,6 +372,7 @@ public class CourseController {
             Set<Integer> collect = courseCategories.stream().map(CourseCategory::getCategoryId).collect(Collectors.toSet());
             map.setCategoryIds(collect);
         }
+        // 获取课程分类
         Collection<Integer> categoryIds = map.getCategoryIds();
         if (CollectionUtils.isNotEmpty(categoryIds)) {
             List<Integer> parentIds = categoryService.getParentById(categoryIds);
@@ -374,8 +395,9 @@ public class CourseController {
 
     /**
      * 更新课程
-     * @param courseVo
-     * @return
+     *
+     * @param courseVo 课程实体
+     * @return response
      */
     @PostMapping("/update")
     public Response courseUpdate(@RequestBody CourseVo courseVo) {
@@ -416,6 +438,7 @@ public class CourseController {
                         .setType(courseVo.getRecommend()).setCreatedBy(userId).setCreatedAt(LocalDateTime.now());
             }
         }
+        // 更新课程信息
         course.setAuditStatus(StatusEnum.WAIT.getStatus())
                 .setAuditNotice(StringUtils.EMPTY);
         courseComponent.updateCourse(course, byUserId, courseCategoryList, homeRecommend);

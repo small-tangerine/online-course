@@ -24,7 +24,6 @@ import java.util.List;
 /**
  * 上传组件
  *
- * @author panguangming
  * @since 2022-03-16
  */
 @RequiredArgsConstructor

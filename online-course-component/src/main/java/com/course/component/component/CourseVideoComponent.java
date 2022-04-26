@@ -14,7 +14,6 @@ import org.springframework.stereotype.Component;
 /**
  * 课程
  *
- * @author panguangming
  * @since 2022-03-13
  */
 @Component

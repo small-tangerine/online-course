@@ -29,7 +29,6 @@ import java.util.Objects;
 /**
  * 课程
  *
- * @author panguangming
  * @since 2022-03-13
  */
 @Component

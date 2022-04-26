@@ -35,7 +35,6 @@ import java.util.stream.Collectors;
 /**
  * 订单
  *
- * @author panguangming
  * @since 2022-03-11
  */
 @RequestMapping("/order")
@@ -49,6 +48,16 @@ public class OrdersController {
     private final MapperFacade mapperFacade;
     private final OrdersDetailService ordersDetailService;
 
+    /**
+     * 订单列表
+     *
+     * @param page      页码
+     * @param pageSize  页大小
+     * @param code      订单号
+     * @param payType   字符类型
+     * @param payStatus 支付状态
+     * @return response
+     */
     @GetMapping("/list")
     public Response orderList(Integer page, Integer pageSize, String code, Integer payType, Integer payStatus) {
         Paging<Orders> paging = new Paging<>(page, pageSize);
@@ -76,6 +85,12 @@ public class OrdersController {
         return Response.ok(paging);
     }
 
+    /**
+     * 订单详情
+     *
+     * @param id 订单ID
+     * @return response
+     */
     @GetMapping("/detail-list")
     public Response orderDetailList(@NotNull(message = "订单编号不能为空") Integer id) {
         Orders byId = ordersService.getById(id);

@@ -12,7 +12,6 @@ import java.util.Map;
  * 订单详情 Mapper 接口
  * </p>
  *
- * @author panguangming
  * @since 2022-03-02
  */
 public interface OrdersDetailMapper extends BaseMapper<OrdersDetail> {

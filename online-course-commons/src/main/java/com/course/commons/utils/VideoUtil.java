@@ -7,7 +7,6 @@ import java.io.IOException;
 /**
  * 视频工具
  *
- * @author panguangming
  * @since 2022-03-16
  */
 public class VideoUtil {

@@ -5,7 +5,6 @@ import java.io.FileInputStream;
 import java.text.DecimalFormat;
 
 /**
- * @author Gm
  */
 public class FileSizeUtil {
     private static final String TAG=FileSizeUtil.class.getSimpleName();

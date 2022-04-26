@@ -30,7 +30,6 @@ import java.time.LocalDateTime;
 /**
  * 头像
  *
- * @author panguangming
  * @since 2022-03-03
  */
 @RequestMapping("/avatar")
@@ -51,7 +50,7 @@ public class AvatarController {
      * @return response
      */
     @PostMapping("/upload")
-    public Response upload( @RequestParam("image") MultipartFile image) {
+    public Response upload(@RequestParam("image") MultipartFile image) {
         Assert.notNull(image, "没有图片");
 
         String originalFilename = image.getOriginalFilename();
@@ -69,6 +68,7 @@ public class AvatarController {
             Assert.isTrue(CommonConstant.IMG_SUFFIX.contains(type), "指定文件不是图片");
             String avatar = BASE_URL + filePath;
             User user = userService.getById(SecurityUtils.getUserId());
+            // 更新用户头像信息
             User updateAvatar = new User().setId(SecurityUtils.getUserId()).setAvatar(avatar)
                     .setUpdatedAt(LocalDateTime.now())
                     .setUpdatedBy(SecurityUtils.getUserId());

@@ -9,7 +9,6 @@ import java.util.List;
 /**
  * 首页vo
  *
- * @author panguangming
  * @since 2022-03-12
  */
 @Data

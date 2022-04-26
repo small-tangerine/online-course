@@ -21,7 +21,6 @@ import java.util.List;
 /**
  * 角色组件
  *
- * @author panguangming
  * @since 2022-03-08
  */
 @RequiredArgsConstructor

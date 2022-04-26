@@ -22,7 +22,6 @@ import java.util.stream.Collectors;
  * 课程 服务实现类
  * </p>
  *
- * @author panguangming
  * @since 2022-03-02
  */
 @Service

@@ -6,7 +6,6 @@ import lombok.ToString;
 import org.springframework.security.core.AuthenticationException;
 
 /**
- * @author Gm
  */
 @Setter
 @Getter

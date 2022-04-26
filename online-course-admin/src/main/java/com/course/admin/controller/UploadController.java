@@ -21,7 +21,6 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * @Author zhangyukang
  * @Date 2021/1/16 19:22
  * @Version 1.0
  * @Modify XJLZ
@@ -33,44 +32,45 @@ import java.io.IOException;
 @Slf4j
 public class UploadController {
 
-   private final UploadComponent uploadComponent;
+    private final UploadComponent uploadComponent;
 
     /**
      * 检查分片是否存在
      *
-     * @return
+     * @return response
      */
     @GetMapping("chunk")
     public Response checkChunkExist(FileChunkDTO chunkDTO) {
-        FileChunkResultDTO fileChunkCheckDTO= uploadComponent.checkChunkExist(chunkDTO);
-            return Response.ok(fileChunkCheckDTO);
+        FileChunkResultDTO fileChunkCheckDTO = uploadComponent.checkChunkExist(chunkDTO);
+        return Response.ok(fileChunkCheckDTO);
     }
 
 
     /**
      * 上传文件分片
      *
-     * @param chunkDTO
-     * @return
+     * @param chunkDTO 分片实体
+     * @return response
      */
     @PostMapping("chunk")
     public Response uploadChunk(FileChunkDTO chunkDTO) throws IOException {
-            uploadComponent.uploadChunk(chunkDTO);
-            return Response.ok(chunkDTO.getIdentifier());
+        uploadComponent.uploadChunk(chunkDTO);
+        return Response.ok(chunkDTO.getIdentifier());
     }
 
     /**
      * 请求合并文件分片
      *
-     * @param chunkDTO
-     * @return
+     * @param chunkDTO 分片实体
+     * @return response
      */
     @PostMapping("merge")
     public Response mergeChunks(@RequestBody FileChunkDTO chunkDTO) throws IOException, EncoderException {
-        CourseVideoVo vo=uploadComponent.mergeChunk(chunkDTO.getIdentifier(), chunkDTO.getFilename(), chunkDTO.getTotalChunks());
+        CourseVideoVo vo = uploadComponent.mergeChunk(chunkDTO.getIdentifier(), chunkDTO.getFilename(), chunkDTO.getTotalChunks());
+        // 计算视频时长
         Encoder encoder = new Encoder();
         MultimediaInfo m = encoder.getInfo(new File(vo.getFileUrl()));
-        long duration   = m.getDuration() / 1000;
+        long duration = m.getDuration() / 1000;
         vo.setVideoLength(duration);
         return Response.ok(vo);
     }

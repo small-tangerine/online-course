@@ -35,7 +35,6 @@ import java.util.stream.Collectors;
 /**
  * 订单
  *
- * @author panguangming
  * @since 2022-03-04
  */
 @RequestMapping("/order")
@@ -120,6 +119,12 @@ public class OrdersController {
         return Response.ok("取消成功");
     }
 
+    /**
+     * 订单详情
+     *
+     * @param code 订单号
+     * @return response
+     */
     @GetMapping("/detail")
     public Response orderDetail(@NotBlank(message = "订单编号不能为空") String code) {
         Integer userId = SecurityUtils.getUserId();
@@ -133,6 +138,12 @@ public class OrdersController {
         return Response.ok(map);
     }
 
+    /**
+     * 封装订单详情
+     *
+     * @param map        订单实体
+     * @param detailList 订单详情List
+     */
     private void wrapDetail(OrdersVo map, List<OrdersDetail> detailList) {
         map.setCost(BigDecimal.ZERO);
         List<OrdersDetailVo> ordersDetailVoList = detailList.stream()
@@ -153,6 +164,12 @@ public class OrdersController {
         }
     }
 
+    /**
+     * 创建订单
+     *
+     * @param ordersVo 订单实体
+     * @return response
+     */
     @PostMapping("/create")
     public Response orderCreate(@RequestBody @Validated OrdersVo ordersVo) {
         Integer userId = SecurityUtils.getUserId();
@@ -186,6 +203,12 @@ public class OrdersController {
         return Response.ok(ImmutableMap.of("code", orders.getCode()));
     }
 
+    /**
+     * 支付订单
+     *
+     * @param ordersVo 订单实体
+     * @return response
+     */
     @PostMapping("/pay")
     public Response orderPay(@RequestBody OrdersVo ordersVo) {
         Integer userId = SecurityUtils.getUserId();
@@ -213,9 +236,9 @@ public class OrdersController {
             return item.getPrice();
         }).reduce(BigDecimal.ZERO, BigDecimal::add);
 
-        Assert.equals(cost,orderByCode.getCost(),"订单异常支付失败,请联系管理员");
+        Assert.equals(cost, orderByCode.getCost(), "订单异常支付失败,请联系管理员");
 
-        //recharge
+        //recharge 封装消费信息
         Recharges recharges = null;
         if (PayTypeEnum.BALANCE.equalsStatus(payType)) {
             recharges = new Recharges().setAmount(cost)
@@ -224,7 +247,7 @@ public class OrdersController {
                     .setUserId(userId).setRemark("订单支出，订单号：" + code)
                     .setCreatedBy(userId).setCreatedAt(LocalDateTime.now());
         }
-        // bill
+        // bill 封装账单信息
         List<Bills> billsList = detailList.stream().map(item -> {
             Bills bills = new Bills().setPayType(payType).setCourseId(item.getCourseId())
                     .setOrderCode(code).setTitle(item.getTitle()).setUserId(userId)
@@ -235,9 +258,9 @@ public class OrdersController {
             return bills.setCost(item.getPrice());
         }).collect(Collectors.toList());
 
-        //user_course
+        //user_course 封装用户课程信息
         List<UserCourse> userCourseList = detailList.stream()
-                .map(item ->{
+                .map(item -> {
                     UserCourse userCourse = new UserCourse().setCourseId(item.getCourseId()).setUserId(userId)
                             .setCreatedAt(LocalDateTime.now()).setCreatedBy(userId);
                     if (YesOrNoEnum.YES.equalsStatus(item.getIsDiscount())) {

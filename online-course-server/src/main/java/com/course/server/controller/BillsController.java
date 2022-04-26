@@ -25,7 +25,6 @@ import java.util.List;
 /**
  * 账单
  *
- * @author panguangming
  * @since 2022-03-04
  */
 @RequestMapping("/bills")
@@ -37,6 +36,13 @@ public class BillsController {
     private final BillsService billsService;
     private final MapperFacade mapperFacade;
 
+    /**
+     * 用户消费帐单列表
+     *
+     * @param page 页码
+     * @param size 页大小
+     * @return response
+     */
     @GetMapping("/list")
     public Response billList(Integer page, Integer size) {
         LambdaQueryWrapper<Bills> query = Wrappers.lambdaQuery();
@@ -49,6 +55,7 @@ public class BillsController {
             map.setPayTypeTitle(PayTypeEnum.getDescFromType(item.getPayType()));
             return map;
         });
+        // 统计总消费金额
         BigDecimal cost = totalCost(SecurityUtils.getUserId());
         paging.setExtra(ImmutableMap.of("cost", cost));
         return Response.ok(paging);

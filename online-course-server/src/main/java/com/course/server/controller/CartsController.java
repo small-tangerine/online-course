@@ -26,7 +26,6 @@ import java.util.Objects;
 /**
  * 购物车
  *
- * @author panguangming
  * @since 2022-03-04
  */
 @RequestMapping("/carts")
@@ -41,9 +40,10 @@ public class CartsController {
 
     /**
      * 购物车列表
-     * @param page
-     * @param size
-     * @return
+     *
+     * @param page 页码
+     * @param size 页大小
+     * @return response
      */
     @GetMapping("/list")
     public Response cartsList(Integer page, Integer size) {
@@ -57,8 +57,9 @@ public class CartsController {
 
     /**
      * 删除购物商品
-     * @param id
-     * @return
+     *
+     * @param id 购物车ID
+     * @return response
      */
     @PostMapping("/delete/{id}")
     public Response cartsDelete(@PathVariable("id") Integer id) {
@@ -70,6 +71,12 @@ public class CartsController {
         return ResponseHelper.deleteSuccess();
     }
 
+    /**
+     * 添加购物车商品
+     *
+     * @param cartsVo 购物车商品实体
+     * @return response
+     */
     @PostMapping("/create")
     public Response cartsCreate(@RequestBody CartsVo cartsVo) {
         Integer userId = SecurityUtils.getUserId();
@@ -84,6 +91,7 @@ public class CartsController {
         // 校验是否已经在购物车了
         Carts carts = cartsService.getByUserIdAndCourseId(userId, courseId);
         Assert.isNull(carts, "当前课程已添加到购物车，无需重复添加");
+        // 新增购物车商品
         Carts createCarts = new Carts().setUserId(userId)
                 .setCourseId(courseId)
                 .setPrice(course.getPrice())

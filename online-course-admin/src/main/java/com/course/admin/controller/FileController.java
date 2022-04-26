@@ -28,7 +28,6 @@ import java.nio.file.Paths;
 /**
  * 头像
  *
- * @author panguangming
  * @since 2022-03-03
  */
 @RequestMapping("/file")
@@ -74,5 +73,5 @@ public class FileController {
             return Response.fail("图片上传失败");
         }
     }
-    
+
 }

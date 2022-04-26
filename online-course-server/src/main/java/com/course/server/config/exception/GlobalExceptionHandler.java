@@ -27,7 +27,6 @@ import javax.validation.ConstraintViolationException;
 import java.util.stream.Collectors;
 
 /**
- * @author Gm
  */
 @RestControllerAdvice
 @Slf4j

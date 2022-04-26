@@ -16,7 +16,6 @@ import java.util.Objects;
 /**
  * 安全验证操作
  *
- * @author guangming
  * @version 1.0
  * @since 2020/10/15/015 9:40
  **/

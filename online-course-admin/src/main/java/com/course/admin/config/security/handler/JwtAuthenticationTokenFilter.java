@@ -87,7 +87,9 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
                 .gt(UserToken::getExpiredAt, LocalDateTime.now())
                 .last("limit 1");
         UserToken userToken = userTokenService.getOne(query);
+        // 是否存在用户登录token信息
         if (Objects.nonNull(userToken)) {
+            // 延长过期时间
             LocalDateTime expiredAt = LocalDateTime.now().plusMinutes(30L);
             UserToken updateToken = new UserToken().setId(userToken.getId())
                     .setExpiredAt(expiredAt);

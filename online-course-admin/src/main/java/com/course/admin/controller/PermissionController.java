@@ -35,7 +35,6 @@ import java.util.Objects;
 /**
  * 权限菜单
  *
- * @author panguangming
  * @since 2022-03-16
  */
 @RequestMapping("/permission")
@@ -53,6 +52,15 @@ public class PermissionController {
     private final UserPermissionCache userPermissionCache;
     private final DynamicSecurityMetadataSource dynamicSecurityMetadataSource;
 
+    /**
+     * 权限菜单列表
+     *
+     * @param page     页码
+     * @param pageSize 页大小
+     * @param keyword  关键词
+     * @param type     类型
+     * @return response
+     */
     @GetMapping("/list")
     public Response pageQueryList(Integer page, Integer pageSize, String keyword, Integer type) {
         LambdaQueryWrapper<Permission> query = Wrappers.lambdaQuery();
@@ -65,7 +73,12 @@ public class PermissionController {
         return Response.ok(list);
     }
 
-
+    /**
+     * 新增权限菜单
+     *
+     * @param permissionVo 权限实体
+     * @return response
+     */
     @PostMapping("/create")
     public Response permissionsCreate(@RequestBody PermissionVo permissionVo) {
         Permission map = mapperFacade.map(permissionVo, Permission.class);
@@ -73,12 +86,19 @@ public class PermissionController {
                 .setCreatedAt(LocalDateTime.now()).setCreatedBy(SecurityUtils.getUserId())
                 .setUpdatedBy(SecurityUtils.getUserId()).setUpdatedAt(LocalDateTime.now());
         permissionService.save(map);
+        // 清除缓存
         menuCache.expireAll();
         userPermissionCache.expireAll();
         dynamicSecurityMetadataSource.clearDataSource();
         return ResponseHelper.createSuccess();
     }
 
+    /**
+     * 更新权限菜单
+     *
+     * @param permissionVo 权限实体
+     * @return response
+     */
     @PostMapping("/update")
     public Response permissionsUpdate(@RequestBody PermissionVo permissionVo) {
         Integer id = permissionVo.getId();
@@ -88,12 +108,19 @@ public class PermissionController {
         Permission map = mapperFacade.map(permissionVo, Permission.class);
         map.setId(id).setUpdatedBy(SecurityUtils.getUserId()).setUpdatedAt(LocalDateTime.now());
         permissionService.updateById(map);
+        // 清除缓存
         menuCache.expireAll();
         userPermissionCache.expireAll();
         dynamicSecurityMetadataSource.clearDataSource();
         return ResponseHelper.updateSuccess();
     }
 
+    /**
+     * 删除权限菜单
+     *
+     * @param permissionVo 权限实体
+     * @return response
+     */
     @PostMapping("/delete")
     public Response permissionsDelete(@RequestBody PermissionVo permissionVo) {
         Collection<Integer> ids = permissionVo.getIds();
@@ -101,12 +128,19 @@ public class PermissionController {
             return ResponseHelper.deleteSuccess();
         }
         permissionComponent.delete(ids);
+        // 删除缓存
         menuCache.expireAll();
         userPermissionCache.expireAll();
         dynamicSecurityMetadataSource.clearDataSource();
         return ResponseHelper.deleteSuccess();
     }
 
+    /**
+     * 修改权限菜单隐藏状态
+     *
+     * @param permissionVo 权限实体
+     * @return response
+     */
     @PostMapping("/hidden-status")
     public Response permissionsHiddenStatus(@RequestBody PermissionVo permissionVo) {
         Integer id = permissionVo.getId();
@@ -117,6 +151,7 @@ public class PermissionController {
                 YesOrNoEnum.NO.getValue() : YesOrNoEnum.YES.getValue())
                 .setUpdatedAt(LocalDateTime.now()).setUpdatedBy(SecurityUtils.getUserId());
         permissionService.updateById(permission);
+        // 清除缓存
         menuCache.expireAll();
         userPermissionCache.expireAll();
         dynamicSecurityMetadataSource.clearDataSource();

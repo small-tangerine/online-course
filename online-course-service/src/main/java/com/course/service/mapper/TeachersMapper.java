@@ -9,7 +9,6 @@ import org.apache.ibatis.annotations.Param;
  * 讲师 Mapper 接口
  * </p>
  *
- * @author panguangming
  * @since 2022-03-02
  */
 public interface TeachersMapper extends BaseMapper<Teachers> {

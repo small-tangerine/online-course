@@ -12,7 +12,6 @@ import java.io.File;
 /**
  * 音频
  *
- * @author panguangming
  * @since 2022-03-16
  */
 public class AudioUtil {

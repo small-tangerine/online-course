@@ -35,7 +35,6 @@ import java.util.Objects;
 /**
  * 头像
  *
- * @author panguangming
  * @since 2022-03-03
  */
 @RequestMapping("/avatar")
@@ -77,6 +76,7 @@ public class AvatarController {
 
             Integer userId = SecurityUtils.getUserId();
             Role userRole = roleService.findUserRole(userId);
+            // 讲师头像信息
             if (RoleTypeEnum.TEACHER.equalsStatus(userRole.getId())) {
                 Teachers teacher = teachersService.getByUserId(userId);
                 Teachers updateTeacher = new Teachers().setAvatar(avatar)
@@ -88,6 +88,7 @@ public class AvatarController {
                 teachersService.saveOrUpdate(updateTeacher);
                 return Response.ok("上传头像成功", ImmutableMap.of("url", avatar));
             }
+            // 更新用户头像信息
             User updateAvatar = new User().setId(SecurityUtils.getUserId())
                     .setAvatar(avatar)
                     .setUpdatedAt(LocalDateTime.now())

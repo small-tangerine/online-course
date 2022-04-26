@@ -11,7 +11,6 @@ import java.util.List;
 /**
  * 订单详情vo
  *
- * @author panguangming
  * @since 2022-03-04
  */
 @Data

@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
- * @author Gm
  * @date 2020-05-09
  * @Description: 返回错误码
  */

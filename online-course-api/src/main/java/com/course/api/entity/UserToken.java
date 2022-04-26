@@ -16,7 +16,6 @@ import java.time.LocalDateTime;
  * token记录
  * </p>
  *
- * @author panguangming
  * @since 2022-03-02
  */
 @Data

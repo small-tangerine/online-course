@@ -49,7 +49,6 @@ import java.util.stream.Collectors;
 /**
  * 课程
  *
- * @author panguangming
  * @since 2022-03-12
  */
 @RequestMapping("/course-video")
@@ -70,6 +69,15 @@ public class CourseVideoController {
     private final CourseVideoComponent courseVideoComponent;
     private final HomeRecommendService homeRecommendService;
 
+    /**
+     * 获取课程视频列表
+     * @param page 页码
+     * @param pageSize 页大小
+     * @param auditStatus 审核状态
+     * @param keyword 关键词
+     * @param courseId 课程ID
+     * @return response
+     */
     @GetMapping("/list")
     public Response courseList(Integer page, Integer pageSize, Integer auditStatus, String keyword,
                                @NotNull(message = "课程编号不能为空") Integer courseId) {
@@ -102,11 +110,11 @@ public class CourseVideoController {
     /**
      * 课程视频学生列表
      *
-     * @param page
-     * @param pagesSize
-     * @param keyword
-     * @param courseId
-     * @return
+     * @param page 页码
+     * @param pagesSize 页大小
+     * @param keyword 关键词
+     * @param courseId 课程ID
+     * @return response
      */
     @GetMapping("/student-list")
     public Response courseUserList(Integer page, Integer pagesSize, String keyword, @NotNull(message = "课程视频编号不能为空") Integer courseId) {
@@ -135,8 +143,8 @@ public class CourseVideoController {
 
     /**
      * 新增课程视频
-     * @param courseVo
-     * @return
+     * @param courseVo 视频实体
+     * @return response
      */
     @PostMapping("/create")
     public Response courseCreate(@RequestBody @Validated CourseVideoVo courseVo) {
@@ -147,6 +155,7 @@ public class CourseVideoController {
         if (StringUtils.isBlank(courseVo.getThumbUrl())) {
             map.setThumbUrl(CommonConstant.DEFAULT_THUMB_URL);
         }
+        // 视频信息
         map.setAuditNotice(StringUtils.EMPTY)
                 .setAuditStatus(StatusEnum.WAIT.getStatus())
                 .setCreatedAt(LocalDateTime.now()).setCreatedBy(SecurityUtils.getUserId())
@@ -158,8 +167,8 @@ public class CourseVideoController {
 
     /**
      * 视频审核
-     * @param course
-     * @return
+     * @param course 视频实体
+     * @return response
      */
     @PostMapping("/audit")
     public Response courseAudit(@RequestBody CourseVideo course) {
@@ -180,8 +189,8 @@ public class CourseVideoController {
 
     /**
      * 删除视频
-     * @param courseVo
-     * @return
+     * @param courseVo 视频实体
+     * @return response
      */
     @PostMapping("/delete")
     public Response courseDelete(@RequestBody CourseVideoVo courseVo) {
@@ -201,8 +210,8 @@ public class CourseVideoController {
 
     /**
      * 更新视频
-     * @param courseVo
-     * @return
+     * @param courseVo 课程视频实体
+     * @return response
      */
     @PostMapping("/update")
     public Response courseUpdate(@RequestBody @Validated CourseVideoVo courseVo) {
@@ -216,6 +225,7 @@ public class CourseVideoController {
         if (StringUtils.isBlank(courseVo.getThumbUrl())) {
             map.setThumbUrl(CommonConstant.DEFAULT_THUMB_URL);
         }
+        // 更新视频信息
         map.setAuditNotice(StringUtils.EMPTY)
                 .setAuditStatus(StatusEnum.WAIT.getStatus())
                 .setCreatedAt(LocalDateTime.now()).setCreatedBy(SecurityUtils.getUserId())

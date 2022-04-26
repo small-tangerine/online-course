@@ -9,7 +9,6 @@ import java.util.List;
 /**
  * List转换类
  *
- * @author pguangming@163.com
  * @version 1.0
  * @since 2020/11/23 12:35
  **/

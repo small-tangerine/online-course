@@ -5,7 +5,6 @@ import lombok.Data;
 /**
  * 响应封装
  *
- * @author panguangming
  * @since 2022-01-24
  */
 @Data

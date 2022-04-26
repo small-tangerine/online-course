@@ -12,7 +12,6 @@ import java.time.LocalDateTime;
  * 购物车
  * </p>
  *
- * @author panguangming
  * @since 2022-03-02
  */
 @Data

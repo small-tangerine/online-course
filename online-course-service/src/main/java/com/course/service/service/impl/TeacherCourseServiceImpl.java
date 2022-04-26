@@ -16,7 +16,6 @@ import java.util.List;
  * 讲师课程关联 服务实现类
  * </p>
  *
- * @author panguangming
  * @since 2022-03-02
  */
 @Service

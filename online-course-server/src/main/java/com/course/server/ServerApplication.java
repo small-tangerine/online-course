@@ -7,7 +7,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 /**
  * 启动类
  *
- * @author panguangming
  * @since 2022-03-02
  */
 @SpringBootApplication(scanBasePackages = {"com.course.server","com.course.component","com.course.service","com.course.commons"})

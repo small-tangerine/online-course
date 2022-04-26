@@ -16,7 +16,6 @@ import lombok.experimental.Accessors;
  * 充值、消费记录
  * </p>
  *
- * @author panguangming
  * @since 2022-03-02
  */
 @Data

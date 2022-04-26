@@ -14,7 +14,6 @@ import java.util.Map;
  * 课程 服务类
  * </p>
  *
- * @author panguangming
  * @since 2022-03-02
  */
 public interface CourseService extends IService<Course> {

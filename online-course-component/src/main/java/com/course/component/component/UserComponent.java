@@ -29,7 +29,6 @@ import java.util.Objects;
 /**
  * 用户组件
  *
- * @author panguangming
  * @since 2022-01-24
  */
 @RequiredArgsConstructor

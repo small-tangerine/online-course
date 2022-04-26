@@ -11,7 +11,6 @@ import java.time.LocalDateTime;
  * 用户课程视频关联
  * </p>
  *
- * @author panguangming
  * @since 2022-03-02
  */
 @Data

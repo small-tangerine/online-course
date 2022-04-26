@@ -34,7 +34,6 @@ import java.util.Objects;
 /**
  * 用户控制器
  *
- * @author panguangming
  * @since 2022-03-02
  */
 @RequestMapping("/account")

@@ -47,7 +47,6 @@ import java.util.stream.Collectors;
 /**
  * 首页
  *
- * @author panguangming
  * @since 2022-03-11
  */
 @RequestMapping("/home")
@@ -62,6 +61,11 @@ public class HomeController {
     private final TeachersService teachersService;
     private final OrdersDetailService ordersDetailService;
 
+    /**
+     * 首页信息
+     * @param type 类型
+     * @return response
+     */
     @GetMapping("/index")
     public Response homeIndex(Integer type) {
         Integer roleId = SecurityUtils.getRoleId();
