@@ -302,8 +302,9 @@ public class CourseController {
             if (StringUtils.isBlank(courseVo.getAlias())) {
                 course.setAlias(IdUtils.uuid());
             } else {
-                Course alias = courseService.getByAlias(course.getAlias());
+                Course alias = courseService.getByAlias(courseVo.getAlias());
                 Assert.isNull(alias, "该课程别名已存在");
+                course.setAlias(courseVo.getAlias());
             }
             course.setAuditStatus(StatusEnum.WAIT.getStatus())
                     .setCreatedAt(LocalDateTime.now()).setCreatedBy(SecurityUtils.getUserId());

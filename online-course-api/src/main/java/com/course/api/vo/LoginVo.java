@@ -30,7 +30,7 @@ public class LoginVo {
      * 密码
      */
     @NotBlank(message = "密码不能为空", groups = {Login.class, Register.class,Forget.class})
-    @Pattern(regexp = "^(?=.{8,})(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*\\W).*",
+    @Pattern(regexp = "^(?=.{8,})(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*\\W).*",
             message = "密码必须长度大于或等于8个字符，必须是由字母大小写、数字、其他特殊符号的组合",
             groups = {Register.class,Forget.class})
     private String password;
