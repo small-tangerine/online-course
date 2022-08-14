@@ -73,6 +73,50 @@ public class CourseController {
     private final UserCourseVideoService userCourseVideoService;
 
     /**
+     * 课程详情
+     *
+     * @param id    课程ID
+     * @param alias 课程别名
+     * @return response
+     */
+    @GetMapping("/detail")
+    public Response courseDetail(Integer id, String alias) {
+        Assert.isTrue(StringUtils.isNotBlank(alias)
+                || Objects.nonNull(id), "课程编号或别名不能为空");
+        Course course;
+        // 是否根据ID查询
+        if (Objects.nonNull(id)) {
+            course = courseService.getById(id);
+        } else if (StringUtils.isNotBlank(alias)) {
+            LambdaQueryWrapper<Course> query = Wrappers.lambdaQuery();
+            query.eq(Course::getAlias, StringUtils.trim(alias))
+                    .last("limit 1");
+            course = courseService.getOne(query);
+        } else {
+            return Response.ok();
+        }
+        if (Objects.isNull(course)) {
+            return Response.ok();
+        }
+        // 讲师信息
+        Teachers teachers = teachersService.getByCourseId(course.getId());
+        CourseVo map = mapperFacade.map(course, CourseVo.class);
+        wrapTips(map, course);
+        if (Objects.nonNull(teachers)) {
+            map.setTeacher(teachers);
+        }
+        wrapVideo(map, course);
+        // 用户课程信息
+        UserCourse byUserIdAndCourseId = userCourseService.getByUserIdAndCourseId(SecurityUtils.getUserId(), course.getId());
+        map.setIsBuy(0);
+        // 是否购买该课程或学习了免费课程
+        if (Objects.nonNull(byUserIdAndCourseId)) {
+            map.setIsBuy(1);
+        }
+        return Response.ok(map);
+    }
+
+    /**
      * 获取课程列表
      *
      * @param page     页码
@@ -121,50 +165,6 @@ public class CourseController {
             return map;
         });
         return Response.ok(paging);
-    }
-
-    /**
-     * 课程详情
-     *
-     * @param id    课程ID
-     * @param alias 课程别名
-     * @return response
-     */
-    @GetMapping("/detail")
-    public Response courseDetail(Integer id, String alias) {
-        Assert.isTrue(StringUtils.isNotBlank(alias)
-                || Objects.nonNull(id), "课程编号或别名不能为空");
-        Course course;
-        // 是否根据ID查询
-        if (Objects.nonNull(id)) {
-            course = courseService.getById(id);
-        } else if (StringUtils.isNotBlank(alias)) {
-            LambdaQueryWrapper<Course> query = Wrappers.lambdaQuery();
-            query.eq(Course::getAlias, StringUtils.trim(alias))
-                    .last("limit 1");
-            course = courseService.getOne(query);
-        } else {
-            return Response.ok();
-        }
-        if (Objects.isNull(course)) {
-            return Response.ok();
-        }
-        // 讲师信息
-        Teachers teachers = teachersService.getByCourseId(course.getId());
-        CourseVo map = mapperFacade.map(course, CourseVo.class);
-        wrapTips(map, course);
-        if (Objects.nonNull(teachers)) {
-            map.setTeacher(teachers);
-        }
-        wrapVideo(map, course);
-        // 用户课程信息
-        UserCourse byUserIdAndCourseId = userCourseService.getByUserIdAndCourseId(SecurityUtils.getUserId(), course.getId());
-        map.setIsBuy(0);
-        // 是否购买该课程或学习了免费课程
-        if (Objects.nonNull(byUserIdAndCourseId)) {
-            map.setIsBuy(1);
-        }
-        return Response.ok(map);
     }
 
     /**
@@ -249,6 +249,34 @@ public class CourseController {
     }
 
     /**
+     * 获取用户学习的课程
+     *
+     * @param page 页码
+     * @param type 类型
+     * @return response
+     */
+    @GetMapping("/user-course")
+    public Response userCourse(Integer page, Integer type) {
+        Paging<Course> paging = new Paging<>(page, 5);
+        Integer userId = SecurityUtils.getUserId();
+        courseService.listByUserCourse(paging, type, userId);
+        Set<Integer> courseId = paging.getItems().stream().map(Course::getId).collect(Collectors.toSet());
+        Map<Integer, List<UserCourseVideo>> userCourseVideoMap = userCourseVideoService.findMapByUserIdAndCourseIds(SecurityUtils.getUserId(), courseId);
+        paging.convert(item -> {
+            CourseListVo map = mapperFacade.map(item, CourseListVo.class);
+            map.setCurrent(0L);
+            List<UserCourseVideo> userCourseVideos = userCourseVideoMap.get(item.getId());
+            if (CollectionUtils.isNotEmpty(userCourseVideos)) {
+                Long reduce = userCourseVideos.stream().map(UserCourseVideo::getLearnLength)
+                        .reduce(0L, Long::sum);
+                map.setCurrent(reduce);
+            }
+            return map;
+        });
+        return Response.ok(paging);
+    }
+
+    /**
      * 更新视频学习进度
      *
      * @param courseVideoListVo 课程视频实体
@@ -307,31 +335,4 @@ public class CourseController {
         return Response.ok();
     }
 
-    /**
-     * 获取用户学习的课程
-     *
-     * @param page 页码
-     * @param type 类型
-     * @return response
-     */
-    @GetMapping("/user-course")
-    public Response userCourse(Integer page, Integer type) {
-        Paging<Course> paging = new Paging<>(page, 5);
-        Integer userId = SecurityUtils.getUserId();
-        courseService.listByUserCourse(paging, type, userId);
-        Set<Integer> courseId = paging.getItems().stream().map(Course::getId).collect(Collectors.toSet());
-        Map<Integer, List<UserCourseVideo>> userCourseVideoMap = userCourseVideoService.findMapByUserIdAndCourseIds(SecurityUtils.getUserId(), courseId);
-        paging.convert(item -> {
-            CourseListVo map = mapperFacade.map(item, CourseListVo.class);
-            map.setCurrent(0L);
-            List<UserCourseVideo> userCourseVideos = userCourseVideoMap.get(item.getId());
-            if (CollectionUtils.isNotEmpty(userCourseVideos)) {
-                Long reduce = userCourseVideos.stream().map(UserCourseVideo::getLearnLength)
-                        .reduce(0L, Long::sum);
-                map.setCurrent(reduce);
-            }
-            return map;
-        });
-        return Response.ok(paging);
-    }
 }

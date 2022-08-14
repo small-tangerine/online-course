@@ -3,6 +3,7 @@ package com.course.server.controller;
 import cn.hutool.core.lang.Validator;
 import cn.hutool.core.text.CharSequenceUtil;
 import com.course.api.entity.User;
+import com.course.api.entity.UserToken;
 import com.course.api.enums.LoginTypeEnum;
 import com.course.api.vo.LoginVo;
 import com.course.api.vo.server.UserVo;
@@ -15,7 +16,6 @@ import com.course.commons.utils.Assert;
 import com.course.component.component.UserComponent;
 import com.course.server.config.security.JwtUtil;
 import com.course.server.config.security.SecurityUtils;
-import com.course.api.entity.UserToken;
 import com.course.service.service.UserService;
 import com.course.service.service.UserTokenService;
 import lombok.RequiredArgsConstructor;
@@ -82,6 +82,23 @@ public class AccountController {
         return Response.ok(map);
     }
 
+
+    /**
+     * 退出登录
+     *
+     * @return response
+     */
+    @PostMapping("/logout")
+    public Response logout() {
+        Integer userId = SecurityUtils.getUserId();
+        UserToken userToken = userTokenService.findByUserIdAndType(userId, LoginTypeEnum.FRONT.getTypeId());
+        if (Objects.nonNull(userToken)) {
+            userTokenService.removeById(userToken.getId());
+        }
+        return Response.ok("退出成功");
+    }
+
+
     /**
      * 注册
      *
@@ -109,21 +126,22 @@ public class AccountController {
         return Response.ok(map);
     }
 
-    /**
-     * 退出登录
-     *
-     * @return response
-     */
-    @PostMapping("/logout")
-    public Response logout() {
-        Integer userId = SecurityUtils.getUserId();
-        UserToken userToken = userTokenService.findByUserIdAndType(userId, LoginTypeEnum.FRONT.getTypeId());
-        if (Objects.nonNull(userToken)) {
-            userTokenService.removeById(userToken.getId());
-        }
-        return Response.ok("退出成功");
-    }
 
+    /**
+     * 根据用户信息生成token信息
+     *
+     * @param user 用户信息
+     * @return 用户token信息
+     */
+    private UserToken generateToken(User user) {
+        String token = jwtUtil.generateToken(user);
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime expired = now.plusMinutes(30L);
+        return new UserToken().setToken(token).setUserId(user.getId())
+                .setUsername(user.getUsername()).setLoginAt(now)
+                .setType(LoginTypeEnum.FRONT.getTypeId())
+                .setExpiredAt(expired);
+    }
     /**
      * 重置密码
      *
@@ -156,20 +174,4 @@ public class AccountController {
         return Response.ok(map);
     }
 
-
-    /**
-     * 根据用户信息生成token信息
-     *
-     * @param user 用户信息
-     * @return 用户token信息
-     */
-    private UserToken generateToken(User user) {
-        String token = jwtUtil.generateToken(user);
-        LocalDateTime now = LocalDateTime.now();
-        LocalDateTime expired = now.plusMinutes(30L);
-        return new UserToken().setToken(token).setUserId(user.getId())
-                .setUsername(user.getUsername()).setLoginAt(now)
-                .setType(LoginTypeEnum.FRONT.getTypeId())
-                .setExpiredAt(expired);
-    }
 }

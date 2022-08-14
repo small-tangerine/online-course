@@ -54,35 +54,6 @@ public class UserInfoController {
     private final UserTokenService userTokenService;
     private final UserCourseVideoService userCourseVideoService;
 
-    /**
-     * 更新用户基础信息
-     *
-     * @param userVo 用户实体
-     * @return response
-     */
-    @PostMapping("/update-base-info")
-    public Response updateBaseInfo(@RequestBody @Validated(BaseInfo.class) UserVo userVo) {
-        Assert.notBlank(SexEnum.getDescFromSex(userVo.getSex()), "请选择正确的性别");
-        Integer userId = SecurityUtils.getUserId();
-        User user = userService.getById(userId);
-        // 更新用户基础信息
-        User updateBaseInfo = new User().setId(userId)
-                .setNickname(userVo.getNickname())
-                .setJob(userVo.getJob())
-                .setCity(userVo.getCity())
-                .setSignature(userVo.getSignature())
-                .setUpdatedBy(userId)
-                .setUpdatedAt(LocalDateTime.now())
-                .setSex(userVo.getSex());
-        userService.updateById(updateBaseInfo);
-        user.setNickname(userVo.getNickname())
-                .setJob(userVo.getJob())
-                .setCity(userVo.getCity())
-                .setSignature(userVo.getSignature())
-                .setSex(userVo.getSex())
-                .setPassword(null);
-        return ResponseHelper.updateSuccess(mapperFacade.map(user, UserVo.class));
-    }
 
     /**
      * 修改用户账号信息
@@ -142,6 +113,35 @@ public class UserInfoController {
                 .setMobile(userVo.getMobile())
                 .setPassword(null);
 
+        return ResponseHelper.updateSuccess(mapperFacade.map(user, UserVo.class));
+    }
+    /**
+     * 更新用户基础信息
+     *
+     * @param userVo 用户实体
+     * @return response
+     */
+    @PostMapping("/update-base-info")
+    public Response updateBaseInfo(@RequestBody @Validated(BaseInfo.class) UserVo userVo) {
+        Assert.notBlank(SexEnum.getDescFromSex(userVo.getSex()), "请选择正确的性别");
+        Integer userId = SecurityUtils.getUserId();
+        User user = userService.getById(userId);
+        // 更新用户基础信息
+        User updateBaseInfo = new User().setId(userId)
+                .setNickname(userVo.getNickname())
+                .setJob(userVo.getJob())
+                .setCity(userVo.getCity())
+                .setSignature(userVo.getSignature())
+                .setUpdatedBy(userId)
+                .setUpdatedAt(LocalDateTime.now())
+                .setSex(userVo.getSex());
+        userService.updateById(updateBaseInfo);
+        user.setNickname(userVo.getNickname())
+                .setJob(userVo.getJob())
+                .setCity(userVo.getCity())
+                .setSignature(userVo.getSignature())
+                .setSex(userVo.getSex())
+                .setPassword(null);
         return ResponseHelper.updateSuccess(mapperFacade.map(user, UserVo.class));
     }
 

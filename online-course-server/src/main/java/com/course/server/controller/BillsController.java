@@ -36,6 +36,17 @@ public class BillsController {
     private final BillsService billsService;
     private final MapperFacade mapperFacade;
 
+    private BigDecimal totalCost(Integer userId) {
+        LambdaQueryWrapper<Bills> query = Wrappers.lambdaQuery();
+        query.eq(Bills::getUserId, userId)
+                .select(Bills::getCost);
+        List<Bills> list = billsService.list(query);
+        if (CollectionUtils.isEmpty(list)) {
+            return BigDecimal.ZERO;
+        }
+        return list.stream().map(Bills::getCost).reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
     /**
      * 用户消费帐单列表
      *
@@ -59,16 +70,5 @@ public class BillsController {
         BigDecimal cost = totalCost(SecurityUtils.getUserId());
         paging.setExtra(ImmutableMap.of("cost", cost));
         return Response.ok(paging);
-    }
-
-    private BigDecimal totalCost(Integer userId) {
-        LambdaQueryWrapper<Bills> query = Wrappers.lambdaQuery();
-        query.eq(Bills::getUserId, userId)
-                .select(Bills::getCost);
-        List<Bills> list = billsService.list(query);
-        if (CollectionUtils.isEmpty(list)) {
-            return BigDecimal.ZERO;
-        }
-        return list.stream().map(Bills::getCost).reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 }
