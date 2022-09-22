@@ -16,8 +16,8 @@ public enum RoleTypeEnum {
     /**
      * 是或者不是
      */
-    ADMIN(1, "管理员"),
     TEACHER(2, "讲师"),
+    ADMIN(1, "管理员"),
     STUDENT(3, "学生");
 
     @Getter

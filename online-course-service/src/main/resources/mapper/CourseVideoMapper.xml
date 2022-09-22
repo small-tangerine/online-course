@@ -23,29 +23,30 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, course_id, title, file_url, file_size, thumb_url, url, video_length, display_order, audit_status, audit_notice, created_at, created_by, updated_by, updated_at
+        id
+        , course_id, title, file_url, file_size, thumb_url, url, video_length, display_order, audit_status, audit_notice, created_at, created_by, updated_by, updated_at
     </sql>
     <select id="pagingByParamsMap" resultMap="BaseResultMap">
         select id,
-               course_id,
-               title,
-               file_url,
-               file_size,
-               thumb_url,
-               url,
-               video_length,
-               display_order,
-               audit_status,
-               audit_notice,
-               created_at
+        course_id,
+        title,
+        file_url,
+        file_size,
+        thumb_url,
+        url,
+        video_length,
+        display_order,
+        audit_status,
+        audit_notice,
+        created_at
         from course_video
         where course_id =#{paramsMap.courseId}
-            <if test="paramsMap.auditStatus !=null">
-                and audit_status = #{paramsMap.auditStatus}
-            </if>
-            <if test="paramsMap.keyword !='' and paramsMap.keyword!=null">
-                and title like concat('%',#{paramsMap.keyword},'%')
-            </if>
+        <if test="paramsMap.auditStatus !=null">
+            and audit_status = #{paramsMap.auditStatus}
+        </if>
+        <if test="paramsMap.keyword !='' and paramsMap.keyword!=null">
+            and title like concat('%',#{paramsMap.keyword},'%')
+        </if>
         order by id desc
     </select>
 

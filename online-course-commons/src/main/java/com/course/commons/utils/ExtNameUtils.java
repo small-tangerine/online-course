@@ -16,14 +16,16 @@ public class ExtNameUtils {
      * 类Unix路径分隔符
      */
     private static final char UNIX_SEPARATOR = CharUtil.SLASH;
+
+
+    private static final List<String> EXTEND_EXT_NAMES = Lists.newArrayList(".tar.gz");
     /**
      * Windows路径分隔符
      */
     private static final char WINDOWS_SEPARATOR = CharUtil.BACKSLASH;
     /**
      * 额外的文件扩展名
-     */
-    private static final List<String> EXTEND_EXT_NAMES = Lists.newArrayList(".tar.gz");
+
 
     /**
      * 获取文件扩展名

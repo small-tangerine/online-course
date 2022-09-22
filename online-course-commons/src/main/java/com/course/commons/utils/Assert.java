@@ -45,15 +45,15 @@ public class Assert {
         }
     }
 
-    public static <T extends CharSequence> T notEmpty(T text, String errorMsgTemplate, Object... params) throws IllegalArgumentException {
-        if (StringUtils.isEmpty(text)) {
+    public static <T extends CharSequence> T notBlank(T text, String errorMsgTemplate, Object... params) throws IllegalArgumentException {
+        if (CharSequenceUtil.isBlank(text)) {
             throw new IgnoreException(CharSequenceUtil.format(errorMsgTemplate, params));
         }
         return text;
     }
 
-    public static <T extends CharSequence> T notBlank(T text, String errorMsgTemplate, Object... params) throws IllegalArgumentException {
-        if (CharSequenceUtil.isBlank(text)) {
+    public static <T extends CharSequence> T notEmpty(T text, String errorMsgTemplate, Object... params) throws IllegalArgumentException {
+        if (StringUtils.isEmpty(text)) {
             throw new IgnoreException(CharSequenceUtil.format(errorMsgTemplate, params));
         }
         return text;
