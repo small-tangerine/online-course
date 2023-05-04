@@ -13,7 +13,7 @@ import lombok.experimental.Accessors;
 
 /**
  * <p>
- * 购物车
+ * 购物车注释修改
  * </p>
  *
  * @since 2022-03-02
