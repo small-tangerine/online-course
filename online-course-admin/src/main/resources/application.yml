@@ -36,8 +36,8 @@ spring:
     auto: true
   servlet:
     multipart:
-      max-file-size: 1000MB
-      max-request-size: 1000MB
+      max-file-size: 1024MB
+      max-request-size: 1024MB
   web:
     resources:
       add-mappings: false
