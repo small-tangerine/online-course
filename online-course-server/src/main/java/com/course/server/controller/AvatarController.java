@@ -28,7 +28,7 @@ import java.nio.file.Paths;
 import java.time.LocalDateTime;
 
 /**
- * 头像
+ * 头像修改获取头像方法
  *
  * @since 2022-03-03
  */
