@@ -20,7 +20,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
- * 权限缓存
+ * 权限缓存修改
  *
  * @since 2022-03-06
  */
