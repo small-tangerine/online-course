@@ -21,6 +21,7 @@ import java.util.Objects;
 
 /**
  * 自动生成 entity service
+ * 新增查询逻辑
  *
  * @since 2021-12-27
  */
