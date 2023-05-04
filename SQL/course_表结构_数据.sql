@@ -173,7 +173,7 @@ CREATE TABLE `course`  (
   `learn_what` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '能学到什么',
   `type` tinyint(1) NOT NULL DEFAULT 1 COMMENT '课程类型 1免费 2付费',
   `price` decimal(10, 2) NOT NULL DEFAULT 0.00 COMMENT '价格',
-  `is_discount` tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否折扣 1是 -否',
+  `is_discount` tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否折扣 1是 0否',
   `discount_price` decimal(10, 2) NOT NULL DEFAULT 0.00 COMMENT '折扣价格',
   `is_finish` tinyint(1) UNSIGNED NOT NULL DEFAULT 0 COMMENT '是否完结 1是 0否',
   `learn_persons` int(10) NOT NULL DEFAULT 0 COMMENT '学习人数',
